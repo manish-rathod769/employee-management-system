@@ -9,7 +9,12 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       employeeId: {
-        type: Sequelize.STRING
+        type: Sequelize.UUID,
+        references: {
+          model: { tableName: 'Employees' },
+          key: 'id',
+        },
+        allowNull: false,
       },
       highestQualification: {
         type: Sequelize.STRING

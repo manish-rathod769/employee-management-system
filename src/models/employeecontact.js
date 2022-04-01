@@ -25,7 +25,7 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
     },
     employeeId: {
-      type: DataTypes.STRING,
+      type: DataTypes.UUID,
     },
     houseNo: {
       type: DataTypes.STRING,

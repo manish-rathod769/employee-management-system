@@ -20,8 +20,13 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: 'employeeId',
       });
     }
-  }
+  };
   Employee.init({
+    id: {
+      type: DataTypes.UUID,
+      allowNull: false,
+      primaryKey: true,
+    },
     firstName: { 
       type: DataTypes.STRING,
       allowNull: false,
@@ -57,11 +62,12 @@ module.exports = (sequelize, DataTypes) => {
     verifyToken: { 
       type: DataTypes.STRING,
       allowNull: true,
-      defaultValue: { }
+      defaultValue: null,
     },
     isArchive: { 
       type: DataTypes.BOOLEAN,
       allowNull: false,
+      defaultValue: false,
     },
     joiningDate: { 
       type: DataTypes.DATE,
