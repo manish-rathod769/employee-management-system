@@ -6,7 +6,7 @@ module.exports = {
       'EmployeeAcademics',
       [
         {
-          employeeId: "4889ed9b-6fa3-4b25-8a27-68779ec3179f",
+          employeeId: "77cb5282-36a6-4c9e-9c8e-84f9cbec0ce7",
           highestQualification: "BE",
           collage: "VGEC",
           university: "GTU",
@@ -15,7 +15,7 @@ module.exports = {
           updatedAt: new Date(),
         },
         {
-          employeeId: "606559db-df9a-4c1f-8243-ef803e52cfa4",
+          employeeId: "8ccf51cb-d271-4ba9-bb2d-a59702052e55",
           highestQualification: "ME",
           collage: "PT",
           university: "VNSGU",
@@ -24,7 +24,7 @@ module.exports = {
           updatedAt: new Date(),
         },
         {
-          employeeId: "d475cab4-c199-40e9-813e-fa648d1c6fea",
+          employeeId: "b8cdbc59-bfa1-404f-b6d2-f1a7136d485a",
           highestQualification: "B. Tech.",
           collage: "nirma",
           university: "nirma",
