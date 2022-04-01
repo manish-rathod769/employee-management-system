@@ -18,7 +18,7 @@ module.exports = (sequelize, DataTypes) => {
   }
   EmployeeAcademic.init({
     employeeId: {
-      type: DataTypes.STRING,
+      type: DataTypes.UUID,
     },
     highestQualification: {
       type: DataTypes.STRING,

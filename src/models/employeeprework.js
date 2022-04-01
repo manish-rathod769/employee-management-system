@@ -18,7 +18,7 @@ module.exports = (sequelize, DataTypes) => {
   }
   EmployeePreWork.init({
     employeeId: {
-      type: DataTypes.STRING,
+      type: DataTypes.UUID,
     },
     previousEmployer: {
       type: DataTypes.STRING,

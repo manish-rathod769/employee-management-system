@@ -15,7 +15,12 @@ module.exports = {
         type: Sequelize.STRING
       },
       employeeId: {
-        type: Sequelize.STRING
+        type: Sequelize.UUID,
+        references: {
+          model: { tableName: 'Employees' },
+          key: 'id',
+        },
+        allowNull: false,
       },
       houseNo: {
         type: Sequelize.STRING

@@ -4,9 +4,9 @@ module.exports = {
     await queryInterface.createTable('Employees', {
       id: {
         allowNull: false,
-        autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.INTEGER
+        type: Sequelize.UUID,
+        defaultValue: Sequelize.UUIDV4,
       },
       firstName: {
         type: Sequelize.STRING
@@ -27,16 +27,19 @@ module.exports = {
         type: Sequelize.ENUM('male', 'female')
       },
       role: {
-        typs: Sequelize.ENUM('ADMIN', 'PM', 'HR', 'DEV')
+        type: Sequelize.ENUM('ADMIN', 'PM', 'HR', 'DEV')
       },
       DOB: {
         type: Sequelize.DATE
       },
       verifyToken: {
-        typs: Sequelize.STRING
+        type: Sequelize.STRING,
+        defaultValue: null,
       },
       isArchive: {
-        type: Sequelize.BOOLEAN
+        type: Sequelize.BOOLEAN,
+        allowNull: false,
+        defaultValue: false,
       },
       joiningDate: {
         type: Sequelize.DATE

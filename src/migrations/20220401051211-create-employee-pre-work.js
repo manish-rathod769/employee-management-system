@@ -9,7 +9,12 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       employeeId: {
-        type: Sequelize.STRING
+        type: Sequelize.UUID,
+        references: {
+          model: { tableName: 'Employees' },
+          key: 'id',
+        },
+        allowNull: false,
       },
       previousEmployer: {
         type: Sequelize.STRING
@@ -27,7 +32,9 @@ module.exports = {
         type: Sequelize.DATE
       },
       isArchive: {
-        type: Sequelize.BOOLEAN
+        type: Sequelize.BOOLEAN,
+        allowNull: false,
+        defaultValue: false,
       },
       createdAt: {
         allowNull: false,
