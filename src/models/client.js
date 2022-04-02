@@ -14,6 +14,11 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   Client.init({
+    id: {
+      type: DataTypes.UUID,
+      allowNull: false,
+      primaryKey: true,
+    },
     name:{ 
       type: DataTypes.STRING, 
       allowNull: false,
@@ -22,12 +27,12 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING, 
       allowNull: false,
     },
-    slack_id:{ 
+    slackId:{ 
       type: DataTypes.STRING, 
       allowNull: false,
     },
-    city:{ type: 
-      DataTypes.STRING, 
+    city:{ 
+      type: DataTypes.STRING, 
       allowNull: false,
     },
     state:{ 
@@ -48,6 +53,7 @@ module.exports = (sequelize, DataTypes) => {
     } 
   }, {
     sequelize,
+    timestamps: false,
     modelName: 'Client',
   });
   return Client;
