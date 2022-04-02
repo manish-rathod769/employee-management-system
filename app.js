@@ -8,6 +8,7 @@ import flash from 'connect-flash';
 import session from 'express-session';
 
 import employeeRoutes from './src/routes/employee.route';
+import clientRoutes from './src/routes/client.route';
 
 dotenv.config();
 require('./src/config/sequelize');
@@ -36,4 +37,7 @@ app.set('views', path.join(__dirname, 'src', 'views'));
 app.set('view engine', 'ejs');
 
 app.use('/', employeeRoutes);
+// requiring routes
+app.use('/', clientRoutes);
+
 module.exports = app;
