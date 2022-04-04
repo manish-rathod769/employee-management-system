@@ -77,7 +77,12 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.DECIMAL,
       allowNull: false,
     }  
-  }, {
+  },
+  {
+    defaultScope:{
+      where: { isArchive: false },
+      attributes: { exclude: ['password', 'verifyToken', 'role'] },
+    },
     sequelize,
     modelName: 'Employee',
   });
