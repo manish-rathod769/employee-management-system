@@ -24,15 +24,21 @@ export const clientRegisterController = async (req, res) => {
     const newClient = await Client.create(clientDetails);
     successResponse(req, res, newClient, 200);
   } catch (error) {
-    errorResponse(req, res, error.message, 500, error);
+    errorResponse(req, res, error.message, 409, error);
   }
 
 }
 
 export const getAllClientController = async (req, res) => {
   try {
-    const allClients = await Client.findAll({ where: {isArchive : false} });
-    if (!allClients.length) throw new Error('Employee data does not exist !!!');
+    const page = Number(req.query.page);
+    const allClients = await Client.findAll({ where: {isArchive : false}, offset: (page-1)*12, limit: 12 });
+    // if (!allClients.length) throw new Error('Employee data does not exist !!!');
+    const isDataBefore = await Client.findAll({ where: {isArchive: false }, limit: (page-1)*12 });
+    const isDataAfter = await Client.findAll({ where: {isArchive: false}, offset: page*12 });
+    
+    const paginationDetails = { before: isDataBefore.length , after: isDataAfter.length};
+    allClients.push(paginationDetails);
     successResponse(req, res, allClients, 200);
   } catch (error) {
     errorResponse(req, res, error.message, 500, error);
@@ -42,9 +48,8 @@ export const getAllClientController = async (req, res) => {
 export const clientUpdateDataController = async (req, res) => {
   try {
     const clientId = req.params.clientId;
-
-    const { name, city, state, country, organization, isArchive } = req.body;
-    const updatedClient = await Client.update({ name, city, state, country, organization, isArchive }, { returning: true, where: { id: clientId } });
+    const { name, city, state, country, organization } = req.body;
+    const updatedClient = await Client.update({ name, city, state, country, organization }, { returning: true, where: { id: clientId } });
     successResponse(req, res, updatedClient[1], 200);
   } catch (error) {
     errorResponse(req, res, error.message, 500, error);
@@ -63,6 +68,17 @@ export const clientSoftDeleteController = async (req, res) => {
     const softDeletedCLient = await Client.update({ isArchive: true }, { returning: true, where: { id: clientId } });
     successResponse(req, res, softDeletedCLient[1], 200);
   } catch (error) {
+    errorResponse(req, res, error.message, 500, error);
+  }
+}
+
+export const getOneClientController = async (req, res) => {
+  try{
+    const clientId = req.params.clientId;
+    const matchedClient = await Client.findOne({ where: {id: clientId} });
+    if(!matchedClient) throw new Error('Client data does not exist');
+    successResponse(req, res, matchedClient, 200);  
+  }catch (error) {
     errorResponse(req, res, error.message, 500, error);
   }
 }

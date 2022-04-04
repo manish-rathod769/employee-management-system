@@ -37,7 +37,6 @@ export const clientDataUpdateOject = joi.object({
   state: joi.string().trim(true).required(),
   country: joi.string().trim(true).required(),
   organization: joi.string().trim(true).required(),
-  isArchive: joi.boolean().required(),
 });
 
 export const clientUpdateDataValidation = async(req, res, next) => {
@@ -54,7 +53,6 @@ export const clientUpdateDataValidation = async(req, res, next) => {
     state: req.body.state,
     country: req.body.country,
     organization: req.body.organization,
-    isArchive: req.body.isArchive,
   }
 
   const { error } = clientDataUpdateOject.validate(payload);
