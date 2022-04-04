@@ -2,12 +2,11 @@ import { v4 as uuidv4 } from 'uuid';
 import { successResponse, errorResponse } from '../../helpers/index';
 import { Client } from '../../models';
 import { Op } from 'sequelize';
-// const { Client } = require('../../models');
 
-export const clientRegisterController = async(req, res) => {
-  try{
+export const clientRegisterController = async (req, res) => {
+  try {
     const { name, email, slackId, city, state, country, organization } = req.body;
-    // const 
+    
     const clientDetails = {
       id: uuidv4(),
       name,
@@ -19,13 +18,23 @@ export const clientRegisterController = async(req, res) => {
       organization,
       isArchive: false,
     }
-    const isUserExist = await Client.findAll({ where: { [Op.or]: [ {email}, {slackId}]} });
-    if(isUserExist.length) throw new Error('EmailID or slackID alreay exists in the database !!!');
-    
+    const isUserExist = await Client.findAll({ where: { [Op.or]: [{ email }, { slackId }] } });
+    if (isUserExist.length) throw new Error('EmailID or slackID alreay exists in the database !!!');
+
     const newClient = await Client.create(clientDetails);
     successResponse(req, res, newClient, 200);
-  }catch(error){
+  } catch (error) {
     errorResponse(req, res, error.message, 500, error);
   }
 
+}
+
+export const getAllClientController = async (req, res) => {
+  try {
+    const allClients = await Client.findAll({ where: {isArchive : false} });
+    if (!allClients.length) throw new Error('Employee data does not exist !!!');
+    successResponse(req, res, allClients, 200);
+  } catch (error) {
+    errorResponse(req, res, error.message, 500, error);
+  }
 }

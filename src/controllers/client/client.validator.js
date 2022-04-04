@@ -1,5 +1,6 @@
 import joi from 'joi';
 import { errorResponse } from '../../helpers/index';
+import { Client } from '../../models';
 
 const clientRegisterObject = joi.object({
   name: joi.string().trim(true).required(),
@@ -26,7 +27,6 @@ export const clientRegisterValidation = async(req, res, next) => {
   if(error) {
     errorResponse(req, res, error.message, 206, error.details);
   }else{
-    console.log("Good to go...")
     next();
   }
 }
