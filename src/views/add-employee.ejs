@@ -22,10 +22,6 @@
       href="assets/plugins/bootstrap-tagsinput/bootstrap-tagsinput.css"
     />
 
-		<!-- JS & CSS library of MultiSelect plugin -->
-<script src="multiselect/jquery.multiselect.js"></script>
-<link rel="stylesheet" href="multiselect/jquery.multiselect.css">
-<!-- multiple select plugin link https://www.codexworld.com/multi-select-dropdown-list-with-checkbox-jquery/ -->
 
     <link rel="stylesheet" href="assets/css/style.css" />
     <title>Add Employee Page</title>
@@ -57,7 +53,7 @@
             <%- include('./partials/aside'); %>
 
             <div class="col-xl-9 col-lg-8 col-md-12">
-							<form>
+							<form id="form-add-employee" >
               <div class="accordion add-employee" id="accordion-details">
                 <div class="card shadow-sm grow ctm-border-radius">
                   <div class="card-header" id="basic1">
@@ -88,6 +84,7 @@
                             <input
                               type="text"
                               class="form-control"
+                              id="firstName"
                               placeholder="First Name"
                             />
                           </div>
@@ -95,6 +92,7 @@
                             <input
                               type="text"
                               class="form-control"
+                              id="middleName"
                               placeholder="Middle Name"
                             />
                           </div>
@@ -102,6 +100,7 @@
                             <input
                               type="text"
                               class="form-control"
+                              id="lastName"
                               placeholder="Last Name"
                             />
                           </div>
@@ -109,6 +108,7 @@
                             <input
                               type="email"
                               class="form-control"
+                              id="email"
                               placeholder="Email"
                             />
                           </div>
@@ -123,7 +123,8 @@
 																	class="custom-control-input"
 																	id="male"
 																	name="gender"
-																	
+                                  value="male"
+                                  checked
 																/>
 																<label
 																	class="custom-control-label"
@@ -138,6 +139,7 @@
                                 class="custom-control-input"
                                 id="female"
                                 name="gender"
+                                value="female"
                               />
                               <label
                                 class="custom-control-label"
@@ -151,12 +153,13 @@
 															<input
 																class="form-control col-10 cal-icon-input"
 																type="date"
+                                id="dob"
 																placeholder="DOB"
 															/>
                           	</div>
                           </div>
 													<div class="col-6 form-group">
-														<select class="form-control select">
+														<select class="form-control select" id="role">
                               <option selected disabled>Role</option>
 															<option value="DEV">DEV.</option>
                               <option value="HR">HR</option>
@@ -170,6 +173,7 @@
 															<input
 																class="form-control col-10 cal-icon-input"
 																type="date"
+                                id="joiningDate"
 																placeholder="joinng date"
 															/>
                           </div>
@@ -178,6 +182,7 @@
                             <input
                               type="text"
                               class="form-control"
+                              id="totalExp"
                               placeholder="Total Experiance e.g. 3.11 => 3 years, 11 months"
                             />
                           </div>
@@ -213,6 +218,7 @@
                             <input
                               type="text"
                               class="form-control"
+                              id="highestQualification"
                               placeholder="Highest Qualification"
                             />
                           </div>
@@ -220,6 +226,7 @@
                             <input
                               type="text"
                               class="form-control"
+                              id="collage"
                               placeholder="collage Name"
                             />
                           </div>
@@ -227,6 +234,7 @@
                             <input
                               type="text"
                               class="form-control"
+                              id="university"
                               placeholder="University Name"
                             />
                           </div>
@@ -242,7 +250,7 @@
                           </div> -->
 
 													<div class="col-6 form-group">
-														<select name="langOpt[]" class="form-control select" multiple id="langOpt">
+														<select name="langOpt[]" class="form-control select" multiple id="knownTech">
 																<option selected disabled>Known Technology</option>
 																<option value="C++">C++</option>
 																<option value="C#">C#</option>
@@ -292,6 +300,7 @@
                             <input
                               type="text"
                               class="form-control"
+                              id="contactNo"
                               placeholder="Contact No"
                             />
                           </div>
@@ -299,6 +308,7 @@
                             <input
                               type="text"
                               class="form-control"
+                              id="secondaryEmail"
                               placeholder="Secondary Email"
                             />
                           </div>
@@ -306,6 +316,7 @@
                             <input
                               type="text"
                               class="form-control"
+                              id="houseNo"
                               placeholder="House NO/Name"
                             />
                           </div>
@@ -313,6 +324,7 @@
                             <input
                               type="text"
                               class="form-control"
+                              id="addressLine1"
                               placeholder="Address Line 1"
                             />
                           </div>
@@ -320,6 +332,7 @@
                             <input
                               type="text"
                               class="form-control"
+                              id="addressLine2"
                               placeholder="Address Line 2"
                             />
                           </div>
@@ -327,6 +340,7 @@
                             <input
                               type="text"
                               class="form-control"
+                              id="landmark"
                               placeholder="Landmark"
                             />
                           </div>
@@ -334,6 +348,7 @@
                             <input
                               type="text"
                               class="form-control"
+                              id="city"
                               placeholder="city"
                             />
                           </div>
@@ -341,6 +356,7 @@
                             <input
                               type="text"
                               class="form-control"
+                              id="pincode"
                               placeholder="pincode"
                             />
                           </div>
@@ -348,6 +364,7 @@
                             <input
                               type="text"
                               class="form-control"
+                              id="state"
                               placeholder="state"
                             />
                           </div>
@@ -355,6 +372,7 @@
                             <input
                               type="text"
                               class="form-control"
+                              id="country"
                               placeholder="Country"
                             />
                           </div>
@@ -391,6 +409,7 @@
                           <input
                             type="text"
                             class="form-control"
+                            id="preEmployer"
                             placeholder="previous Employer"
                           />
                         </div>
@@ -398,6 +417,7 @@
                           <input
                             type="text"
                             class="form-control"
+                            id="preEmployerAddress"
                             placeholder="previous Employer Address"
                           />
                         </div>
@@ -406,6 +426,7 @@
                             <input
                               class="form-control datetimepicker cal-icon-input"
                               type="text"
+                              id="startDate"
                               placeholder="Start Date"
                             />
                           </div>
@@ -415,6 +436,7 @@
                             <input
                               class="form-control datetimepicker cal-icon-input"
                               type="text"
+                              id="endDate"
                               placeholder="End Date"
                             />
                           </div>
@@ -426,8 +448,8 @@
 								<div class="row">
 									<div class="col-12">
 										<div class="submit-section text-center btn-add">
-											<button
-												class="btn btn-theme text-white ctm-border-radius button-1"
+											<button type="submit" 
+												class="btn btn-theme text-white ctm-border-radius "
 											>
 												Add Employee
 											</button>
@@ -462,6 +484,57 @@
     <script src="assets/plugins/theia-sticky-sidebar/theia-sticky-sidebar.js"></script>
 
     <script src="assets/js/script.js"></script>
+    <script>
+      $('#form-add-employee').submit((event) => {
+        event.preventDefault();
+        const payload = {
+          lastName: $('#lastName').val(),
+          firstName: $('#firstName').val(),
+          middleName: $('#middleName').val(),
+          email: $('#email').val(),
+          gender: $("input[type='radio'][name='gender']:checked").val(),
+          DOB: $('#dob').val(),
+          role: $('#role').val(),
+          joiningDate: $('#joiningDate').val(),
+          totalExp: $('#totalExp').val(),
+          
+          collage: $('#collage').val(),
+          highestQualification: $('#highestQualification').val(),
+          university: $('#university').val(),
+          knownTech: $('#knownTech').val(),
+
+          secondaryEmail: $('#secondaryEmail').val(),
+          contactNo: $('#contactNo').val(),
+          houseNo: $('#houseNo').val(),
+          addressLine1: $('#addressLine1').val(),
+          addressLine2: $('#addressLine2').val(),
+          landmark: $('#landmark').val(),
+          state: $('#state').val(),
+          pincode: $('#pincode').val(),
+          city: $('#city').val(),
+          country: $('#country').val(),
+
+          previousEmployer: $('#preEmployer').val(),
+          employerAddress: $('#preEmployerAddress').val(),
+          startDate: $('#startDate').val(),
+          endDate: $('#endDate').val(),
+        };
+        console.log(payload);
+
+        $.ajax({
+          type: 'POST',
+          url: '/employees',
+          contentType: 'application/x-www-form-urlencoded',
+          data: payload,
+          success: (data) => {
+            console.log(data);
+          },
+          error: (error) => {
+            console.log(error);
+          }
+        })
+      });
+    </script>
   </body>
 
   <!-- Mirrored from dleohr.dreamguystech.com/template-1/dleohr-vertical/add-employee.html by HTTrack Website Copier/3.x [XR&CO'2014], Mon, 21 Mar 2022 16:37:33 GMT -->

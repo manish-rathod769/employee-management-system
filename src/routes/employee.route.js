@@ -1,12 +1,13 @@
 import express from 'express';
-import employee from '../controllers/employee/employee.controller';
+import * as employeeController from '../controllers/employee/employee.controller';
+import { employeeValidate } from '../controllers/employee/employee.validator';
 
 const router = express.Router();
 
-router.get('/', employee.renderEmployeeView);
-router.get('/add-employee', employee.renderAddEmployeeView);
+router.get('/', employeeController.renderEmployeeView);
+router.get('/add-employee', employeeController.renderAddEmployeeView);
 
-router.post('/employees', employee.addEmployee);
+router.post('/employees', employeeValidate, employeeController.addEmployee);
 router.get('/employees', );
 router.get('/employees/:employeeId', );
 router.put('/employees/:employeeId', );
