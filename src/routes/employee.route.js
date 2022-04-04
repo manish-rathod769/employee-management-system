@@ -8,7 +8,7 @@ router.get('/', employeeController.renderEmployeeView);
 router.get('/add-employee', employeeController.renderAddEmployeeView);
 
 router.post('/employees', employeeValidator.employeeValidate, employeeController.addEmployee);
-router.get('/employees', );
+router.get('/employees', employeeController.getEmployee);
 router.get('/employees/:employeeId', );
 router.put('/employees/:employeeId', );
 router.delete('/employees/:employeeId', );

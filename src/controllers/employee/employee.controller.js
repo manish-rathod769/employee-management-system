@@ -85,7 +85,43 @@ export const addEmployee = async (req, res, next) => {
   }
 }
 
-export const renderEmployeeView = (req, res) => {
+export const getEmployee = async (req, res, next) => {
+  try{
+    const page = Number(req.query.page);
+    const limit = Number(req.query.limit);
+    const order = /DESC/i.test(req.query.order) ? 'DESC' : 'ASC';
+    const startIndex = (page-1) * limit;
+    
+    let result = {};
+    const totalEmployee = Employee.count();
+
+    if (totalEmployee > (page*limit)) {
+      result.next = true;
+    }
+    if (startIndex > 0) {
+      result.pre = true
+    }
+
+    result.employee = await Employee.findAll(
+      { 
+        include: [EmployeeContact, EmployeeAcademic, EmployeePreWork],
+        offset: startIndex,
+        limit: limit,
+        order: [
+          ['firstName', order]
+        ]
+      });
+
+    res.status(200);
+    successResponse(req, res, result, 200);
+  } catch (error) {
+    errorResponse(req, res, "something went wrong", 500, error);
+  }
+  
+}
+
+export const renderEmployeeView = async (req, res) => {
+  const countEmployee = await Employee.count();
   res.render('employees');
 }
 export const renderAddEmployeeView = (req, res) => {
