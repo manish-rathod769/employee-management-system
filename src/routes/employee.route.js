@@ -3,6 +3,9 @@ import employee from '../controllers/employee/employee.controller';
 
 const router = express.Router();
 
+router.get('/', employee.renderEmployeeView);
+router.get('/add-employee', employee.renderAddEmployeeView);
+
 router.post('/employees', employee.addEmployee);
 router.get('/employees', );
 router.get('/employees/:employeeId', );
