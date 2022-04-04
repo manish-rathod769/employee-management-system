@@ -38,3 +38,15 @@ export const getAllClientController = async (req, res) => {
     errorResponse(req, res, error.message, 500, error);
   }
 }
+
+export const clientUpdateDataController = async (req, res) => {
+  try {
+    const clientId = req.params.clientId;
+
+    const { name, city, state, country, organization, isArchive } = req.body;
+    const updatedClient = await Client.update({ name, city, state, country, organization, isArchive }, { returning: true, where: { id: clientId } });
+    successResponse(req, res, updatedClient[1], 200);
+  } catch (error) {
+    errorResponse(req, res, error.message, 500, error);
+  }
+}

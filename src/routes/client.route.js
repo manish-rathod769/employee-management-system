@@ -1,10 +1,11 @@
 import express from 'express';
-import { clientRegisterValidation, } from '../controllers/client/client.validator';
-import { clientRegisterController, getAllClientController, } from '../controllers/client/client.controller';
+import { clientRegisterValidation, clientUpdateDataValidation } from '../controllers/client/client.validator';
+import { clientRegisterController, getAllClientController, clientUpdateDataController, } from '../controllers/client/client.controller';
 
 const route = express.Router();
 
 route.get('/clients', getAllClientController);
 route.post('/clients', clientRegisterValidation, clientRegisterController);
+route.put('/clients/:clientId', clientUpdateDataValidation, clientUpdateDataController);
 
 module.exports = route;
