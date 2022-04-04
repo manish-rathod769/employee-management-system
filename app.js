@@ -3,8 +3,8 @@ import dotenv from 'dotenv';
 
 import bodyParser from 'body-parser';
 import cors from 'cors';
+import path from 'path';
 
-import publicRoutes from './src/routes/public';
 import employeeRoutes from './src/routes/employee.route';
 dotenv.config();
 require('./src/config/sequelize');
@@ -19,7 +19,9 @@ app.use(
 
 app.use(cors());
 app.use(bodyParser.json());
-app.use('/pub', publicRoutes);
+app.use('/assets', express.static(path.join(__dirname, 'public')));
+app.set('views', path.join(__dirname, 'src', 'views'));
+app.set('view engine', 'ejs');
 
 app.use('/', employeeRoutes);
 module.exports = app;

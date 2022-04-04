@@ -18,6 +18,22 @@ export const errorResponse = (
   success: false,
 });
 
+export const createPassword = (dob) => {
+  const date = new Date(dob);
+  return `${date.getDate()}${date.getMonth()}${date.getFullYear()}`;
+}
+
+export const getTimeBetweenDates = (startDate, endDate) => {
+  const sDate = new Date(startDate);
+  const eDate = new Date(endDate);
+  let year = eDate.getFullYear() - sDate.getFullYear();
+  let month = eDate.getMonth() - sDate.getMonth();
+  if(month < 0){
+    year -= 1;
+    month += 11;
+  }
+  return `${year} years, ${month+1} months`;
+}
 export const validateEmail = (email) => {
   const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
   return re.test(String(email).toLowerCase());

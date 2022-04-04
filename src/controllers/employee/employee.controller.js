@@ -1,39 +1,38 @@
-const crypto = require('crypto');
-const { v4: uuidv4 } = require('uuid');
-const { errorResponse, successResponse } = require('../../helpers');
-import Employee from '../../models/employee';
+import { createHash } from 'crypto';
+import { v4 as uuidv4 } from 'uuid';
+import { errorResponse, successResponse, createPassword, getTimeBetweenDates } from '../../helpers';
+import { Employee, EmployeeContact, EmployeeAcademic, EmployeePreWork } from '../../models';
 
-const addEmployee = async (req, res, next) => {
+export const addEmployee = async (req, res, next) => {
   try{
-    console.log(req.body);
+
   const {
     firstName,
     lastName,
     middleName,
     email,
-    password,
     gender,
     DOB,
     role,
     joiningDate,
     totalExp,
   } = req.body;
-  console.log(req.body);
-  // const employee = await Employee.findOne(
-  //   { 
-  //     where: { email } 
-  //   });
-  // if (employee) {
-  //   throw new Error('employee already exist eith same email id');
-  // }
 
-  const encryptedPassword = crypto
-                  .createHash('md5')
-                  .update(password)
-                  .digest('hex');
-  
-  const newEmployee = await Employee.create(
-    {
+  console.log();
+  const employee = await Employee.findOne(
+    { 
+      where: { email } 
+    });
+  if (employee) {
+    return errorResponse(req, res, `user with email ${email} already exists`, 409);
+  }
+
+  // password is auto generated for all employees using dob as ddmmyyyy
+    const encryptedPassword = createHash('md5')
+      .update(createPassword(req.body.DOB))
+      .digest('hex');
+
+    const payload = {
       id: uuidv4(),
       firstName,
       lastName,
@@ -41,14 +40,44 @@ const addEmployee = async (req, res, next) => {
       email,
       password: encryptedPassword,
       gender,
-      DOB,
+      DOB: new Date(DOB),
       role,
-      joiningDate,
+      joiningDate: new Date(joiningDate),
       totalExp,
-    }  
-  );
-  
-  console.log(newEmployee);
+    };
+    const contactDetailsPayload = {
+      employeeId: payload.id,
+      contactNo: req.body.contactNo,
+      secondaryEmail: req.body.secondaryEmail || null,
+      houseNo: req.body.houseNo,
+      addressLine1: req.body.addressLine1,
+      addressLine2: req.body.addressLine2,
+      landmark: req.body.landmark,
+      city: req.body.city,
+      state: req.body.state,
+      pincode: req.body.pincode,
+      country: req.body.country,
+    };
+    const preWorkPayload = {
+      employeeId: payload.id,
+      previousEmployer: req.body.previousEmployer,
+      employerAddress: req.body.employerAddress,
+      workingTime: `${getTimeBetweenDates(req.body.startDate, req.body.endDate)}`,
+    };
+    const academicPayload = {
+      employeeId: payload.id,
+      highestQualification: req.body.highestQualification,
+      collage: req.body.collage,
+      university: req.body.university,
+      knownTech: req.body.knownTech,
+    };
+
+  const newEmployee = {};
+  newEmployee.personal = await Employee.create(payload);  
+  newEmployee.contact = await EmployeeContact.create(contactDetailsPayload);
+  newEmployee.academic = await EmployeeAcademic.create(academicPayload);
+  newEmployee.preWork = await EmployeePreWork.create(preWorkPayload);
+
   successResponse(req, res, newEmployee);
   } catch (error) {
     console.log(error);
@@ -56,6 +85,9 @@ const addEmployee = async (req, res, next) => {
   }
 }
 
-module.exports = {
-  addEmployee,
+export const renderEmployeeView = (req, res) => {
+  res.render('employees');
+}
+export const renderAddEmployeeView = (req, res) => {
+  res.render('add-employee');
 }
