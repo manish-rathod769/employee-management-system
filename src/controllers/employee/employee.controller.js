@@ -1,11 +1,11 @@
-const crypto = require('crypto');
-const { v4: uuidv4 } = require('uuid');
-const { errorResponse, successResponse, createPassword } = require('../../helpers');
-const {Employee} =  require('../../models');
+import { createHash } from 'crypto';
+import { v4 as uuidv4 } from 'uuid';
+import { errorResponse, successResponse, createPassword, getTimeBetweenDates } from '../../helpers';
+import { Employee, EmployeeContact, EmployeeAcademic, EmployeePreWork } from '../../models';
 
-const addEmployee = async (req, res, next) => {
+export const addEmployee = async (req, res, next) => {
   try{
-    console.log(req.body);
+
   const {
     firstName,
     lastName,
@@ -17,19 +17,21 @@ const addEmployee = async (req, res, next) => {
     joiningDate,
     totalExp,
   } = req.body;
-  //console.log(req.body);
+
+  console.log();
   const employee = await Employee.findOne(
     { 
       where: { email } 
     });
   if (employee) {
-    throw new Error('employee already exist with same email id');
+    return errorResponse(req, res, `user with email ${email} already exists`, 409);
   }
-  //console.log(employee);
-    const encryptedPassword = crypto
-      .createHash('md5')
+
+  // password is auto generated for all employees using dob as ddmmyyyy
+    const encryptedPassword = createHash('md5')
       .update(createPassword(req.body.DOB))
       .digest('hex');
+
     const payload = {
       id: uuidv4(),
       firstName,
@@ -43,9 +45,6 @@ const addEmployee = async (req, res, next) => {
       joiningDate: new Date(joiningDate),
       totalExp,
     };
-    //console.log(payload);
-  
-  //const newEmployee = await Employee.create(payload);
     const contactDetailsPayload = {
       employeeId: payload.id,
       contactNo: req.body.contactNo,
@@ -63,7 +62,7 @@ const addEmployee = async (req, res, next) => {
       employeeId: payload.id,
       previousEmployer: req.body.previousEmployer,
       employerAddress: req.body.employerAddress,
-      workingTime: req.body.workingTime,
+      workingTime: `${getTimeBetweenDates(req.body.startDate, req.body.endDate)}`,
     };
     const academicPayload = {
       employeeId: payload.id,
@@ -71,27 +70,24 @@ const addEmployee = async (req, res, next) => {
       collage: req.body.collage,
       university: req.body.university,
       knownTech: req.body.knownTech,
-    }
-  console.log(payload);
-    console.log(contactDetailsPayload);
-    console.log(academicPayload);
-    console.log(preWorkPayload);
-  successResponse(req, res, payload);
+    };
+
+  const newEmployee = {};
+  newEmployee.personal = await Employee.create(payload);  
+  newEmployee.contact = await EmployeeContact.create(contactDetailsPayload);
+  newEmployee.academic = await EmployeeAcademic.create(academicPayload);
+  newEmployee.preWork = await EmployeePreWork.create(preWorkPayload);
+
+  successResponse(req, res, newEmployee);
   } catch (error) {
     console.log(error);
     errorResponse(req, res, "something went wrong", 400, { err: error });
   }
 }
 
-const renderEmployeeView = (req, res) => {
+export const renderEmployeeView = (req, res) => {
   res.render('employees');
 }
-const renderAddEmployeeView = (req, res) => {
+export const renderAddEmployeeView = (req, res) => {
   res.render('add-employee');
-}
-
-module.exports = {
-  addEmployee,
-  renderEmployeeView,
-  renderAddEmployeeView,
 }
