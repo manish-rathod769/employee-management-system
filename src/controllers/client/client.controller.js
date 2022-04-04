@@ -50,3 +50,19 @@ export const clientUpdateDataController = async (req, res) => {
     errorResponse(req, res, error.message, 500, error);
   }
 }
+
+export const clientSoftDeleteController = async (req, res) => {
+  try {
+    const clientId = req.params.clientId;
+    const matchedClient = await Client.findOne({ where: { id: clientId } });
+    if (!matchedClient) {
+      errorResponse(req, res, 'Client does not exist !!!', 500, { error: `Client does not exist with id ${clientId} !!!` });
+      return;
+    }
+
+    const softDeletedCLient = await Client.update({ isArchive: true }, { returning: true, where: { id: clientId } });
+    successResponse(req, res, softDeletedCLient[1], 200);
+  } catch (error) {
+    errorResponse(req, res, error.message, 500, error);
+  }
+}
