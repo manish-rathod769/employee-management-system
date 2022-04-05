@@ -104,20 +104,35 @@ export const getEmployee = async (req, res, next) => {
 
     result.employee = await Employee.findAll(
       { 
-        include: [EmployeeContact, EmployeeAcademic, EmployeePreWork],
+        //include: [EmployeeContact, EmployeeAcademic, EmployeePreWork],
         offset: startIndex,
         limit: limit,
         order: [
           ['firstName', order]
         ]
       });
-    console.log(totalEmployee);
-    console.log(result);
+    // console.log(totalEmployee);
+    // console.log(result);
     res.status(200);
     successResponse(req, res, result, 200);
   } catch (error) {
     errorResponse(req, res, "something went wrong", 500, error);
   } 
+}
+
+export const getEmployeeOne = async (req, res, next) => {
+  try {
+    const employee = await Employee.findOne(
+      {
+        where: { id: req.params.employeeId },
+        include: [EmployeeContact, EmployeeAcademic, EmployeePreWork],
+      });
+    // console.log(employee);
+    res.status(200);
+    successResponse(req, res, employee, 200);
+  } catch (error) {
+    errorResponse(req, res, "something went wrong", 500, error);
+  }
 }
 
 export const updateEmployee = async (req, res, next) => {
@@ -146,8 +161,14 @@ export const searchEmployee = async (req, res, next) => {
 
 export const renderEmployeeView = async (req, res) => {
   const countEmployee = await Employee.count();
+  res.status(200);
   res.render('employees');
 }
 export const renderAddEmployeeView = (req, res) => {
+  res.status(200);
   res.render('add-employee');
+}
+export const renderEmployeeProfile = (req, res) => {
+  res.status(200);
+  res.render('profile');
 }
