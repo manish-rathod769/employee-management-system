@@ -1,5 +1,6 @@
 import express from 'express';
 import dotenv from 'dotenv';
+import path from 'path';
 
 import bodyParser from 'body-parser';
 import cors from 'cors';
@@ -9,6 +10,7 @@ import session from 'express-session';
 
 import employeeRoutes from './src/routes/employee.route';
 import clientRoutes from './src/routes/client.route';
+import adminRoutes from './src/routes/admin.routes';
 
 dotenv.config();
 require('./src/config/sequelize');
