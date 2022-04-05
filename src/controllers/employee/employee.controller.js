@@ -93,7 +93,7 @@ export const getEmployee = async (req, res, next) => {
     const startIndex = (page-1) * limit;
     
     let result = {};
-    const totalEmployee = Employee.count();
+    const totalEmployee = await Employee.count();
 
     if (totalEmployee > (page*limit)) {
       result.next = true;
@@ -111,13 +111,37 @@ export const getEmployee = async (req, res, next) => {
           ['firstName', order]
         ]
       });
-
+    console.log(totalEmployee);
+    console.log(result);
     res.status(200);
     successResponse(req, res, result, 200);
   } catch (error) {
     errorResponse(req, res, "something went wrong", 500, error);
+  } 
+}
+
+export const updateEmployee = async (req, res, next) => {
+  try{
+
+  } catch (err) {
+    errorResponse(req, res, "something went wrong", 500, {err});
   }
-  
+}
+
+export const deleteEmployee = async (req, res, next) => {
+  try{
+
+  } catch (err) {
+    errorResponse(req, res, "something went wrong!", 500, {err});
+  }
+}
+
+export const searchEmployee = async (req, res, next) => {
+  try{
+    
+  } catch (error) {
+    errorResponse(req, res, "something went wrong", 500, error.message);
+  }
 }
 
 export const renderEmployeeView = async (req, res) => {

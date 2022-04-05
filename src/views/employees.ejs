@@ -13,6 +13,8 @@
 
     <link rel="stylesheet" href="assets/css/font-awesome.min.css" />
 
+    <link rel="stylesheet" href="assets/plugins/select2/select2.min.css" />
+
     <link rel="stylesheet" href="assets/css/style.css" />
     <title>Employees Page</title>
 
@@ -23,15 +25,6 @@
   </head>
   <body>
     <div class="inner-wrapper">
-      <div id="loader-wrapper">
-        <div class="loader">
-          <div class="dot"></div>
-          <div class="dot"></div>
-          <div class="dot"></div>
-          <div class="dot"></div>
-          <div class="dot"></div>
-        </div>
-      </div>
       <!--  header partials  -->
       <%- include('partials/header'); %>
 
@@ -42,9 +35,11 @@
             <%- include('partials/aside'); %>
 
             <div class="col-xl-9 col-lg-8 col-md-12">
-              <div
-                class="quicklink-sidebar-menu ctm-border-radius shadow-sm grow bg-white card"
-              >
+              <div id="addEmployeeFormContainer" class="d-none">
+                  <%- include('add-employee'); %>
+              </div>
+              <div id="employeeDisplayContainer" class="">
+              <div class="quicklink-sidebar-menu ctm-border-radius shadow-sm grow bg-white card">
                 <div class="card-body">
                   <ul class="list-group list-group-horizontal-lg">
                     <li class="list-group-item text-center active button-5">
@@ -79,7 +74,8 @@
                     </li>
                     <li class="nav-item pl-3">
                       <a
-                        href="javascript:window.location='/add-employee'"
+                        href="#"
+                        id="addEmployeeBtn"
                         class="btn btn-theme button-1 text-white ctm-border-radius p-2 add-person ctm-btn-padding"
                         ><i class="fa fa-plus"></i> Add Person</a
                       >
@@ -87,12 +83,43 @@
                   </ul>
                 </div>
               </div>
+              <div class="card shadow-sm grow ctm-border-radius">
+                <div class="card-body align-center">
+                  <!-- <h4 class="card-title float-left mb-0 mt-2">7 People</h4> -->
+                  <ul class="nav nav-tabs d-flex justify-content-between border-0 tab-list-emp">
+                    <li class="nav-item">
+                      <a href=""
+                        id="previousEmployeeRecord"
+                        class="btn btn-theme button-1 text-white ctm-border-radius p-2 ctm-btn-padding">
+                        <i class="fa fa-angle-double-left"></i> Prev </a>
+                    </li>
+                    <li class="nav-item pl-3">
+                      <h4 class="card-title float-left mb-0 mt-2" id="employeeRecordPageCount" data-page="1">1</h4>
+                    </li>
+                    <li class="nav-item">
+                      <a href=""
+                        id="nextEmployeeRecord"
+                        class="btn btn-theme button-1 text-white ctm-border-radius p-2 ctm-btn-padding">
+                        Next <i class="fa fa-angle-double-right"></i> </a>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+              <div class=" grow ctm-border-radius"> 
+                <div class="input-group mb-3 col-4 justify-content-end d-flex d-block">
+                  <h4 class="card-title float-left mb-0 mt-2"> No of record: </h4>
+                  <input type="number" class="form-control" placeholder="No of record" pattern="[0-9]+" id="employeeRecordLimit" value="9">
+                  <div class="input-group-append">
+                    <button class="btn btn-theme button-1 text-white ctm-border-radius p-2 ctm-btn-padding" id="employeeRecordLimitBtn" type="button">Button</button>
+                  </div>
+                </div>
+              </div>
               <div class="ctm-border-radius shadow-sm grow card">
                 <div class="card-body">
+                  
+                  <div class="row people-grid-row" id="displayEmployeeDetails">
 
-                  <div class="row people-grid-row">
-
-                    <div class="col-md-6 col-lg-6 col-xl-4">
+                    <div class="col-md-6 col-lg-6 col-xl-4" >
                       <div class="card widget-profile">
                         <div class="card-body">
                           <div class="pro-widget-content text-center">
@@ -127,281 +154,9 @@
                       </div>
                     </div>
 
-                    <div class="col-md-6 col-lg-6 col-xl-4">
-                      <div class="card widget-profile">
-                        <div class="card-body">
-                          <div class="pro-widget-content text-center">
-                            <div class="profile-info-widget">
-                              <a href="employment.html" class="booking-doc-img">
-                                <img
-                                  src="assets/img/profiles/img-5.jpg"
-                                  alt="User Image"
-                                />
-                              </a>
-                              <div class="profile-det-info">
-                                <h4>
-                                  <a href="employment.html" class="text-primary"
-                                    >Danny Ward</a
-                                  >
-                                </h4>
-                                <div>
-                                  <p class="mb-0"><b>Designing Team Lead</b></p>
-                                  <p class="mb-0 ctm-text-sm">
-                                    <a
-                                      href="https://dleohr.dreamguystech.com/cdn-cgi/l/email-protection"
-                                      class="__cf_email__"
-                                      data-cfemail="dfbbbeb1b1a6a8beadbb9fbaa7beb2afb3baf1bcb0b2"
-                                      >[email&#160;protected]</a
-                                    >
-                                  </p>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="col-md-6 col-lg-6 col-xl-4">
-                      <div class="card widget-profile">
-                        <div class="card-body">
-                          <div class="pro-widget-content text-center">
-                            <div class="profile-info-widget">
-                              <a href="employment.html" class="booking-doc-img">
-                                <img
-                                  src="assets/img/profiles/img-4.jpg"
-                                  alt="User Image"
-                                />
-                              </a>
-                              <div class="profile-det-info">
-                                <h4>
-                                  <a href="employment.html" class="text-primary"
-                                    >Linda Craver</a
-                                  >
-                                </h4>
-                                <div>
-                                  <p class="mb-0"><b>IOS Team Lead</b></p>
-                                  <p class="mb-0 ctm-text-sm">
-                                    <a
-                                      href="https://dleohr.dreamguystech.com/cdn-cgi/l/email-protection"
-                                      class="__cf_email__"
-                                      data-cfemail="c6aaafa8a2a7a5b4a7b0a3b486a3bea7abb6aaa3e8a5a9ab"
-                                      >[email&#160;protected]</a
-                                    >
-                                  </p>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="col-md-6 col-lg-6 col-xl-4">
-                      <div class="card widget-profile">
-                        <div class="card-body">
-                          <div class="pro-widget-content text-center">
-                            <div class="profile-info-widget">
-                              <a href="employment.html" class="booking-doc-img">
-                                <img
-                                  src="assets/img/profiles/img-3.jpg"
-                                  alt="User Image"
-                                />
-                              </a>
-                              <div class="profile-det-info">
-                                <h4>
-                                  <a href="employment.html" class="text-primary"
-                                    >Jenni Sims</a
-                                  >
-                                </h4>
-                                <div>
-                                  <p class="mb-0"><b>Android Team Lead</b></p>
-                                  <p class="mb-0 ctm-text-sm">
-                                    <a
-                                      href="https://dleohr.dreamguystech.com/cdn-cgi/l/email-protection"
-                                      class="__cf_email__"
-                                      data-cfemail="d9b3bcb7b7b0aab0b4aa99bca1b8b4a9b5bcf7bab6b4"
-                                      >[email&#160;protected]</a
-                                    >
-                                  </p>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="col-md-6 col-lg-6 col-xl-4">
-                      <div class="card widget-profile">
-                        <div class="card-body">
-                          <div class="pro-widget-content text-center">
-                            <div class="profile-info-widget">
-                              <a href="employment.html" class="booking-doc-img">
-                                <img
-                                  src="assets/img/profiles/img-2.jpg"
-                                  alt="User Image"
-                                />
-                              </a>
-                              <div class="profile-det-info">
-                                <h4>
-                                  <a href="employment.html" class="text-primary"
-                                    >John Gibbs</a
-                                  >
-                                </h4>
-                                <div>
-                                  <p class="mb-0"><b> Business Team Lead</b></p>
-                                  <p class="mb-0 ctm-text-sm">
-                                    <a
-                                      href="https://dleohr.dreamguystech.com/cdn-cgi/l/email-protection"
-                                      class="__cf_email__"
-                                      data-cfemail="dbb1b4b3b5bfa9a2a8bfbab7be9bbea3bab6abb7bef5b8b4b6"
-                                      >[email&#160;protected]</a
-                                    >
-                                  </p>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="col-md-6 col-lg-6 col-xl-4">
-                      <div class="card widget-profile">
-                        <div class="card-body">
-                          <div class="pro-widget-content text-center">
-                            <div class="profile-info-widget">
-                              <a href="employment.html" class="booking-doc-img">
-                                <img
-                                  src="assets/img/profiles/img-8.jpg"
-                                  alt="User Image"
-                                />
-                              </a>
-                              <div class="profile-det-info">
-                                <h4>
-                                  <a href="employment.html" class="text-primary"
-                                    >Stacey Linville</a
-                                  >
-                                </h4>
-                                <div>
-                                  <p class="mb-0"><b> Testing Team Lead</b></p>
-                                  <p class="mb-0 ctm-text-sm">
-                                    <a
-                                      href="https://dleohr.dreamguystech.com/cdn-cgi/l/email-protection"
-                                      class="__cf_email__"
-                                      data-cfemail="2b585f4a484e524742455d4247474e6b4e534a465b474e05484446"
-                                      >[email&#160;protected]</a
-                                    >
-                                  </p>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="col-md-6 col-lg-6 col-xl-4">
-                      <div class="card widget-profile last-card-row">
-                        <div class="card-body">
-                          <div class="pro-widget-content text-center">
-                            <div class="profile-info-widget">
-                              <a href="employment.html" class="booking-doc-img">
-                                <img
-                                  src="assets/img/profiles/img-10.jpg"
-                                  alt="User Image"
-                                />
-                              </a>
-                              <div class="profile-det-info">
-                                <h4>
-                                  <a href="employment.html" class="text-primary"
-                                    >Richard Wilson</a
-                                  >
-                                </h4>
-                                <div>
-                                  <p class="mb-0"><b> Operation Manager</b></p>
-                                  <p class="mb-0 ctm-text-sm">
-                                    <a
-                                      href="https://dleohr.dreamguystech.com/cdn-cgi/l/email-protection"
-                                      class="__cf_email__"
-                                      data-cfemail="81f3e8e2e9e0f3e5f6e8edf2eeefc1e4f9e0ecf1ede4afe2eeec"
-                                      >[email&#160;protected]</a
-                                    >
-                                  </p>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="col-md-6 col-lg-6 col-xl-4">
-                      <div class="card widget-profile last-card-row">
-                        <div class="card-body">
-                          <div class="pro-widget-content text-center">
-                            <div class="profile-info-widget">
-                              <a href="employment.html" class="booking-doc-img">
-                                <img
-                                  src="assets/img/profiles/img-15.jpg"
-                                  alt="User Image"
-                                />
-                              </a>
-                              <div class="profile-det-info">
-                                <h4>
-                                  <a href="employment.html" class="text-primary"
-                                    >Daniel Griffing</a
-                                  >
-                                </h4>
-                                <div>
-                                  <p class="mb-0"><b> Designing Team</b></p>
-                                  <p class="mb-0 ctm-text-sm">
-                                    <a
-                                      href="https://dleohr.dreamguystech.com/cdn-cgi/l/email-protection"
-                                      class="__cf_email__"
-                                      data-cfemail="e387828d8a868f84918a85858a8d84a3869b828e938f86cd808c8e"
-                                      >[email&#160;protected]</a
-                                    >
-                                  </p>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="col-md-6 col-lg-6 col-xl-4">
-                      <div class="card widget-profile last-card-row1">
-                        <div class="card-body">
-                          <div class="pro-widget-content text-center">
-                            <div class="profile-info-widget">
-                              <a href="employment.html" class="booking-doc-img">
-                                <img
-                                  src="assets/img/profiles/img-14.jpg"
-                                  alt="User Image"
-                                />
-                              </a>
-                              <div class="profile-det-info">
-                                <h4>
-                                  <a href="employment.html" class="text-primary"
-                                    >Michelle Fairfax</a
-                                  >
-                                </h4>
-                                <div>
-                                  <p class="mb-0"><b>PHP Team</b></p>
-                                  <p class="mb-0 ctm-text-sm">
-                                    <a
-                                      href="https://dleohr.dreamguystech.com/cdn-cgi/l/email-protection"
-                                      class="__cf_email__"
-                                      data-cfemail="b3dedad0dbd6dfdfd6d5d2dac1d5d2cbf3d6cbd2dec3dfd69dd0dcde"
-                                      >[email&#160;protected]</a
-                                    >
-                                  </p>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
 
                   
+                  </div>
                 </div>
               </div>
             </div>
@@ -412,10 +167,6 @@
 
     <div class="sidebar-overlay" id="sidebar_overlay"></div>
 
-    <script
-      data-cfasync="false"
-      src="../../cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"
-    ></script>
     <script src="assets/js/jquery-3.2.1.min.js"></script>
 
     <script src="assets/js/popper.min.js"></script>
@@ -424,7 +175,108 @@
     <script src="assets/plugins/theia-sticky-sidebar/ResizeSensor.js"></script>
     <script src="assets/plugins/theia-sticky-sidebar/theia-sticky-sidebar.js"></script>
 
+    <script src="assets/plugins/select2/moment.min.js"></script>
+    <script src="assets/js/bootstrap-datetimepicker.min.js"></script>
+
+    <script src="assets/plugins/select2/select2.min.js"></script>
+
+    <script src="assets/plugins/bootstrap-tagsinput/bootstrap-tagsinput.min.js"></script>
+    
     <script src="assets/js/script.js"></script>
+    <script src="assets/js/add-employee.js"></script>
+
+    <script>
+      // change view between add employee form and display employee 
+      $('#addEmployeeBtn').click((event) => {
+        event.preventDefault();
+        $('#addEmployeeFormContainer').removeClass('d-none');
+        $('#employeeDisplayContainer').addClass('d-none');
+      });
+
+      $(document).ready(() => {
+        
+        $('#previousEmployeeRecord').click((event) => {
+          event.preventDefault();
+          const page = $('#employeeRecordPageCount').data('page') - 1;
+          $('#employeeRecordPageCount').data('page', page);
+          $('#employeeRecordPageCount').text(page);
+          displayEmployee();
+        });
+
+        $('#nextEmployeeRecord').click((event) => {
+          event.preventDefault();
+          const page = $('#employeeRecordPageCount').data('page') + 1;
+          $('#employeeRecordPageCount').data('page', page);
+          $('#employeeRecordPageCount').text(page);
+          //console.log(page)
+          displayEmployee();
+        });
+
+        $('#employeeRecordLimit,#employeeRecordLimitBtn').click((event) => {
+          displayEmployee();
+        });
+
+        const displayEmployee =  () => {
+          $('#displayEmployeeDetails').html("");
+          const page = $('#employeeRecordPageCount').data('page');
+          const limit = $('#employeeRecordLimit').val();
+          //console.log('limit', limit);
+          $.ajax({
+            type: 'GET',
+            url: `/employees?page=${page}&limit=${limit}`,
+            success: (result) => {
+              //console.log(result.data);
+              $('#previousEmployeeRecord').removeClass('disabled');
+              $('#nextEmployeeRecord').removeClass('disabled');
+              if(!result.data.pre){
+                $('#previousEmployeeRecord').addClass('disabled');
+              }
+              if(!result.data.next){
+                $('#nextEmployeeRecord').addClass('disabled');
+              }
+              result.data.employee.forEach(element => {
+                //console.log(element);
+                $('#displayEmployeeDetails').append(
+                      `<div class="col-md-6 col-lg-6 col-xl-4">
+                        <div class="card widget-profile">
+                          <div class="card-body">
+                            <div class="pro-widget-content text-center">
+                              <div class="profile-info-widget">
+                                <a href="employment.html" class="booking-doc-img">
+                                  <img
+                                    src="assets/img/profiles/img-6.jpg"
+                                    alt="User Image"
+                                  />
+                                </a>
+                                <div class="profile-det-info">
+                                  <h4>
+                                    <a href="employment.html" class="text-primary"
+                                      >${element.firstName} ${element.lastName}</a
+                                    >
+                                  </h4>
+                                  <div>
+                                    <p class="mb-0"><b>PHP Team Lead</b></p>
+                                    <p class="mb-0 ctm-text-sm">
+                                      ${element.email}
+                                    </p>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>`
+                  );
+              });
+            },
+            error: (err) => {
+
+            }
+          });
+        }
+        displayEmployee();
+      });
+    </script>
   </body>
 
   <!-- Mirrored from dleohr.dreamguystech.com/template-1/dleohr-vertical/employees.html by HTTrack Website Copier/3.x [XR&CO'2014], Mon, 21 Mar 2022 16:37:11 GMT -->
