@@ -34,11 +34,15 @@ let clientDetails = clientId => {
 }
 
 let fetchClientData = (index) => {
+  const recordCount = $("#select-record-count").val();
   $.ajax({
-    url: `/admin/client?page=${index}`,
-    method: 'GET'
-  }).done( resData => {
-    $("#clients-data").html("");
+    url: `/admin/client?page=${index}&count=${recordCount}`,
+    method: 'GET',
+    error: (resData) => {
+      alert(resData.responseJSON.errorMessage);
+    },
+    success: (resData) => {
+      $("#clients-data").html("");
     if(resData.success){
 
       const paginationDetails = resData.data.pop();
@@ -84,7 +88,13 @@ let fetchClientData = (index) => {
     }else{
       alert(resData.errorMessage);
     }
+    }
   });
+}
+
+let showThisMuchRecord = () => {
+  const index = $("#current").attr("data-index");
+  fetchClientData(index);
 }
 
 let hideShowField = (fieldsToBeHide, fieldsToBeShown) => {
@@ -257,4 +267,4 @@ $("#client-register-form").on("submit", (event) => {
   });
 }); 
 
-// fetchClientData(1);
+fetchClientData(1);
