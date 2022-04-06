@@ -37,9 +37,29 @@
             </div>
             <div class="ctm-border-radius shadow-sm grow card" id="clients-data-body">
               <div class="card-body">
-                <div class="row d-flex justify-content-end">
+                <div class="row">
                   <div class="col-md-4 form-group">
-                    <select class="form-control select" id="select-record-count" onchange="showThisMuchRecord(this.value)">
+                    <p class="pl-1 error">Sorting By:</p>
+                    <select class="form-control select" id="sort-by" onchange="sortByField()">
+                      <option value="name">Name</option>
+                      <option value="email">Email</option>
+                      <option value="slackId">SlackId</option>
+                      <option value="city">City</option>
+                      <option value="state">State</option>
+                      <option value="country">Country</option>
+                      <option value="organization">Organization</option>
+                    </select>
+                  </div>
+                  <div class="col-md-4 form-group">
+                    <p class="pl-1 error">Sorting Order:</p>
+                    <select class="form-control select" id="sort-order" onchange="sortByField()">
+                      <option value="ASC" selected>Ascending</option>
+                      <option value="DESC">Descending</option>
+                    </select>
+                  </div>
+                  <div class="col-md-4 form-group">
+                    <p class="pl-1 error">Number of records per page:</p>
+                    <select class="form-control select" id="select-record-count" onchange="showThisMuchRecord()">
                       <option value="6">6</option>
                       <option value="12" selected>12</option>
                       <option value="24">24</option>
