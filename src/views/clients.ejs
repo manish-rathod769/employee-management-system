@@ -38,7 +38,7 @@
             <div class="ctm-border-radius shadow-sm grow card" id="clients-data-body">
               <div class="card-body">
                 <div class="row">
-                  <div class="col-md-4 form-group">
+                  <div class="col-md-2 form-group">
                     <p class="pl-1 error">Sorting By:</p>
                     <select class="form-control select" id="sort-by" onchange="sortByField()">
                       <option value="name">Name</option>
@@ -50,12 +50,16 @@
                       <option value="organization">Organization</option>
                     </select>
                   </div>
-                  <div class="col-md-4 form-group">
+                  <div class="col-md-2 form-group">
                     <p class="pl-1 error">Sorting Order:</p>
                     <select class="form-control select" id="sort-order" onchange="sortByField()">
                       <option value="ASC" selected>Ascending</option>
                       <option value="DESC">Descending</option>
                     </select>
+                  </div>
+                  <div class="col-md-4 form-group form-outline">
+                    <p class="pl-1 error">Search:</p>
+                    <input type="search" id="search-by" class="form-control" aria-label="Search" />
                   </div>
                   <div class="col-md-4 form-group">
                     <p class="pl-1 error">Number of records per page:</p>
