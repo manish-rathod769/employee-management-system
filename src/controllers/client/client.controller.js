@@ -31,14 +31,16 @@ export const clientRegisterController = async (req, res) => {
 
 export const getAllClientController = async (req, res) => {
   try {
-    const page = Number(req.query.page);
-    const count = Number(req.query.count);
-    const { sortBy,sortOrder } = req.query;
-
-    const allClients = await Client.findAll({ where: {isArchive : false}, order: [[`${sortBy}`, `${sortOrder}`]], offset: (page-1)*count, limit: count });
+    const page = Number(req.query.page) || 1;
+    const count = Number(req.query.count) || 6;
+    const sortBy= req.query.sortBy || 'name';
+    const sortOrder = req.query.sortOrder || 'ASC';
+    const searchWord = req.query.searchWord || "";
+    
+    const allClients = await Client.findAll({ where: {isArchive : false, [Op.or]: [{name: {[Op.like]: `%${searchWord}%`}}, {email: {[Op.like]: `%${searchWord}%`}}, {slackId: {[Op.like]: `%${searchWord}%`}}, {city: {[Op.like]: `%${searchWord}%`}}, {state: {[Op.like]: `%${searchWord}%`}}, {country: {[Op.like]: `%${searchWord}%`}}, {organization: {[Op.like]: `%${searchWord}%`}}]}, attributes: ['id', 'name', 'email', 'slackId', 'organization'] , order: [[`${sortBy}`, `${sortOrder}`]], offset: (page-1)*count, limit: count });
     // if (!allClients.length) throw new Error('Employee data does not exist !!!');
-    const isDataBefore = await Client.findAll({ where: {isArchive: false }, order: [[`${sortBy}`, `${sortOrder}`]], limit: (page-1)*count });
-    const isDataAfter = await Client.findAll({ where: {isArchive: false}, order: [[`${sortBy}`, `${sortOrder}`]], offset: page*count });
+    const isDataBefore = await Client.findAll({ where: {isArchive : false, [Op.or]: [{name: {[Op.like]: `%${searchWord}%`}}, {email: {[Op.like]: `%${searchWord}%`}}, {slackId: {[Op.like]: `%${searchWord}%`}}, {city: {[Op.like]: `%${searchWord}%`}}, {state: {[Op.like]: `%${searchWord}%`}}, {country: {[Op.like]: `%${searchWord}%`}}, {organization: {[Op.like]: `%${searchWord}%`}}]}, order: [[`${sortBy}`, `${sortOrder}`]], limit: (page-1)*count });
+    const isDataAfter = await Client.findAll({ where: {isArchive : false, [Op.or]: [{name: {[Op.like]: `%${searchWord}%`}}, {email: {[Op.like]: `%${searchWord}%`}}, {slackId: {[Op.like]: `%${searchWord}%`}}, {city: {[Op.like]: `%${searchWord}%`}}, {state: {[Op.like]: `%${searchWord}%`}}, {country: {[Op.like]: `%${searchWord}%`}}, {organization: {[Op.like]: `%${searchWord}%`}}]}, order: [[`${sortBy}`, `${sortOrder}`]], offset: page*count });
     
     const paginationDetails = { before: isDataBefore.length , after: isDataAfter.length};
     allClients.push(paginationDetails);

@@ -37,11 +37,14 @@ let fetchClientData = (index) => {
   const recordCount = $("#select-record-count").val();
   const sortBy = $("#sort-by").val();
   const sortOrder = $("#sort-order").val();
+  const searchWord = $("#search-by").val();
+
   $.ajax({
-    url: `/admin/client?page=${index}&count=${recordCount}&sortBy=${sortBy}&sortOrder=${sortOrder}`,
+    url: `/admin/client?page=${index}&count=${recordCount}&sortBy=${sortBy}&sortOrder=${sortOrder}&searchWord=${searchWord}`,
     method: 'GET',
     error: (resData) => {
       alert(resData.responseJSON.errorMessage);
+      $("#search-by").val("");
     },
     success: (resData) => {
       $("#clients-data").html("");
@@ -251,7 +254,6 @@ if(("#client-edit-form").length){
 }
 
 $("#client-register-form").on("submit", (event) => {
-  if(form.valid() == false) return;
   event.preventDefault();
   const clientData = $("#client-register-form").serializeArray();
   const clientDataObj = {};
@@ -274,4 +276,10 @@ $("#client-register-form").on("submit", (event) => {
   });
 }); 
 
+$("#search-by").on('input paste', () => {
+  const index = $("#current").attr("data-index");
+  fetchClientData(index);
+});
+
+hideShowField(["#all-client", "#clients-add-div", "#clients-view-div"], ["#add-client", "#pagination", "#clients-data-body"]);
 fetchClientData(1);
