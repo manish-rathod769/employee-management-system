@@ -35,8 +35,10 @@ let clientDetails = clientId => {
 
 let fetchClientData = (index) => {
   const recordCount = $("#select-record-count").val();
+  const sortBy = $("#sort-by").val();
+  const sortOrder = $("#sort-order").val();
   $.ajax({
-    url: `/admin/client?page=${index}&count=${recordCount}`,
+    url: `/admin/client?page=${index}&count=${recordCount}&sortBy=${sortBy}&sortOrder=${sortOrder}`,
     method: 'GET',
     error: (resData) => {
       alert(resData.responseJSON.errorMessage);
@@ -93,6 +95,11 @@ let fetchClientData = (index) => {
 }
 
 let showThisMuchRecord = () => {
+  const index = $("#current").attr("data-index");
+  fetchClientData(index);
+}
+
+let sortByField = () => {
   const index = $("#current").attr("data-index");
   fetchClientData(index);
 }
