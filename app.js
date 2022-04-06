@@ -12,6 +12,8 @@ import clientRoutes from './src/routes/client.route';
 import projectRoutes from './src/routes/project.routes';
 import attendanceRoutes from './src/routes/attendance.route';
 import { notFound } from './src/helpers/middleware.notFound';
+import routes from './src/routes/leaveRouter';
+
 
 import leaveRoutes from './src/routes/leave.route';
 
@@ -38,6 +40,10 @@ app.use(express.urlencoded({ extended: true }));
 app.use('/public', express.static(path.resolve(__dirname, './src/public')));
 app.set('view engine', 'ejs');
 app.set('views', path.resolve(__dirname, './src/views'));
+<<<<<<< HEAD
+=======
+app.use(routes);
+>>>>>>> clone successful
 app.use(cors());
 app.use(flash());
 app.use(cookieParser());
