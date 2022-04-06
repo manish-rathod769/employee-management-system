@@ -83,6 +83,12 @@ module.exports = (sequelize, DataTypes) => {
       where: { isArchive: false },
       attributes: { exclude: ['password', 'verifyToken', 'role'] },
     },
+    scopes: {
+      admin: {
+        where: { isArchive: false },
+        attribute: { exlude: ['password', 'verifyToken'] },
+      },
+    },
     sequelize,
     modelName: 'Employee',
   });

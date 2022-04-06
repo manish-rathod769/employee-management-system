@@ -11,7 +11,7 @@ router.post('/employees', employeeValidator.employeeValidate, employeeController
 router.get('/employees', employeeController.getEmployee);
 router.get('/employees/:employeeId', employeeController.getEmployeeOne);
 router.put('/employees/:employeeId', );
-router.delete('/employees/:employeeId', );
+router.delete('/employees', employeeController.deleteEmployee);
 router.get('/employees/search', );
 
 router.post('/employees/login' );
