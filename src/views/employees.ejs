@@ -38,6 +38,9 @@
               <div id="addEmployeeFormContainer" class="d-none">
                   <%- include('add-employee'); %>
               </div>
+              <div id="editEmployeeFormContainer" class="d-none">
+                  <%- include('edit-employee'); %>
+              </div>
               <div id="employeeDisplayContainer" class="">
               <div class="quicklink-sidebar-menu ctm-border-radius shadow-sm grow bg-white card">
                 <div class="card-body">
@@ -233,8 +236,14 @@
         $('#employeeDisplayContainer').addClass('d-none');
       });
 
+      $('#cancelEdit').click((event) => {
+        event.preventDefault();
+        $('#editEmployeeFormContainer').addClass('d-none');
+        $('#employeeDisplayContainer').removeClass('d-none');
+      });
+
       const deleteButton = (id, name) => {
-        console.log(id);
+        //console.log(id);
         $('#EmployeeDeleteConcentModal').find('.modal-body').html(`<p> Employee <b>${name}</b> will get deleted.are you sure? </p>`);
         $('#employeeConfirmDelete').click((event) => {
           
@@ -252,8 +261,57 @@
               console.log(error);
             }
           });
-        })
-        }
+        });
+      };
+
+      const editButton = (id) => {
+        $.ajax({
+          type: 'GET',
+          url: `/employees/${id}`,
+          success: ({ data }) => {
+
+            // remove employee display and show edit div
+            $('#editEmployeeFormContainer').removeClass('d-none');
+            $('#employeeDisplayContainer').addClass('d-none');
+            console.log(id);
+            console.log(data);
+            // change edit div and add edit and cancel button;
+            const form = $('#editEmployeeFormContainer');
+            form.find('#lastName').val(data.lastName);  
+            form.find('#firstName').val(data.firstName);  
+            form.find('#middleName').val(data.middleName);  
+            form.find('#email').val(data.email).prop('disabled', true);
+            form.find("input[type='radio'][name='gender']:checked").val(data.gender);  
+            form.find('#dob').val(data.DOB.split('T')[0]);  
+            form.find('#role').val(data.role);  
+            form.find('#joiningDate').val(data.joiningDate.split('T')[0]);  
+            form.find('#totalExp').val(data.totalExp);  
+
+            form.find('#collage').val(data.EmployeeAcademic.collage);  
+            form.find('#highestQualification').val(data.EmployeeAcademic.highestQualification);  
+            form.find('#university').val(data.EmployeeAcademic.university);  
+            form.find('#knownTech');
+              
+            form.find('#secondaryEmail').val(data.EmployeeContact.secondaryEmail);  
+            form.find('#contactNo').val(data.EmployeeContact.contactNo);  
+            form.find('#houseNo').val(data.EmployeeContact.houseNo);  
+            form.find('#addressLine1').val(data.EmployeeContact.addressLine1);  
+            form.find('#addressLine2').val(data.EmployeeContact.addressLine2);  
+            form.find('#landmark').val(data.EmployeeContact.landmark);  
+            form.find('#state').val(data.EmployeeContact.state);  
+            form.find('#pincode').val(data.EmployeeContact.pincode);  
+            form.find('#city').val(data.EmployeeContact.city);  
+            form.find('#country').val(data.EmployeeContact.country);  
+            form.find('#preEmployer').val(data.EmployeePreWork.previousEmployer);  
+            form.find('#preEmployerAddress').val(data.EmployeePreWork.employerAddress);   
+            
+          },
+          error: (error) => {
+            // display toast for error
+            console.log(error);
+          }
+        });
+      };
 
       $(document).ready(() => {
         
@@ -330,15 +388,13 @@
                                 </div>
                               </div>
                                   <div class="team-action-icon float-right">
-                                      <span data-toggle="modal" data-target="#editNewTeam">
-                                        <button
-                                          class="btn btn-theme ctm-border-radius text-white"
-                                          data-toggle="tooltip"
-                                          data-placement="bottom"
-                                          title="Edit"
-                                          ><i class="fa fa-pencil"></i
-                                        ></button>
-                                      </span>
+                                      <button type="button" 
+                                        class="btn btn-theme ctm-border-radius text-white" 
+                                        title="Edit"
+                                        onclick="editButton('${element.id}')"
+                                        id="employeeEditButton" >
+                                        <i class="fa fa-pencil"></i>
+                                      </button>
                                       <button type="button" 
                                         class="btn btn-theme ctm-border-radius text-white" 
                                         title="Delete"
