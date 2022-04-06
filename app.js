@@ -13,6 +13,8 @@ import adminRoutes from './src/routes/admin.routes';
 import projectRoutes from './src/routes/project.routes';
 import attendanceRoutes from './src/routes/attendance.route';
 import { notFound } from './src/helpers/middleware.notFound';
+import routes from './src/routes/leaveRouter';
+
 
 dotenv.config();
 require('./src/config/sequelize');
@@ -27,6 +29,11 @@ app.use(session({
   saveUninitialized: true,
   cookie: { maxAge: 60000, secure: true },
 }));
+app.use(express.urlencoded({ extended: true }));
+app.use('/public', express.static(path.resolve(__dirname, './src/public')));
+app.set('view engine', 'ejs');
+app.set('views', path.resolve(__dirname, './src/views'));
+app.use(routes);
 app.use(cors());
 app.use(flash());
 app.use(cookieParser());
@@ -40,7 +47,6 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/assets', express.static(path.join(__dirname, 'public')));
 // app.use('/employee/assets', express.static(path.join(__dirname, 'public')));
 app.set('views', path.join(__dirname, 'src', 'views'));
-app.set('view engine', 'ejs');
 
 app.use('/', employeeRoutes);
 // requiring routes
