@@ -1,16 +1,20 @@
-let disableClient = clientId => {
-  $.ajax({
-    url: `/admin/clients/${clientId}`,
-    method: 'DELETE',
-    success: () => {
-      alert("Client disabled Successfully...");
-      const index = $("#current").attr("data-index");
-      fetchClientData(index);
-    },
-    error: (resData) => {
-      alert(resData.responseJSON.errorMessage);
+let disableClient = () => {
+  const clientId = $("#disable-client").val();
+    if(confirm('Are you sure ?') == true) {
+      $.ajax({
+        url: `/admin/clients/${clientId}`,
+        method: 'DELETE',
+        success: () => {
+          alert("Client disabled Successfully...");
+          const index = $("#current").attr("data-index");
+          fetchClientData(index);
+        },
+        error: (resData) => {
+          console.log(resData);
+          alert(resData.responseJSON.errorMessage);
+        }
+      });
     }
-  })
 }
 
 let clientDetails = clientId => {
@@ -26,6 +30,7 @@ let clientDetails = clientId => {
       $("#client-edit-country").val(resData.data.country);
       $("#client-edit-organization").val(resData.data.organization);
       $("#client-edit-submit").val(resData.data.id);
+      $("#disable-client").val(resData.data.id);
     },
     error: resData => {
       alert(resData.responseJSON.errorMessage);
