@@ -102,9 +102,10 @@ export const getEmployee = async (req, res, next) => {
       result.pre = true
     }
 
-    result.employee = await Employee.findAll(
+    result.employee = await Employee.scope('admin').findAll(
       { 
-        //include: [EmployeeContact, EmployeeAcademic, EmployeePreWork],
+        include: [{ model: EmployeeAcademic, attributes: ['knownTech'] }],
+        attributes: ['id', 'firstName', 'lastName', 'role', 'email'],
         offset: startIndex,
         limit: limit,
         order: [
@@ -145,7 +146,21 @@ export const updateEmployee = async (req, res, next) => {
 
 export const deleteEmployee = async (req, res, next) => {
   try{
-
+    // check if employee exists or not
+    const employee = await Employee.findOne(
+      {
+        where: {
+          id: req.body.id,
+      }
+    });
+    if(!employee){
+      return errorResponse(req, res, "employee record not found", 404);
+    }
+    employee.isArchive = true;
+    employee.save();
+    
+    res.status(202);
+    successResponse(req, res, "", 202);
   } catch (err) {
     errorResponse(req, res, "something went wrong!", 500, {err});
   }
@@ -160,9 +175,11 @@ export const searchEmployee = async (req, res, next) => {
 }
 
 export const renderEmployeeView = async (req, res) => {
-  const countEmployee = await Employee.count();
+  const totalEmployee = await Employee.count();
   res.status(200);
-  res.render('employees');
+  res.render('employees', {
+    totalEmployee,
+  });
 }
 export const renderAddEmployeeView = (req, res) => {
   res.status(200);

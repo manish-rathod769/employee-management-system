@@ -56,7 +56,7 @@
               </div>
               <div class="card shadow-sm grow ctm-border-radius">
                 <div class="card-body align-center">
-                  <h4 class="card-title float-left mb-0 mt-2">7 People</h4>
+                  <h4 class="card-title float-left mb-0 mt-2"><%= totalEmployee %> Employees</h4>
                   <ul class="nav nav-tabs float-right border-0 tab-list-emp">
                     <li class="nav-item">
                       <a
@@ -165,6 +165,43 @@
       </div>
     </div>
 
+    <!-- delete concent modal -->
+    <div id="EmployeeDeleteConcentModal">
+      <div class="modal fade" id="delete" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalCenterTitle">Delete Employee</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-theme ctm-border-radius text-white" data-dismiss="modal"> Close </button>
+              <button type="button" class="btn btn-theme ctm-border-radius text-white" data-dismiss="modal" id="employeeConfirmDelete"> Delete </button>
+            </div>
+          </div>
+        </div>
+      </div>  
+    </div>
+
+    <!-- success/error message popup -->
+          <!-- <div class="toast align-items-center text-white bg-primary border-0 " role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="d-flex">
+              <div class="toast-body">
+                
+              </div>
+              <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+          </div> -->
+    <!-- -->
+
+        
+
+
     <div class="sidebar-overlay" id="sidebar_overlay"></div>
 
     <script src="assets/js/jquery-3.2.1.min.js"></script>
@@ -195,6 +232,28 @@
         $('#addEmployeeFormContainer').removeClass('d-none');
         $('#employeeDisplayContainer').addClass('d-none');
       });
+
+      const deleteButton = (id, name) => {
+        console.log(id);
+        $('#EmployeeDeleteConcentModal').find('.modal-body').html(`<p> Employee <b>${name}</b> will get deleted.are you sure? </p>`);
+        $('#employeeConfirmDelete').click((event) => {
+          
+          $.ajax({
+            type: 'DELETE',
+            url: '/employees/',
+            data: {
+              id: id,
+            },
+            success: (data) => {
+              console.log(data);
+              location.reload();
+            },
+            error: (error) => {
+              console.log(error);
+            }
+          });
+        })
+        }
 
       $(document).ready(() => {
         
@@ -239,6 +298,7 @@
               }
               result.data.employee.forEach(element => {
                 //console.log(element);
+                const tech = element.EmployeeAcademic?.knownTech || "tech";
                 $('#displayEmployeeDetails').append(
                       `<div class="col-md-6 col-lg-6 col-xl-4">
                         <div class="card widget-profile">
@@ -254,17 +314,41 @@
                                 <div class="profile-det-info">
                                   <h4>
                                     <a href="employment.html" class="text-primary"
-                                      >${element.firstName} ${element.lastName}</a
+                                      >${ element.firstName } ${ element.lastName }</a
                                     >
                                   </h4>
                                   <div>
-                                    <p class="mb-0"><b>PHP Team Lead</b></p>
+                                    <p class="mb-0"><b>${ tech }</b></p>
                                     <p class="mb-0 ctm-text-sm">
-                                      ${element.email}
+                                      ${ element.email }
+                                    </p>
+                                    <p class="mb-0 ctm-text-sm">
+                                      <b>Role</b>
+                                      ${ element.role }
                                     </p>
                                   </div>
                                 </div>
                               </div>
+                                  <div class="team-action-icon float-right">
+                                      <span data-toggle="modal" data-target="#editNewTeam">
+                                        <button
+                                          class="btn btn-theme ctm-border-radius text-white"
+                                          data-toggle="tooltip"
+                                          data-placement="bottom"
+                                          title="Edit"
+                                          ><i class="fa fa-pencil"></i
+                                        ></button>
+                                      </span>
+                                      <button type="button" 
+                                        class="btn btn-theme ctm-border-radius text-white" 
+                                        title="Delete"
+                                        onclick="deleteButton('${element.id}', '${ element.firstName } ${ element.lastName }')"
+                                        id="employeeDeleteButton" 
+                                        data-toggle="modal" 
+                                        data-target="#delete">
+                                        <i class="fa fa-trash"></i>
+                                      </button>
+                                    </div>
                             </div>
                           </div>
                         </div>
@@ -273,12 +357,16 @@
               });
             },
             error: (err) => {
-
+              console.log(err);
             }
           });
         }
         displayEmployee();
       });
+      
+    </script>
+    <script>
+      
     </script>
   </body>
 
