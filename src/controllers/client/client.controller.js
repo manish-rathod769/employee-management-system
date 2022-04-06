@@ -33,11 +33,12 @@ export const getAllClientController = async (req, res) => {
   try {
     const page = Number(req.query.page);
     const count = Number(req.query.count);
-    console.log(page, count);
-    const allClients = await Client.findAll({ where: {isArchive : false}, offset: (page-1)*count, limit: count });
+    const { sortBy,sortOrder } = req.query;
+
+    const allClients = await Client.findAll({ where: {isArchive : false}, order: [[`${sortBy}`, `${sortOrder}`]], offset: (page-1)*count, limit: count });
     // if (!allClients.length) throw new Error('Employee data does not exist !!!');
-    const isDataBefore = await Client.findAll({ where: {isArchive: false }, limit: (page-1)*count });
-    const isDataAfter = await Client.findAll({ where: {isArchive: false}, offset: page*count });
+    const isDataBefore = await Client.findAll({ where: {isArchive: false }, order: [[`${sortBy}`, `${sortOrder}`]], limit: (page-1)*count });
+    const isDataAfter = await Client.findAll({ where: {isArchive: false}, order: [[`${sortBy}`, `${sortOrder}`]], offset: page*count });
     
     const paginationDetails = { before: isDataBefore.length , after: isDataAfter.length};
     allClients.push(paginationDetails);
