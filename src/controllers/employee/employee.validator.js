@@ -26,8 +26,7 @@ const validation = joi.object({
 
   previousEmployer: joi.string().trim(true),
   employerAddress: joi.string().trim(true),
-  startDate: joi.date(),
-  endDate: joi.date(),
+  workingTime: joi.string().trim(true),
 
   highestQualification: joi.string().trim(true).required(),
   collage: joi.string().trim(true).required(),
@@ -65,8 +64,7 @@ export const employeeValidate = async (req, res, next) => {
 
     previousEmployer: req.body.previousEmployer,
     employerAddress: req.body.employerAddress,
-    startDate: req.body.startDate,
-    endDate: req.body.endDate,
+    workingTime: req.body.workingTime,
   };
 
   const { error } = validation.validate(payload);

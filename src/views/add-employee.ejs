@@ -387,26 +387,24 @@
               placeholder="previous Employer Address"
             />
           </div>
-          <div class="col-md-6 form-group mb-0">
-            <div class="cal-icon">
-              <input
-                class="form-control cal-icon-input"
-                type="date"
-                id="startDate"
-                name="startDate"
-                placeholder="Start Date"
-              />
-            </div>
-          </div>
-          <div class="col-md-6 form-group mb-0">
-            <div class="cal-icon">
-              <input
-                class="form-control cal-icon-input"
-                type="date"
-                name="endDate"
-                placeholder="End Date"
-              />
-            </div>
+          <div class="col-md-12 form-group mb-0">
+            <div class="cal-icon d-flex">
+                <p>working time: &nbsp;</p>
+                <input
+                  type="number"
+                  class="form-control col-2"
+                  id="workingTimeInYear"
+                  name="workingTimeInYear"
+                />
+                <p>years, &nbsp;</p>
+                <input
+                  type="number"
+                  class="form-control col-2"
+                  id="workingTimeInMonth"
+                  name="workingTimeInMonth"
+                />
+                <p>months.</p>
+              </div>
           </div>
         </div>
       </div>
