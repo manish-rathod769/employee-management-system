@@ -86,7 +86,7 @@ module.exports = (sequelize, DataTypes) => {
     scopes: {
       admin: {
         where: { isArchive: false },
-        attribute: { exlude: ['password', 'verifyToken'] },
+        attributes: { exclude: ['password', 'verifyToken'] },
       },
     },
     sequelize,

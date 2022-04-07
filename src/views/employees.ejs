@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-  <!-- Mirrored from dleohr.dreamguystech.com/template-1/dleohr-vertical/employees.html by HTTrack Website Copier/3.x [XR&CO'2014], Mon, 21 Mar 2022 16:37:04 GMT -->
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -227,6 +226,7 @@
     
     <script src="assets/js/script.js"></script>
     <script src="assets/js/add-employee.js"></script>
+    <script src="assets/js/edit-employee.js"></script>
 
     <script>
       // change view between add employee form and display employee 
@@ -277,6 +277,7 @@
             console.log(data);
             // change edit div and add edit and cancel button;
             const form = $('#editEmployeeFormContainer');
+            form.data('id', id);
             form.find('#lastName').val(data.lastName);  
             form.find('#firstName').val(data.firstName);  
             form.find('#middleName').val(data.middleName);  
@@ -290,7 +291,7 @@
             form.find('#collage').val(data.EmployeeAcademic.collage);  
             form.find('#highestQualification').val(data.EmployeeAcademic.highestQualification);  
             form.find('#university').val(data.EmployeeAcademic.university);  
-            form.find('#knownTech');
+            form.find('#knownTech').val(data.EmployeeAcademic.knownTech);
               
             form.find('#secondaryEmail').val(data.EmployeeContact.secondaryEmail);  
             form.find('#contactNo').val(data.EmployeeContact.contactNo);  
@@ -304,7 +305,8 @@
             form.find('#country').val(data.EmployeeContact.country);  
             form.find('#preEmployer').val(data.EmployeePreWork.previousEmployer);  
             form.find('#preEmployerAddress').val(data.EmployeePreWork.employerAddress);   
-            
+            form.find('#workingTimeInYear').val(Number(data.EmployeePreWork.workingTime.split(' ')[0]));
+            form.find('#workingTimeInMonth').val(Number(data.EmployeePreWork.workingTime.split(' ')[2]));
           },
           error: (error) => {
             // display toast for error
@@ -425,6 +427,4 @@
       
     </script>
   </body>
-
-  <!-- Mirrored from dleohr.dreamguystech.com/template-1/dleohr-vertical/employees.html by HTTrack Website Copier/3.x [XR&CO'2014], Mon, 21 Mar 2022 16:37:11 GMT -->
 </html>
