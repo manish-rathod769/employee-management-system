@@ -231,6 +231,49 @@ export const searchEmployee = async (req, res, next) => {
     errorResponse(req, res, "something went wrong", 500, error.message);
   }
 }
+
+// employee login
+export const loginEmployee = async (req, res, next) => {
+  try{
+
+    // check if employee exists
+    const employee = await Employee.scope('login').findOne(
+      {
+        where: {
+          email: req.body.email,
+        }
+      });
+    if (!employee) {
+      return errorResponse(req, res, "employee does not exists", 404);
+    }
+
+    // encrypt password and dob to check for first login 
+    const encryptedPassword = createHash('md5')
+      .update(req.body.password)
+      .digest('hex');
+    const dobPassword = createHash('md5')
+      .update(createPassword(employee.DOB))
+      .digest('hex');
+      
+    if (encryptedPassword !== employee.password) {
+      return errorResponse(req, res, "password does not match", 400);
+    }
+
+    // if dob password match redirect to set password page.
+    if (encryptedPassword !== dobPassword) {
+      // redirect to the profile page
+    }
+
+    // redirect to change password page
+    res.redirect(`/employee/${employee.id}`);
+  } catch (error) {
+    // render with error console.
+    errorResponse(req, res, "something went wrong", 500, error);
+  }
+
+
+}
+
 // admin side view
 export const renderEmployeeView = async (req, res) => {
   const totalEmployee = await Employee.count();
@@ -251,4 +294,9 @@ export const renderEmployeeProfile = (req, res) => {
 export const renderEmployee = (req, res) => {
   res.status(200);
   res.render('employee/employeeProfile');
+}
+// render login page
+export const loginView = (req, res) => {
+  res.status(200);
+  res.render('employee/login');
 }

@@ -75,3 +75,24 @@ export const employeeValidate = async (req, res, next) => {
     next();
   }
 }
+
+const loginValidation =  joi.object({
+  email: joi.string().email().trim(true).required(),
+  role: joi.string().trim(true).valid('ADMIN', 'DEV', 'PM', 'HR').required(),
+  //password: joi.string().trim(true).max(12).min(8).required(),
+});
+
+export const loginValidate = async (req, res, next) => {
+  const payload = {
+    email: req.body.email,
+    role: req.body.role,
+    //password: req.body.password,
+  }
+
+  const { error } = loginValidation.validate(payload);
+  if(error){
+    errorResponse(req, res, "employee data validation error", 406, error.message);
+  } else {
+    next();
+  }
+}

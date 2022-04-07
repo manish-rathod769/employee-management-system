@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <link rel="icon" type="image/x-icon" href="assets/img/favicon.png" />
+
+    <link rel="stylesheet" href="/assets/css/bootstrap.min.css" />
+
+    <link rel="stylesheet" href="/assets/css/lnr-icon.css" />
+
+    <link rel="stylesheet" href="/assets/css/font-awesome.min.css" />
+
+    <link rel="stylesheet" href="assets/plugins/select2/select2.min.css" />
+
+    <link rel="stylesheet" href="/assets/css/style.css" />
+
+    <title>Login</title>
+  </head>
+
+  <body>
+    <div id="loader-wrapper">
+      <div class="loader">
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+      </div>
+    </div>
+
+    <div class="inner-wrapper login-body">
+      <div class="login-wrapper">
+        <div class="container">
+          <div class="loginbox shadow-sm grow">
+            <div class="login-left">
+              <img class="img-fluid" src="/assets/img/logo.png" alt="Logo" />
+            </div>
+            <div class="login-right">
+              <div class="login-right-wrap">
+                <h1>Login</h1>
+                <p class="account-subtitle">Access to our EMS</p>
+
+                <form action="/login" id="loginForm" method="POST">
+                  <div class="form-group">
+                    <input
+                      class="form-control"
+                      type="email"
+                      name="email"
+                      id="email"
+                      placeholder="Email"
+                    />
+                  </div>
+                  <div class="form-group">
+                    <input
+                      class="form-control"
+                      type="password"
+                      name="password"
+                      id="password"
+                      placeholder="Password"
+                    />
+                  </div>
+                  <div class="form-group"> 
+                    <select class="form-control select" name="role" id="role">
+                      <option selected disabled>Role</option>
+                      <option value="DEV">DEV.</option>
+                      <option value="HR">HR</option>
+                      <option value="PM">PM</option>
+                      <option value="ADMIN">ADMIN</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <button
+                      class="btn btn-theme button-1 text-white ctm-border-radius btn-block"
+                      type="submit"
+                    >
+                      Login
+                    </button>
+                  </div>
+                </form>
+
+                <div class="text-center forgotpass">
+                  <a href="/forgot-password">Forgot Password?</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="/assets/js/jquery-3.2.1.min.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.3/jquery.validate.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.3/dist/additional-methods.min.js"></script>
+
+    <script src="/assets/js/popper.min.js"></script>
+    <script src="/assets/js/bootstrap.min.js"></script>
+
+    <script src="/assets/plugins/theia-sticky-sidebar/ResizeSensor.js"></script>
+    <script src="/assets/plugins/theia-sticky-sidebar/theia-sticky-sidebar.js"></script>
+
+    <script src="assets/plugins/select2/select2.min.js"></script>
+
+    <script src="/assets/js/script.js"></script>
+    <script>
+      $(document).ready(() => {
+      $('#loginForm').on('submit', (event) => {
+        event.preventDefault();
+      });
+
+      $('#loginForm').validate({
+        rule:{
+          email: {
+            required: true,
+            email: true,
+          },
+          password: {
+            required: true,
+            maxLength: 12,
+            minLength: 8,
+          },
+          role: {
+            required: true,
+          }
+        },
+        message: {
+          email:{
+            required: "email is required",
+            email: "please enter valid email"
+          },
+          password: {
+            required: "password is required",
+            maxLength: "password must be ob 8 to 12 characters",
+            minLength: "password must be ob 8 to 12 characters",
+          },
+          role: {
+            required: "please select role",
+          }
+        },
+        errorElement: "span",
+        errorClass: "text-danger",
+        errorPlacement: function (error, element) {
+          if (element.attr('name') === "role") {
+            error.insertAfter(element.parent());
+          } else {
+            error.insertAfter(element);
+          }
+        },
+        submitHandler: function(form) {
+          form.submit();
+        }
+      });
+    });
+    </script>
+  </body>
+</html>

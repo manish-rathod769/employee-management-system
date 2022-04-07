@@ -88,6 +88,9 @@ module.exports = (sequelize, DataTypes) => {
         where: { isArchive: false },
         attributes: { exclude: ['password', 'verifyToken'] },
       },
+      login: {
+        attributes: { include: ['password', 'verifyToken'] },
+      }
     },
     sequelize,
     modelName: 'Employee',

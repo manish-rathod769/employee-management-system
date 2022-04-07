@@ -14,9 +14,10 @@ router.put('/employees/:employeeId', employeeValidator.employeeValidate, employe
 router.delete('/employees', employeeController.deleteEmployee);
 router.get('/employees/search', );
 
-router.post('/employees/login' );
+router.get('/login', employeeController.loginView);
+router.post('/login', employeeValidator.loginValidate, employeeController.loginEmployee);
 router.patch('/employees/:employeeId', );
-router.get('/employee', employeeController.renderEmployee);
+router.get('/employee/:employeeId', employeeController.renderEmployee);
 // protected, check for employee login and empoyee side route
 router.get('/profile', employeeController.renderEmployeeProfile);
 module.exports = router;
