@@ -1,48 +1,56 @@
+'use strict';
+const {
+  Model
+} = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
-    const Leave = sequelize.define(
-      'Leave',
-      {       
-        
-        employeeId: {
-          type: DataTypes.STRING,
-          allowNull: false,
-        },
-        startDate: {
-          type: DataTypes.STRING,
-        },
-        endDate: {
-          type: DataTypes.STRING,
-          allowNull: false,
-        },
-        reason: {
-          type: DataTypes.STRING,
-        },
-        status: {
-          type: DataTypes.STRING,
-        },
-        remainingLeave: {
-          type: DataTypes.BOOLEAN,
-          defaultValue: false,
-        },
-        isArchieve: {
-          type: DataTypes.BOOLEAN,
-          defaultValue: false,
-        },
-      },
-      {
-        defaultScope: {
-          attributes: { exclude: ['password', 'verifyToken', 'isAdmin'] },
-        },
-        scopes: {
-          withSecretColumns: {
-            attributes: { include: ['password', 'verifyToken', 'isAdmin'] },
-          },
-        },
-      },
-    );
-    Leave.associate = function (models) {
-      // associations can be defined here
-    };
-    return Leave;
-  };
-  
+  class Leave extends Model {
+    /**
+     * Helper method for defining associations.
+     * This method is not a part of Sequelize lifecycle.
+     * The `models/index` file will call this method automatically.
+     */
+    static associate(models) {
+      // define association here
+    }
+  }
+  Leave.init({
+    id: {
+      type: DataTypes.UUID,
+      allowNull: false,
+      primaryKey: true,
+    },
+    employeeId: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    startDate: {
+      type: DataTypes.DATE,
+      allowNull: false,
+    },
+    endDate: {
+      type: DataTypes.DATE,
+      allowNull: false,
+    },
+    reason: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    status: {
+      type: DataTypes.ENUM('pending', 'approved', 'rejected'),
+
+    },
+    remainingLeave: {
+      type: DataTypes.STRING,
+
+    },
+    isArchive: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+
+    }
+  }, {
+    sequelize,
+    modelName: 'Leave',
+  });
+  return Leave;
+};
