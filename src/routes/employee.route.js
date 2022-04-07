@@ -10,7 +10,7 @@ router.get('/add-employee', employeeController.renderAddEmployeeView);
 router.post('/employees', employeeValidator.employeeValidate, employeeController.addEmployee);
 router.get('/employees', employeeController.getEmployee);
 router.get('/employees/:employeeId', employeeController.getEmployeeOne);
-router.put('/employees/:employeeId', );
+router.put('/employees/:employeeId', employeeValidator.employeeValidate, employeeController.updateEmployee);
 router.delete('/employees', employeeController.deleteEmployee);
 router.get('/employees/search', );
 
