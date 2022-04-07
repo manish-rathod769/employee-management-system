@@ -1,20 +1,19 @@
 let disableClient = () => {
   const clientId = $("#disable-client").val();
-    if(confirm('Are you sure ?') == true) {
-      $.ajax({
-        url: `/admin/clients/${clientId}`,
-        method: 'DELETE',
-        success: () => {
-          alert("Client disabled Successfully...");
-          const index = $("#current").attr("data-index");
-          fetchClientData(index);
-        },
-        error: (resData) => {
-          console.log(resData);
-          alert(resData.responseJSON.errorMessage);
-        }
-      });
-    }
+  if (confirm('Are you sure ?') == true) {
+    $.ajax({
+      url: `/admin/clients/${clientId}`,
+      method: 'DELETE',
+      success: () => {
+        alert("Client disabled Successfully...");
+        viewClientWithPagination();
+      },
+      error: (resData) => {
+        console.log(resData);
+        alert(resData.responseJSON.errorMessage);
+      }
+    });
+  }
 }
 
 let clientDetails = clientId => {
@@ -53,26 +52,26 @@ let fetchClientData = (index) => {
     },
     success: (resData) => {
       $("#clients-data").html("");
-    if(resData.success){
+      if (resData.success) {
 
-      const paginationDetails = resData.data.pop();
-      $("#action").text("Clients");
-      $("#all-client").css("display","none");
+        const paginationDetails = resData.data.pop();
+        $("#action").text("Clients");
+        $("#all-client").css("display", "none");
 
-      hideShowField(["#all-client", "#clients-add-div", "#clients-view-div"], ["#add-client", "#pagination", "#clients-data-body"]);
+        hideShowField(["#all-client", "#clients-add-div", "#clients-view-div"], ["#add-client", "#pagination", "#clients-data-body"]);
 
-      $("#clients-count").text(resData.data.length + paginationDetails.before + paginationDetails.after);
-      (!paginationDetails.before) ? $("#previous").addClass("disabled") : $("#previous").removeClass("disabled");
-      (!paginationDetails.after) ? $("#next").addClass("disabled") : $("#next").removeClass("disabled");
-      
-      $("#previous").attr('data-index', Number(index)-1);
-      $("#next").attr('data-index', Number(index)+1);
-      $("#current").attr('data-index', Number(index));
+        $("#clients-count").text(resData.data.length + paginationDetails.before + paginationDetails.after);
+        (!paginationDetails.before) ? $("#previous").addClass("disabled") : $("#previous").removeClass("disabled");
+        (!paginationDetails.after) ? $("#next").addClass("disabled") : $("#next").removeClass("disabled");
 
-      $("#current").text(index);
-      if(resData.data.length){
-        resData.data.forEach( client => {
-          $("#clients-data").append(`
+        $("#previous").attr('data-index', Number(index) - 1);
+        $("#next").attr('data-index', Number(index) + 1);
+        $("#current").attr('data-index', Number(index));
+
+        $("#current").text(index);
+        if (resData.data.length) {
+          resData.data.forEach(client => {
+            $("#clients-data").append(`
             <div class="col-md-6 col-lg-6 col-xl-4">
               <div class="card">
                 <div class="card-body">
@@ -91,25 +90,23 @@ let fetchClientData = (index) => {
               </div>
             </div>
           `);
-        });
-      }else{
-        alert("No more data found !!!");
+          });
+        } else {
+          alert("No more data found !!!");
+        }
+      } else {
+        alert(resData.errorMessage);
       }
-    }else{
-      alert(resData.errorMessage);
-    }
     }
   });
 }
 
 let showThisMuchRecord = () => {
-  const index = $("#current").attr("data-index");
-  fetchClientData(index);
+  viewClientWithPagination();
 }
 
 let sortByField = () => {
-  const index = $("#current").attr("data-index");
-  fetchClientData(index);
+  viewClientWithPagination();
 }
 
 let hideShowField = (fieldsToBeHide, fieldsToBeShown) => {
@@ -120,6 +117,11 @@ let hideShowField = (fieldsToBeHide, fieldsToBeShown) => {
     $(field).css("display", "block");
   });
 }
+
+// let viewClientWithPagination = () => {
+//   const index = $("#current").attr("data-index");
+//   fetchClientData(index);
+// }
 
 $("#previous").on("click", () => {
   const index = $("#previous").attr("data-index");
@@ -138,11 +140,18 @@ $("#add-client").on("click", () => {
 
 $("#all-client").on("click", () => {
   hideShowField(["#all-client", "#clients-add-div", "#clients-view-div"], ["#clients-data-body", "#pagination", "#add-client"]);
-  const index = $("#current").attr("data-index");
-  fetchClientData(index);
+  viewClientWithPagination();
 });
 
-if(("#client-register-form").length){
+$("#search-by").on('input paste', () => {
+  viewClientWithPagination();
+});
+
+$("#client-register-form").on("submit", (event) => {
+  event.preventDefault();
+});
+
+if (("#client-register-form").length) {
   $("#client-register-form").validate({
     rules: {
       name: {
@@ -191,35 +200,35 @@ if(("#client-register-form").length){
       organization: {
         required: "Organization is required !!!",
       }
+    },
+    submitHandler: (from) => {
+      const clientData = $("#client-register-form").serializeArray();
+      const clientDataObj = {};
+      clientData.forEach(obj => {
+        clientDataObj[obj.name] = obj.value;
+      });
+
+      $.ajax({
+        url: '/admin/clients',
+        method: 'POST',
+        data: clientDataObj,
+        success: () => {
+          alert('Client Data Added Successfully...');
+          viewClientWithPagination();
+        },
+        error: (resData) => {
+          alert(resData.responseJSON.errorMessage);
+        }
+      });
     }
   });
 }
 
 $("#client-edit-form").on("submit", (event) => {
   event.preventDefault();
-  const clientData = $("#client-edit-form").serializeArray();
-  const clientDataObj = {};
-  clientData.forEach( obj => {
-    clientDataObj[obj.name] = obj.value;
-  });
-
-  clientId = $("#client-edit-submit").val();
-  $.ajax({
-    url: `/admin/clients/${clientId}`,
-    method: "PUT",
-    data: clientDataObj,
-    success: () => {
-      alert("Client Data Updated Successfully...");
-      const index = $("#current").attr("data-index");
-      fetchClientData(index);
-    },
-    error: (resData) => {
-      alert(resData.responseJSON.errorMessage);
-    }
-  });
 });
 
-if(("#client-edit-form").length){
+if (("#client-edit-form").length) {
   $("#client-edit-form").validate({
     rules: {
       name: {
@@ -254,37 +263,30 @@ if(("#client-edit-form").length){
       organization: {
         required: "Organization is required !!!",
       }
+    },
+    submitHandler: (form) => {
+      const clientData = $("#client-edit-form").serializeArray();
+      const clientDataObj = {};
+      clientData.forEach(obj => {
+        clientDataObj[obj.name] = obj.value;
+      });
+
+      clientId = $("#client-edit-submit").val();
+      $.ajax({
+        url: `/admin/clients/${clientId}`,
+        method: "PUT",
+        data: clientDataObj,
+        success: () => {
+          alert("Client Data Updated Successfully...");
+          viewClientWithPagination();
+        },
+        error: (resData) => {
+          alert(resData.responseJSON.errorMessage);
+        }
+      });
     }
   });
 }
-
-$("#client-register-form").on("submit", (event) => {
-  event.preventDefault();
-  const clientData = $("#client-register-form").serializeArray();
-  const clientDataObj = {};
-  clientData.forEach( obj => {
-    clientDataObj[obj.name] = obj.value;
-  });
-  
-  $.ajax({
-    url:'/admin/clients',
-    method: 'POST',
-    data: clientDataObj,
-    success: () => {
-      alert('Client Data Added Successfully...');
-      const index = $("#current").attr("data-index");
-      fetchClientData(index);
-    },
-    error: (resData) => {
-      alert(resData.responseJSON.errorMessage);
-    }
-  });
-}); 
-
-$("#search-by").on('input paste', () => {
-  const index = $("#current").attr("data-index");
-  fetchClientData(index);
-});
 
 hideShowField(["#all-client", "#clients-add-div", "#clients-view-div"], ["#add-client", "#pagination", "#clients-data-body"]);
 fetchClientData(1);
