@@ -118,10 +118,10 @@ let hideShowField = (fieldsToBeHide, fieldsToBeShown) => {
   });
 }
 
-// let viewClientWithPagination = () => {
-//   const index = $("#current").attr("data-index");
-//   fetchClientData(index);
-// }
+let viewClientWithPagination = () => {
+  const index = $("#current").attr("data-index");
+  fetchClientData(index);
+}
 
 $("#previous").on("click", () => {
   const index = $("#previous").attr("data-index");
