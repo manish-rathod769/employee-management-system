@@ -231,7 +231,7 @@ export const searchEmployee = async (req, res, next) => {
     errorResponse(req, res, "something went wrong", 500, error.message);
   }
 }
-
+// admin side view
 export const renderEmployeeView = async (req, res) => {
   const totalEmployee = await Employee.count();
   res.status(200);
@@ -246,4 +246,9 @@ export const renderAddEmployeeView = (req, res) => {
 export const renderEmployeeProfile = (req, res) => {
   res.status(200);
   res.render('profile');
+}
+// employee side view
+export const renderEmployee = (req, res) => {
+  res.status(200);
+  res.render('employee/employeeProfile');
 }

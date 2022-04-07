@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <link rel="icon" type="image/x-icon" href="assets/img/favicon.png" />
+
+    <link rel="stylesheet" href="assets/css/bootstrap.min.css" />
+
+    <link rel="stylesheet" href="assets/css/lnr-icon.css" />
+
+    <link rel="stylesheet" href="assets/css/font-awesome.min.css" />
+
+    <link rel="stylesheet" href="assets/plugins/select2/select2.min.css" />
+
+    <link rel="stylesheet" href="assets/css/style.css" />
+    <title>Profile Page</title>
+
+  </head>
+  <body>
+    <div class="inner-wrapper">
+      <!--  header partials  -->
+      <%- include('../partials/headerEmployee'); %>
+
+      <div class="page-wrapper">
+        <div class="container-fluid">
+          <div class="row">
+            
+            <!--  side bar aside tag -->
+            <%- include('../partials/asideEmployee'); %>
+
+            <div class="col-xl-10 col-lg-9 col-md-12">
+              <div
+                class="quicklink-sidebar-menu ctm-border-radius shadow-sm grow bg-white p-4 mb-4 card"
+              >
+                <ul class="list-group list-group-horizontal-lg">
+                  <li class="list-group-item text-center active button-5 disabled">
+                    <a href="#" id="employeeDetails" class="text-white">Detail</a>
+                  </li>
+                  <li class="list-group-item text-center button-6">
+                    <a href="documents.html" class="text-dark">Document</a>
+                  </li>
+                  <li class="list-group-item text-center button-6">
+                    <a href="payroll.html" class="text-dark">Payroll</a>
+                  </li>
+                  <li class="list-group-item text-center button-6">
+                    <a href="time-off.html" class="text-dark">Timeoff</a>
+                  </li>
+                  <li class="list-group-item text-center button-6">
+                    <a href="profile-reviews.html" class="text-dark">Reviews</a>
+                  </li>
+                  <li class="list-group-item text-center button-6">
+                    <a class="text-dark" href="profile-settings.html"
+                      >Settings</a
+                    >
+                  </li>
+                </ul>
+              </div>
+
+              <!-- employee details  -->
+              <div class="row" id="displayEmployeeDetails"> 
+                <!-- employee profile -->
+              </div>
+              
+              <!-- employee deshbord -->
+              <div id="employeeDeshbord">
+              
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sidebar-overlay" id="sidebar_overlay"></div>
+
+    <script src="assets/js/jquery-3.2.1.min.js"></script>
+
+    <script src="assets/js/popper.min.js"></script>
+    <script src="assets/js/bootstrap.min.js"></script>
+
+    <script src="assets/plugins/select2/select2.min.js"></script>
+
+    <script src="assets/plugins/theia-sticky-sidebar/ResizeSensor.js"></script>
+    <script src="assets/plugins/theia-sticky-sidebar/theia-sticky-sidebar.js"></script>
+
+    <script src="assets/js/script.js"></script>
+    <script>
+        $.ajax({
+          type: 'GET',
+          url: '/employees/4db11e2f-26c4-493e-b40e-a88d7c4ac59b',
+          success: (result) => {
+            console.log(result);
+            const { data } = result;
+            $('#displayEmployeeDetails').append(
+              `<div class="col-xl-4 col-lg-6 col-md-6 d-flex" data-employee-id=${data.id}>
+                <div class="card flex-fill ctm-border-radius shadow-sm grow">
+                  <div class="card-header">
+                    <h4 class="card-title mb-0">Basic Information</h4>
+                  </div>
+                  <div class="card-body text-center">
+                    <p class="card-text mb-3">
+                      <span class="text-primary">First Name :</span><b> ${data.firstName}</b>
+                    </p>
+                    <p class="card-text mb-3">
+                      <span class="text-primary">Last Name :</span> ${data.lastName}
+                    </p>
+                    <p class="card-text mb-3">
+                      <span class="text-primary">Middle Name : </span>${data.middleName}
+                    </p>
+                    <p class="card-text mb-3">
+                      <span class="text-primary">Email :</span> ${data.email}
+                    </p>
+                    <p class="card-text mb-3">
+                      <span class="text-primary">Gender :</span> ${data.gender}
+                    </p>
+                    <p class="card-text mb-3">
+                      <span class="text-primary">DOB :</span> ${data.DOB}
+                    </p>
+                    <p class="card-text mb-3">
+                      <span class="text-primary">Joining Date :</span> ${data.joiningDate}
+                    </p>
+                    <p class="card-text mb-3">
+                      <span class="text-primary">Total Exp :</span> ${data.totalExp}
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <div class="col-xl-4 col-lg-6 col-md-6 d-flex">
+                <div class="card flex-fill ctm-border-radius shadow-sm grow">
+                  <div class="card-header">
+                    <h4 class="card-title mb-0">Contact</h4>
+                  </div>
+                  <div class="card-body text-center">
+                    <p class="card-text mb-3">
+                      <span class="text-primary">Phone Number : </span>${data.EmployeeContact.contactNo}
+                    </p>
+                    <p class="card-text mb-3">
+                      <span class="text-primary">Secondary Email : </span>${data.EmployeeContact.secondaryEmail}
+                    </p>
+                    <p class="card-text mb-3">
+                      <span class="text-primary">House No : </span>${data.EmployeeContact.houseNo}
+                    </p>
+                    <p class="card-text mb-3">
+                      <span class="text-primary">Address Line 1 : </span>${data.EmployeeContact.addressLine1}
+                    </p>
+                    <p class="card-text mb-3">
+                      <span class="text-primary">Address Line 2 : </span>${data.EmployeeContact.addressLine2}
+                    </p>
+                    <p class="card-text mb-3">
+                      <span class="text-primary">Landmark : </span>${data.EmployeeContact.landmark}
+                    </p>
+                    <p class="card-text mb-3">
+                      <span class="text-primary">City : </span>${data.EmployeeContact.city}
+                    </p>
+                    <p class="card-text mb-3">
+                      <span class="text-primary">State : </span>${data.EmployeeContact.state}
+                    </p>
+                    <p class="card-text mb-3">
+                      <span class="text-primary">Pincode : </span>${data.EmployeeContact.pincode}
+                    </p>
+                    <p class="card-text mb-3">
+                      <span class="text-primary">Coutry : </span>${data.EmployeeContact.country}
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <div class="col-xl-4 col-lg-12 col-md-12">
+                <div class="row">
+                  <div class="col-xl-12 col-lg-6 col-md-6 d-flex">
+                    <div class="card ctm-border-radius shadow-sm grow flex-fill">
+                      <div class="card-header">
+                        <h4 class="card-title mb-0"> Academics </h4>
+                      </div>
+                      <div class="card-body text-center">
+                        <p class="card-text mb-3">
+                          <span class="text-primary">Highest Qualification : </span>${data.EmployeeAcademic.highestQualification}
+                        </p>
+                        <p class="card-text mb-3">
+                          <span class="text-primary">Collage : </span>${data.EmployeeAcademic.collage}
+                        </p>
+                        <p class="card-text mb-3">
+                          <span class="text-primary">University : </span>${data.EmployeeAcademic.university}
+                        </p>
+                        <p class="card-text mb-3">
+                          <span class="text-primary">Known Tech : </span>${data.EmployeeAcademic.knownTech}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-xl-12 col-lg-6 col-md-6 d-flex">
+                    <div class="card ctm-border-radius shadow-sm grow flex-fill">
+                      <div class="card-header">
+                        <h4 class="card-title mb-0"> previous Employer </h4>
+                      </div>
+                      <div class="card-body text-center">
+                        <p class="card-text mb-3">
+                          <span class="text-primary">Employer : </span>${data.EmployeePreWork.previousEmployer}
+                        </p>
+                        <p class="card-text mb-3">
+                          <span class="text-primary">Address : </span>${data.EmployeePreWork.employerAddress}
+                        </p>
+                        <p class="card-text mb-3">
+                          <span class="text-primary">Duration : </span>${data.EmployeePreWork.workingTime}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>`
+            );
+          }
+        });
+    </script>
+  </body>
+</html>
