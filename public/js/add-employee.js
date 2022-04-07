@@ -1,3 +1,10 @@
+$('#cancelAddEmployee').click((event) => {
+  event.preventDefault();
+  $(':input', '#form-edit-employee').not(':button, :submit, :reset, :hidden')
+    .val('');
+  $('#addEmployeeFormContainer').addClass('d-none');
+  $('#employeeDisplayContainer').removeClass('d-none');
+});
 $(document).ready(() => { 
   $('#form-add-employee').validate({
     rules: {

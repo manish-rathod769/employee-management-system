@@ -1,3 +1,11 @@
+$('#cancelEdit').click((event) => {
+  event.preventDefault();
+  $(':input', '#form-edit-employee').not(':button, :submit, :reset, :hidden')
+    .val('');
+  $('#editEmployeeFormContainer').addClass('d-none');
+  $('#employeeDisplayContainer').removeClass('d-none');
+});
+
 $('#form-edit-employee').validate({
   rules: {
     firstName: {
@@ -178,7 +186,7 @@ $('#form-edit-employee').validate({
     }
   },
   submitHandler: function (form) {
-    const editForm = $('#editEmployeeFormContainer');
+    const editForm = $('#form-edit-employee');
     const payload = {
       lastName: editForm.find('#lastName').val(),
       firstName: editForm.find('#firstName').val(),
@@ -217,6 +225,7 @@ $('#form-edit-employee').validate({
         //console.log(data);
         $('#editEmployeeFormContainer').addClass('d-none');
         $('#employeeDisplayContainer').removeClass('d-none');
+        $('#form-edit-employee').reset();
         location.reload();
         //show successfull message in toast
       },
