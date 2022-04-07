@@ -16,7 +16,7 @@ router.get('/employees/search', );
 
 router.post('/employees/login' );
 router.patch('/employees/:employeeId', );
-
+router.get('/employee', employeeController.renderEmployee);
 // protected, check for employee login and empoyee side route
 router.get('/profile', employeeController.renderEmployeeProfile);
 module.exports = router;
