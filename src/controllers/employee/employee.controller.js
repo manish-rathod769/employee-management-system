@@ -19,6 +19,7 @@ export const addEmployee = async (req, res, next) => {
   } = req.body;
 
   console.log();
+  // check for if employee exists
   const employee = await Employee.findOne(
     { 
       where: { email } 
@@ -62,7 +63,7 @@ export const addEmployee = async (req, res, next) => {
       employeeId: payload.id,
       previousEmployer: req.body.previousEmployer,
       employerAddress: req.body.employerAddress,
-      workingTime: `${getTimeBetweenDates(req.body.startDate, req.body.endDate)}`,
+      workingTime: req.body.workingTime,
     };
     const academicPayload = {
       employeeId: payload.id,
@@ -158,7 +159,7 @@ export const deleteEmployee = async (req, res, next) => {
     }
     employee.isArchive = true;
     employee.save();
-    
+
     res.status(202);
     successResponse(req, res, "", 202);
   } catch (err) {

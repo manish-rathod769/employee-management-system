@@ -79,6 +79,15 @@ $(document).ready(() => {
         maxlength: 6,
         minlength: 6,
       },
+      workingTimeInYear: {
+        min: 0,
+        digits: true,
+      },
+      workingTimeInMonth: {
+        max: 12,
+        min: 1,
+        digits: true,
+      }
     },
     messages: {
       firstName: {
@@ -158,6 +167,15 @@ $(document).ready(() => {
         maxlength: "pin should be of 6 digit",
         minlength: "pin should be of 6 digit",
       },
+      workingTimeInYear: {
+        min: "please enter appropriate value",
+        digits: "only digits allowed",
+      },
+      workingTimeInMonth: {
+        max: "choose number between 1 to 12",
+        min: "choose number between 1 to 12",
+        digits: "only digits allowed",
+      }
     },
     errorElement: "span",
     errorClass: "text-danger",
@@ -196,8 +214,7 @@ $(document).ready(() => {
         country: $('#country').val(),
         previousEmployer: $('#preEmployer').val(),
         employerAddress: $('#preEmployerAddress').val(),
-        startDate: $('#startDate').val(),
-        endDate: $('#endDate').val(),
+        workingTime: `${$('#workingTimeInYear')} years, ${$('#workingTimeInMonth')} months`,
       };
       console.log(payload);
       $.ajax({
