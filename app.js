@@ -40,10 +40,6 @@ app.use(express.urlencoded({ extended: true }));
 app.use('/public', express.static(path.resolve(__dirname, './src/public')));
 app.set('view engine', 'ejs');
 app.set('views', path.resolve(__dirname, './src/views'));
-<<<<<<< HEAD
-=======
-app.use(routes);
->>>>>>> clone successful
 app.use(cors());
 app.use(flash());
 app.use(cookieParser());
