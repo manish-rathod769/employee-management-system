@@ -1,7 +1,11 @@
+/* eslint-disable strict */
+
 'use strict';
+
 const {
-  Model
+  Model,
 } = require('sequelize');
+
 module.exports = (sequelize, DataTypes) => {
   class Client extends Model {
     /**
@@ -9,9 +13,9 @@ module.exports = (sequelize, DataTypes) => {
      * This method is not a part of Sequelize lifecycle.
      * The `models/index` file will call this method automatically.
      */
-    static associate(models) {
-      // define association here
-    }
+    // static associate(models) {
+    // define association here
+    // }
   }
   Client.init({
     id: {
@@ -19,38 +23,38 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       primaryKey: true,
     },
-    name:{ 
-      type: DataTypes.STRING, 
+    name: {
+      type: DataTypes.STRING,
       allowNull: false,
     },
-    email:{ 
-      type: DataTypes.STRING, 
+    email: {
+      type: DataTypes.STRING,
       allowNull: false,
     },
-    slackId:{ 
-      type: DataTypes.STRING, 
+    slackId: {
+      type: DataTypes.STRING,
       allowNull: false,
     },
-    city:{ 
-      type: DataTypes.STRING, 
+    city: {
+      type: DataTypes.STRING,
       allowNull: false,
     },
-    state:{ 
-      type: DataTypes.STRING, 
+    state: {
+      type: DataTypes.STRING,
       allowNull: false,
     },
-    country:{ 
-      type: DataTypes.STRING, 
+    country: {
+      type: DataTypes.STRING,
       allowNull: false,
     },
-    organization:{ 
-      type: DataTypes.STRING, 
+    organization: {
+      type: DataTypes.STRING,
       allowNull: false,
     },
-    isArchive:{
+    isArchive: {
       type: DataTypes.BOOLEAN,
       allowNull: false,
-    } 
+    },
   }, {
     sequelize,
     timestamps: false,
