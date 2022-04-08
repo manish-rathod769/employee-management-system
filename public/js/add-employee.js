@@ -5,6 +5,7 @@ $('#cancelAddEmployee').click((event) => {
   $('#addEmployeeFormContainer').addClass('d-none');
   $('#employeeDisplayContainer').removeClass('d-none');
 });
+<<<<<<< HEAD
 
 const imagePreview = () => {
   const addForm = $('#form-add-employee');
@@ -26,6 +27,9 @@ const imagePreview = () => {
 $(document).ready(() => {
   $.validator.addMethod('filesize', (value, element, param) => this.optional(element) || (element.files[0].size <= param * 1000000), 'File size must be less than {0} MB');
 
+=======
+$(document).ready(() => {
+>>>>>>> add: backend of update, view and softdelet of leave
   $('#form-add-employee').validate({
     rules: {
       firstName: {
@@ -114,12 +118,15 @@ $(document).ready(() => {
         min: 0,
         digits: true,
       },
+<<<<<<< HEAD
 
       avatar: {
         required: true,
         extensions: 'jpg || png || jpeg',
         filesize: 2,
       },
+=======
+>>>>>>> add: backend of update, view and softdelet of leave
     },
     messages: {
       firstName: {
@@ -147,8 +154,14 @@ $(document).ready(() => {
       joiningDate: {
         required: 'please enter date',
       },
+<<<<<<< HEAD
       careerStartDate: {
         required: 'plese enter total experiance',
+=======
+      totalExp: {
+        required: 'plese enter total experiance',
+        number: 'select decimal number',
+>>>>>>> add: backend of update, view and softdelet of leave
       },
 
       highestQualification: {
@@ -207,6 +220,7 @@ $(document).ready(() => {
         min: 'choose number between 1 to 12',
         digits: 'only digits allowed',
       },
+<<<<<<< HEAD
 
       avatar: {
         required: 'please upload profile pic',
@@ -217,6 +231,12 @@ $(document).ready(() => {
     errorElement: 'span',
     errorClass: 'text-danger',
     errorPlacement(error, element) {
+=======
+    },
+    errorElement: 'span',
+    errorClass: 'text-danger',
+    errorPlacement: function (error, element) {
+>>>>>>> add: backend of update, view and softdelet of leave
       if (element.attr('name') === 'dob' || element.attr('name') === 'joiningDate' || element.attr('name') === 'role') {
         error.insertAfter(element.parent());
       } else if (element.attr('name') === 'avatar') {
@@ -227,6 +247,7 @@ $(document).ready(() => {
     },
     submitHandler() {
       const addForm = $('#form-add-employee');
+<<<<<<< HEAD
       const formData = new FormData($('#form-add-employee')[0]);
       formData.append('knownTechs', addForm.find('#knownTech').val());
       // const file = addForm.find('#imageUpload')[0].files[0];
@@ -237,6 +258,9 @@ $(document).ready(() => {
       //   console.log(`${pair[0]}`);
       //   console.dir(pair[1]);
       // }
+=======
+      //const addForm = $('#editEmployeeFormContainer');
+>>>>>>> add: backend of update, view and softdelet of leave
       const payload = {
         lastName: addForm.find('#lastName').val(),
         firstName: addForm.find('#firstName').val(),
