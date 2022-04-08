@@ -122,10 +122,6 @@ const cancelBtnEmployeeDetails = (id) => {
   $('#employee-details').remove();
 }
 
-$('#search').click((event) => {
-  displayEmployee();
-});
-
 const displayEmployee = () => {
   $('#displayEmployeeDetails').html("");
   const page = $('#employeeRecordPageCount').data('page');
@@ -153,8 +149,8 @@ const displayEmployee = () => {
         $('#nextEmployeeRecord').addClass('disabled');
       }
       result.data.employee.forEach((element, index) => {
-        //console.log(element);
-        const tech = element.EmployeeAcademic?.knownTech || "tech";
+        // console.log(element);
+        const tech = element.EmployeeAcademic.knownTech || 'tech';
         $('#displayEmployeeDetails').append(
           `<div class="col-md-6 col-lg-6 col-xl-4" id="employee-card-${element.id}">
             <div class="card widget-profile">
@@ -220,14 +216,18 @@ const displayEmployee = () => {
                     </div>`);
     }
   });
-}
+};
 displayEmployee();
+
+$('#search').click(() => {
+  displayEmployee();
+});
 
 const enlargeEmployee = (event, id, index) => {
   event.preventDefault();
   console.log('hello', index);
-  //event.preventDefault();
-  //const id = $('#employeeName').data('id');
+  // event.preventDefault();
+  // const id = $('#employeeName').data('id');
   let lastcard = $(`#employee-card-${id}`);
   $('#employee-details').remove();
   // if(index%3 === 0){
