@@ -4,17 +4,17 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <link rel="icon" type="image/x-icon" href="assets/img/favicon.png" />
+    <link rel="icon" type="image/x-icon" href="/assets/img/favicon.png" />
 
-    <link rel="stylesheet" href="assets/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="/assets/css/bootstrap.min.css" />
 
-    <link rel="stylesheet" href="assets/css/lnr-icon.css" />
+    <link rel="stylesheet" href="/assets/css/lnr-icon.css" />
 
-    <link rel="stylesheet" href="assets/css/font-awesome.min.css" />
+    <link rel="stylesheet" href="/assets/css/font-awesome.min.css" />
 
-    <link rel="stylesheet" href="assets/plugins/select2/select2.min.css" />
+    <link rel="stylesheet" href="/assets/plugins/select2/select2.min.css" />
 
-    <link rel="stylesheet" href="assets/css/style.css" />
+    <link rel="stylesheet" href="/assets/css/style.css" />
     <title>Profile Page</title>
 
   </head>
@@ -75,21 +75,21 @@
 
     <div class="sidebar-overlay" id="sidebar_overlay"></div>
 
-    <script src="assets/js/jquery-3.2.1.min.js"></script>
+    <script src="/assets/js/jquery-3.2.1.min.js"></script>
 
-    <script src="assets/js/popper.min.js"></script>
-    <script src="assets/js/bootstrap.min.js"></script>
+    <script src="/assets/js/popper.min.js"></script>
+    <script src="/assets/js/bootstrap.min.js"></script>
 
-    <script src="assets/plugins/select2/select2.min.js"></script>
+    <script src="/assets/plugins/select2/select2.min.js"></script>
 
-    <script src="assets/plugins/theia-sticky-sidebar/ResizeSensor.js"></script>
-    <script src="assets/plugins/theia-sticky-sidebar/theia-sticky-sidebar.js"></script>
+    <script src="/assets/plugins/theia-sticky-sidebar/ResizeSensor.js"></script>
+    <script src="/assets/plugins/theia-sticky-sidebar/theia-sticky-sidebar.js"></script>
 
-    <script src="assets/js/script.js"></script>
+    <script src="/assets/js/script.js"></script>
     <script>
         $.ajax({
           type: 'GET',
-          url: '/employees/4db11e2f-26c4-493e-b40e-a88d7c4ac59b',
+          url: `/employees/${window.location.pathname.split('/')[2]}`,
           success: (result) => {
             console.log(result);
             const { data } = result;

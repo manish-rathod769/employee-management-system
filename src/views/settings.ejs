@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <link rel="icon" type="image/x-icon" href="assets/img/favicon.png" />
+
+    <link rel="stylesheet" href="assets/css/bootstrap.min.css" />
+
+    <link rel="stylesheet" href="assets/css/lnr-icon.css" />
+
+    <link rel="stylesheet" href="assets/css/font-awesome.min.css" />
+
+    <link rel="stylesheet" href="assets/plugins/select2/select2.min.css" />
+
+    <link rel="stylesheet" href="assets/css/style.css" />
+    <title>Settings Page</title>
+  </head>
+  <body>
+    <div class="inner-wrapper">
+      <div id="loader-wrapper">
+        <div class="loader">
+          <div class="dot"></div>
+          <div class="dot"></div>
+          <div class="dot"></div>
+          <div class="dot"></div>
+          <div class="dot"></div>
+        </div>
+      </div>
+
+      <!--  header partials  -->
+      <%- include('partials/header'); %>
+
+      <div class="page-wrapper">
+        <div class="container-fluid">
+          <div class="row">
+            <!--  side bar aside tag -->
+            <%- include('partials/aside'); %>
+
+            <div class="col-xl-9 col-lg-8 col-md-12">
+              <div
+                class="quicklink-sidebar-menu ctm-border-radius shadow-sm grow bg-white card"
+              >
+                <div class="card-body">
+                  <ul class="list-group list-group-horizontal-lg">
+                    <li class="list-group-item text-center active button-5">
+                      <a href="settings.html" class="text-white">General</a>
+                    </li>
+                    <li class="list-group-item text-center button-6">
+                      <a class="text-dark" href="settings-timeoff.html"
+                        >Time Off</a
+                      >
+                    </li>
+                  </ul>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-6 d-flex">
+                  <div class="card ctm-border-radius shadow-sm flex-fill grow">
+                    <div class="card-header">
+                      <h4 class="card-title mb-0">Technology</h4>
+                    </div>
+                    <div class="card-body">
+                      <form>
+                        <div class="form-group">
+                          <label>Tech. list</label>
+                          <div class="d-flex">
+                            <select
+                              class="form-control select"
+                              id=""
+                              name=""
+                            >
+                              <option>Technology</option>
+                              <option value="C++">C++</option>
+                              <option value="C#">C#</option>
+                              <option value="Java">Java</option>
+                              <option value="Objective-C">Objective-C</option>
+                              <option value="JavaScript">JavaScript</option>
+                              <option value="Perl">Perl</option>
+                              <option value="PHP">PHP</option>
+                              <option value="Ruby on Rails">Ruby on Rails</option>
+                              <option value="Android">Android</option>
+                              <option value="iOS">iOS</option>
+                              <option value="HTML">HTML</option>
+                              <option value="XML">XML</option>
+                            </select>
+                          <div class="team-action-icon mx-2">
+                            <button
+                              href="javascript:void(0)"
+                              class="btn btn-theme ctm-border-radius text-white btn-sm"
+                              ><i class="fa fa-trash" aria-hidden="true"></i></button>
+                          </div>
+                          </div>
+                        </div>
+
+                        <div class="form-group d-flex">
+                          <input type="text" class="form-control" placeholder="add Technology"/>
+                          <div class="team-action-icon mx-2">
+                            <button
+                              href="javascript:void(0)"
+                              class="btn btn-theme ctm-border-radius text-white btn-sm"
+                              ><i class="fa fa-plus" aria-hidden="true"></i></button>
+                          </div>
+                        </div>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sidebar-overlay" id="sidebar_overlay"></div>
+
+    <script src="assets/js/jquery-3.2.1.min.js"></script>
+
+    <script src="assets/js/popper.min.js"></script>
+    <script src="assets/js/bootstrap.min.js"></script>
+
+    <script src="assets/plugins/theia-sticky-sidebar/ResizeSensor.js"></script>
+    <script src="assets/plugins/theia-sticky-sidebar/theia-sticky-sidebar.js"></script>
+
+    <script src="assets/plugins/select2/select2.min.js"></script>
+
+    <script src="assets/js/script.js"></script>
+  </body>
+</html>

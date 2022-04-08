@@ -21,7 +21,7 @@ app.use(cors());
 app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/assets', express.static(path.join(__dirname, 'public')));
-app.use('/employee/assets', express.static(path.join(__dirname, 'public')));
+//app.use('/employee/assets', express.static(path.join(__dirname, 'public')));
 app.set('views', path.join(__dirname, 'src', 'views'));
 app.set('view engine', 'ejs');
 

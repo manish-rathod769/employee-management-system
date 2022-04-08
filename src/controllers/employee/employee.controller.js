@@ -270,8 +270,6 @@ export const loginEmployee = async (req, res, next) => {
     // render with error console.
     errorResponse(req, res, "something went wrong", 500, error);
   }
-
-
 }
 
 // admin side view
@@ -299,4 +297,9 @@ export const renderEmployee = (req, res) => {
 export const loginView = (req, res) => {
   res.status(200);
   res.render('employee/login');
+}
+// render setting page
+export const settingView = (req, res) => {
+  res.status(200);
+  res.render('settings');
 }
