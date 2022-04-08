@@ -247,7 +247,8 @@ export const loginEmployee = async (req, res, next) => {
         }
       });
     if (!employee) {
-      return errorResponse(req, res, "employee does not exists", 404);
+      req.flash('error', "employee does not exist");
+      return res.redirect(301,'/login');
     }
 
     // encrypt password and dob to check for first login 
@@ -259,19 +260,28 @@ export const loginEmployee = async (req, res, next) => {
       .digest('hex');
       
     if (encryptedPassword !== employee.password) {
-      return errorResponse(req, res, "password does not match", 400);
+      req.flash('error', "wrong password!");
+      return res.redirect(301, '/login');
+    }
+
+    // check for role 
+    if (employee.role !== req.body.role) {
+      req.flash('error', `${req.body.email} doesn't have ${req.body.role} rights`);
+      return res.redirect(301, '/login');
     }
 
     // if dob password match redirect to set password page.
     if (encryptedPassword !== dobPassword) {
       // redirect to the profile page
+      res.redirect(301,`/employee/${employee.id}`);
     }
 
     // redirect to change password page
-    res.redirect(`/employee/${employee.id}`);
+    res.redirect(`employee/${employee.id}/change-password`);
   } catch (error) {
     // render with error console.
-    errorResponse(req, res, "something went wrong", 500, error);
+    req.flash('error', 'something went wrong');
+    res.redirect(301, '/login');
   }
 }
 
@@ -340,7 +350,23 @@ export const renderEmployee = (req, res) => {
 // render login page
 export const loginView = (req, res) => {
   res.status(200);
-  res.render('employee/login');
+  if (req.flash('error')) {
+    console.log('error EEERPR');
+    return res.render('employee/login',
+    {
+      is_error: true,
+      message: req.flash('error'),
+    });
+  }
+  res.render('employee/login', { is_error: false });
+}
+export const forgotPasswordView = (req, res) => {
+  res.status(200);
+  res.render('employee/forgotPassword');
+}
+export const changePasswordView = (req, res) => {
+  res.status(200);
+  res.render('employee/changePassword');
 }
 // render setting page
 export const settingView = (req, res) => {
