@@ -6,7 +6,67 @@ module.exports = {
       'Technologies',
       [
         {
-          techName: 'JAVA',
+          techName: 'Java',
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
+        {
+          techName: 'C++',
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
+        {
+          techName: 'C#',
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
+        {
+          techName: 'Objective-C',
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
+        {
+          techName: 'Perl',
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
+        {
+          techName: 'PHP',
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
+        {
+          techName: 'RubyonRails',
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
+        {
+          techName: 'Android',
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
+        {
+          techName: 'iOS',
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
+        {
+          techName: 'HTML',
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
+        {
+          techName: 'XML',
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
+        {
+          techName: 'ReactJs',
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
+        {
+          techName: 'ReactNative',
           createdAt: new Date(),
           updatedAt: new Date(),
         },
