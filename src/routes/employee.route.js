@@ -20,4 +20,10 @@ router.patch('/employees/:employeeId', );
 router.get('/employee/:employeeId', employeeController.renderEmployee);
 // protected, check for employee login and empoyee side route
 router.get('/profile', employeeController.renderEmployeeProfile);
+
+
+// general route settings
+router.get('/technology');
+router.post('/technology');
+router.get('/setting', employeeController.settingView);
 module.exports = router;
