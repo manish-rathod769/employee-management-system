@@ -1,7 +1,8 @@
-'use strict';
+
 const {
-  Model
+  Model,
 } = require('sequelize');
+
 module.exports = (sequelize, DataTypes) => {
   class Employee extends Model {
     /**
@@ -20,66 +21,66 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: 'employeeId',
       });
     }
-  };
+  }
   Employee.init({
     id: {
       type: DataTypes.UUID,
       allowNull: false,
       primaryKey: true,
     },
-    firstName: { 
+    firstName: {
       type: DataTypes.STRING,
       allowNull: false,
     },
-    lastName: { 
+    lastName: {
       type: DataTypes.STRING,
       allowNull: false,
     },
-    middleName: { 
+    middleName: {
       type: DataTypes.STRING,
       allowNull: false,
     },
-    email: { 
+    email: {
       type: DataTypes.STRING,
       allowNull: false,
     },
-    password: { 
+    password: {
       type: DataTypes.STRING,
       allowNull: false,
     },
-    gender: { 
+    gender: {
       type: DataTypes.ENUM('male', 'female'),
       allowNull: false,
     },
-    role: { 
+    role: {
       type: DataTypes.ENUM('ADMIN', 'PM', 'HR', 'DEV'),
       allowNull: false,
     },
-    DOB: { 
+    DOB: {
       type: DataTypes.DATE,
       allowNull: false,
     },
-    verifyToken: { 
+    verifyToken: {
       type: DataTypes.STRING,
       allowNull: true,
       defaultValue: null,
     },
-    isArchive: { 
+    isArchive: {
       type: DataTypes.BOOLEAN,
       allowNull: false,
       defaultValue: false,
     },
-    joiningDate: { 
+    joiningDate: {
       type: DataTypes.DATE,
       allowNull: false,
     },
-    totalExp: { 
+    totalExp: {
       type: DataTypes.DECIMAL,
       allowNull: false,
-    }  
+    },
   },
   {
-    defaultScope:{
+    defaultScope: {
       where: { isArchive: false },
       attributes: { exclude: ['password', 'verifyToken', 'role'] },
     },
@@ -90,7 +91,7 @@ module.exports = (sequelize, DataTypes) => {
       },
       login: {
         attributes: { include: ['password', 'verifyToken'] },
-      }
+      },
     },
     sequelize,
     modelName: 'Employee',
