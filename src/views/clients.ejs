@@ -1,5 +1,5 @@
       <!-- Include header -->
-      <%- include("partials/header.ejs") %>
+      <%- include("partials/header.ejs"); %>
       <!-- /Include header -->
 
       <div class="page-wrapper">
@@ -7,7 +7,7 @@
           <div class="row">
 
         <!-- Include aside -->
-        <%- include("partials/aside.ejs") %>
+        <%- include("partials/aside.ejs"); %>
         <!-- /Include aside -->
 
           <div class="col-xl-10 col-lg-9 col-md-12">
@@ -40,7 +40,7 @@
                 <div class="row">
                   <div class="col-md-2 form-group">
                     <p class="pl-1 error">Sorting By:</p>
-                    <select class="form-control" id="sort-by" onchange="sortByField()">
+                    <select class="form-control" id="sort-by" onchange="viewClientWithPagination()">
                       <option value="name">Name</option>
                       <option value="email">Email</option>
                       <option value="slackId">SlackId</option>
@@ -52,7 +52,7 @@
                   </div>
                   <div class="col-md-2 form-group">
                     <p class="pl-1 error">Sorting Order:</p>
-                    <select class="form-control" id="sort-order" onchange="sortByField()">
+                    <select class="form-control" id="sort-order" onchange="viewClientWithPagination()">
                       <option value="ASC" selected>Ascending</option>
                       <option value="DESC">Descending</option>
                     </select>
@@ -63,7 +63,7 @@
                   </div>
                   <div class="col-md-4 form-group">
                     <p class="pl-1 error">Number of records per page:</p>
-                    <select class="form-control" id="select-record-count" onchange="showThisMuchRecord()">
+                    <select class="form-control" id="select-record-count" onchange="viewClientWithPagination()">
                       <option value="6">6</option>
                       <option value="12" selected>12</option>
                       <option value="24">24</option>
