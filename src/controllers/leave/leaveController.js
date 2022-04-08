@@ -30,11 +30,12 @@ exports.addLeave = async (req, res) => {
 exports.viewLeave = async (req, res) => {
     try {
 
-    
-            const getleave = await Leave.findAll({ where: {isArchive : false } });
-            console.log(getleave);
-            res.render('view-leave', { leavesdata: getleave });
-        //    successResponse(req, res, getleave, 200);
+
+        const getleave = await Leave.findAll({ where: { isArchive: false } });
+        console.log(getleave);
+        // successResponse(req, res, getleave, 200);
+        res.render('view-leave', { leavesdata: getleave });
+
         //==============================
 
 
@@ -57,26 +58,29 @@ exports.viewLeave = async (req, res) => {
     }
 }
 
+exports.viewOwnLeave = async (req, res) => {
+    try {
+        console.log("-------------------------------------------------------------------------viewownleave")
+        const id = req.params.id;
+        console.log(id);
+        const getleave = await Leave.findAll({ where: { id: id, isArchive: false } });
+        console.log(getleave)
+        res.render('view-leavedata', { leavesdata: getleave });
+    } catch (e) {
+        errorResponse(req, res, e.message, 400, e);
+    }
+}
+
 exports.deleteLeave = async (req, res) => {
     try {
         const id = req.params.id;
         console.log(id);
-        const getdata = await Leave.findByPk(id);
-
-        let leavedata = {
-            employeeId: getdata.employeeId,
-            startDate: getdata.startDate,
-            endDate: getdata.endDate,
-            reason: getdata.reason,
-            status: getdata.reason,
-            remainingLeave: getdata.reason,
-            isArchive: true,
-        }
-
-        const getleave = await Leave.update(leavedata, { where: { id: id } })
-        //const getleave = await Leave.destroy({ where: { id: id } })
-        console.log(getleave)
-        successResponse(req, res, getleave, 200);
+        const leavedata = await Leave.update({ isArchive: true }, { returning: true, where: { id: id } });
+        console.log(leavedata);
+        const getleave = await Leave.findAll({ where: { id: id, isArchive: false } });
+        console.log(getleave);
+        res.render('view-leavedata', { leavesdata: getleave });
+        // successResponse(req, res, getleave, 200);
     }
     catch (e) {
         errorResponse(req, res, e.message, 400, e);
@@ -132,7 +136,10 @@ exports.updateLeave = async (req, res) => {
         console.log(leavedata)
         const getleave = await Leave.update(leavedata, { where: { id: id } })
         console.log(getleave)
-        successResponse(req, res, getleave, 200);
+        const getallleave = await Leave.findAll({ where: { isArchive: false } });
+        console.log(getallleave);
+        res.render('view-leave', { leavesdata: getallleave });
+        //successResponse(req, res, getleave, 200);
     }
     catch (e) {
         errorResponse(req, res, e.message, 400, e);
