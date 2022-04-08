@@ -22,8 +22,9 @@ router.get('/employee/:employeeId', employeeController.renderEmployee);
 router.get('/profile', employeeController.renderEmployeeProfile);
 
 
-// general route settings
-router.get('/technology');
-router.post('/technology');
+// general settings-route
+router.get('/technologies', employeeController.getTechnology);
+router.post('/technologies', employeeController.addTechnology);
 router.get('/setting', employeeController.settingView);
+
 module.exports = router;
