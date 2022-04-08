@@ -1,4 +1,7 @@
+/* eslint-disable strict */
+
 'use strict';
+
 module.exports = {
   async up(queryInterface, Sequelize) {
     await queryInterface.createTable('Clients', {
@@ -8,33 +11,34 @@ module.exports = {
         primaryKey: true,
       },
       name: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
       },
       email: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
       },
       slackId: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
       },
       city: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
       },
       state: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
       },
       country: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
       },
       organization: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
       },
       isArchive: {
         type: Sequelize.BOOLEAN,
         defaultValue: false,
-      }
+      },
     });
   },
+  // eslint-disable-next-line no-unused-vars
   async down(queryInterface, Sequelize) {
     await queryInterface.dropTable('Clients');
-  }
+  },
 };
