@@ -122,18 +122,26 @@ const cancelBtnEmployeeDetails = (id) => {
   $('#employee-details').remove();
 }
 
-$('#employeeRecordLimit,#employeeRecordLimitBtn').click((event) => {
+$('#search').click((event) => {
   displayEmployee();
 });
 
 const displayEmployee = () => {
   $('#displayEmployeeDetails').html("");
   const page = $('#employeeRecordPageCount').data('page');
-  const limit = $('#employeeRecordLimit').val();
-  //console.log('limit', limit);
+  const limit = $('#employeeRecordLimit').val() || 9;
+  const order = $('#order').val();
+  let query = `page=${page}&limit=${limit}&order=${order}`;
+  const search = $('#searchKeyword').val();
+  if (search) {
+    query = `${query}&search=${search}`;
+    console.log(query); 
+  }
+
+  console.log(order, limit);
   $.ajax({
     type: 'GET',
-    url: `/employees?page=${page}&limit=${limit}`,
+    url: `/employees?${query}`,
     success: (result) => {
       //console.log(result.data);
       $('#previousEmployeeRecord').removeClass('disabled');
@@ -204,6 +212,12 @@ const displayEmployee = () => {
     },
     error: (err) => {
       console.log(err);
+      $('#displayEmployeeDetails').html(`
+                    <div class="card text-center shadow-sm grow ctm-border-radius">
+                    <div class="card-body align-center">
+                    <h4> No Record Found Try again !!</h4>
+                    </div>
+                    </div>`);
     }
   });
 }
