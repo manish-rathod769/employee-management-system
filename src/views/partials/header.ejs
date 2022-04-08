@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <header class="header">
   <div class="top-header-section">
     <div class="container-fluid">
@@ -106,6 +107,139 @@
                         <span class="lnr lnr-power-switch mr-3"></span>
                         <span class="media-body text-truncate">
                           <span class="text-truncate">Logout</span>
+=======
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Employee Management app</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <link rel="icon" type="image/x-icon" href="/public/img/favicon.png">
+
+  <link rel="stylesheet" href="/public/css/bootstrap.min.css">
+
+  <link rel="stylesheet" href="/public/css/lnr-icon.css">
+
+  <link rel="stylesheet" href="/public/css/font-awesome.min.css">
+
+  <link rel="stylesheet" href="/public/css/style.css">
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"
+    integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.3/jquery.validate.js"></script>
+
+</head>
+
+<body>
+  <div class="inner-wrapper">
+    <header class="header">
+      <div class="top-header-section">
+        <div class="container-fluid">
+          <div class="row align-items-center">
+            <div class="col-lg-3 col-md-3 col-sm-3 col-6">
+              <div class="logo my-3 my-sm-0">
+                <a href="index.html">
+                  <img src="/public/img/logo.png" alt="logo image" class="img-fluid" width="100">
+                </a>
+              </div>
+            </div>
+            <div class="col-lg-9 col-md-9 col-sm-9 col-6 text-right">
+              <div class="user-block d-none d-lg-block">
+                <div class="row align-items-center">
+                  <div class="col-lg-12 col-md-12 col-sm-12">
+                    <div class="user-info align-right dropdown d-inline-block header-dropdown">
+                      <a href="javascript:void(0)" data-toggle="dropdown" class=" menu-style dropdown-toggle">
+                        <div class="user-avatar d-inline-block">
+                          <img src="/public/img/profiles/img-6.jpg" alt="user avatar" class="rounded-circle img-fluid"
+                            width="55">
+                        </div>
+                      </a>
+                      <div class="dropdown-menu notification-dropdown-menu shadow-lg border-0 p-3 m-0 dropdown-menu-right">
+                        <a class="dropdown-item p-2" href="/logout">
+                          <span class="media align-items-center">
+                            <span class="lnr lnr-power-switch mr-3"></span>
+                            <span class="media-body text-truncate">
+                              <span class="text-truncate">Logout</span>
+                            </span>
+                          </span>
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="d-block d-lg-none">
+                <a href="javascript:void(0)">
+                  <span class="lnr lnr-user d-block display-5 text-white" id="open_navSidebar"></span>
+                </a>
+                <div class="offcanvas-menu" id="offcanvas_menu">
+                  <span class="lnr lnr-cross float-left display-6 position-absolute t-1 l-1 text-white"
+                    id="close_navSidebar"></span>
+                  <div class="user-info align-center bg-theme text-center">
+                    <a href="javascript:void(0)" class="d-block menu-style text-white">
+                      <div class="user-avatar d-inline-block mr-3">
+                        <img src="/public/img/profiles/img-6.jpg" alt="user avatar" class="rounded-circle img-fluid"
+                          width="55">
+                      </div>
+                    </a>
+                  </div>
+                  <hr>
+                  <div class="user-menu-items px-3 m-0">
+                    <a class="p-2" href="/employees/:eid/profile">
+                      <span class="media align-items-center">
+                        <span class="lnr lnr-user mr-3"></span>
+                        <span class="media-body text-truncate text-left">
+                          <span class="text-truncate text-left">Profile</span>
+                        </span>
+                      </span>
+                    </a>
+                    <a class="p-2" href="/employees/:eid/projects">
+                      <span class="media align-items-center">
+                        <span class="lnr lnr-chart-bars mr-3"></span>
+                        <span class="media-body text-truncate text-left">
+                          <span class="text-truncate text-left">Projects</span>
+                        </span>
+                      </span>
+                    </a>
+                    <a class="p-2" href="/employees/:eid/pocs">
+                      <span class="media align-items-center">
+                        <span class="lnr lnr-users mr-3"></span>
+                        <span class="media-body text-truncate text-left">
+                          <span class="text-truncate text-left">POC</span>
+                        </span>
+                      </span>
+                    </a>
+                    <a class="p-2" href="/employees/:eid/attendences">
+                      <span class="media align-items-center">
+                        <span class="lnr lnr-pencil mr-3"></span>
+                        <span class="media-body text-truncate text-left">
+                          <span class="text-truncate text-left">Attendence</span>
+                        </span>
+                      </span>
+                    </a>
+                    <a class="p-2" href="/employees/:eid/leaves">
+                      <span class="media align-items-center">
+                        <span class="lnr lnr-list mr-3"></span>
+                        <span class="media-body text-truncate text-left">
+                          <span class="text-truncate text-left">Leave</span>
+                        </span>
+                      </span>
+                    </a>
+                    <a class="p-2" href="/logout">
+                      <span class="media align-items-center">
+                        <span class="lnr lnr-power-switch mr-3"></span>
+                        <span class="media-body text-truncate text-left">
+                          <span class="text-truncate text-left">Logout</span>
+>>>>>>> add: backend of update, view and softdelet of leave
                         </span>
                       </span>
                     </a>
@@ -122,6 +256,7 @@
               </div>
             </div>
           </div>
+<<<<<<< HEAD
           <div class="d-block d-lg-none">
             <a href="javascript:void(0)">
               <span
@@ -228,3 +363,8 @@
     </div>
   </div>
 </header>
+=======
+        </div>
+      </div>
+    </header>
+>>>>>>> add: backend of update, view and softdelet of leave
