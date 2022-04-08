@@ -3,6 +3,26 @@ $('#addEmployeeBtn').click((event) => {
   event.preventDefault();
   $('#addEmployeeFormContainer').removeClass('d-none');
   $('#employeeDisplayContainer').addClass('d-none');
+
+  // populate tech table
+  $.ajax({
+    type: 'GET',
+    url: '/technologies',
+    success: function ({ data }) {
+      data.forEach(elem => {
+        const val = elem.techName;
+
+        // append to select group
+        $('#knownTech').append(
+          `<option value="${val}">${val}</option>`
+        );
+      })
+      // append data to #knownTech 
+    },
+    error : function (error) {
+      console.log(error);
+    }
+  })
 });
 
 const deleteButton = (id, name) => {
