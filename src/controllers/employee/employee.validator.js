@@ -1,5 +1,5 @@
-import { errorResponse, isValidTech } from '../../helpers';
 import joi from 'joi';
+import { errorResponse, isValidTech } from '../../helpers';
 
 const validation = joi.object({
   firstName: joi.string().trim(true).required(),
@@ -8,7 +8,6 @@ const validation = joi.object({
   email: joi.string().email().trim(true).required(),
   gender: joi.string().trim(true).valid('male', 'female').required(),
   DOB: joi.date().less('now').required(),
-  //password: joi.string().trim(true).min(8).max(12).required(),
   joiningDate: joi.date().required(),
   role: joi.string().trim(true).valid('ADMIN', 'DEV', 'PM', 'HR').required(),
   totalExp: joi.number().required(),
@@ -70,32 +69,32 @@ export const employeeValidate = async (req, res, next) => {
   const { error } = validation.validate(payload);
   if (error) {
     res.status(406);
-    errorResponse(req, res, "employee data validation error", 406, error.message);
+    errorResponse(req, res, 'employee data validation error', 406, error.message);
   } else if (!isValidTech(req.body.knownTech)) {
-    errorResponse(req, res, "selected technology does not exists in system", 406);
+    errorResponse(req, res, 'selected technology does not exists in system', 406);
   } else {
     next();
   }
-}
+};
 
 const loginValidation = joi.object({
   email: joi.string().email().trim(true).required(),
   role: joi.string().trim(true).valid('ADMIN', 'DEV', 'PM', 'HR').required(),
-  password: joi.string().trim(true).max(12).min(8).required(),
+  password: joi.string().trim(true).required().min(8)
+    .max(12),
 });
 
+// eslint-disable-next-line consistent-return
 export const loginValidate = async (req, res, next) => {
   const payload = {
     email: req.body.email,
     role: req.body.role,
     password: req.body.password,
-  }
-
+  };
   const { error } = loginValidation.validate(payload);
-  if(error){
+  if (error) {
     req.flash('error', error.message);
     return res.redirect(301, '/login');
-  } else {
-    next();
   }
-}
+  next();
+};
