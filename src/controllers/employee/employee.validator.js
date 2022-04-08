@@ -1,4 +1,4 @@
-import { errorResponse } from '../../helpers';
+import { errorResponse, isValidTech } from '../../helpers';
 import joi from 'joi';
 
 const validation = joi.object({
@@ -12,7 +12,7 @@ const validation = joi.object({
   joiningDate: joi.date().required(),
   role: joi.string().trim(true).valid('ADMIN', 'DEV', 'PM', 'HR').required(),
   totalExp: joi.number().required(),
-  
+
   contactNo: joi.string().trim(true).required(),
   secondaryEmail: joi.string().email().trim(true),
   houseNo: joi.string().trim(true).required(),
@@ -44,7 +44,7 @@ export const employeeValidate = async (req, res, next) => {
     DOB: req.body.DOB,
     role: req.body.role,
     joiningDate: req.body.joiningDate,
-    totalExp: req.body.totalExp,  
+    totalExp: req.body.totalExp,
 
     collage: req.body.collage,
     highestQualification: req.body.highestQualification,
@@ -68,15 +68,17 @@ export const employeeValidate = async (req, res, next) => {
   };
 
   const { error } = validation.validate(payload);
-  if(error){
+  if (error) {
     res.status(406);
     errorResponse(req, res, "employee data validation error", 406, error.message);
+  } else if (isValidTech(req.body.knownTech)) {
+    errorResponse(req, res, "selected technology does not exists in system", 406);
   } else {
     next();
   }
 }
 
-const loginValidation =  joi.object({
+const loginValidation = joi.object({
   email: joi.string().email().trim(true).required(),
   role: joi.string().trim(true).valid('ADMIN', 'DEV', 'PM', 'HR').required(),
   password: joi.string().trim(true).max(12).min(8).required(),

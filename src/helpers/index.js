@@ -1,3 +1,5 @@
+import { Technology } from '../models';
+
 export const successResponse = (req, res, data, code = 200) => res.send({
   code,
   data,
@@ -38,6 +40,15 @@ export const validateEmail = (email) => {
   const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
   return re.test(String(email).toLowerCase());
 };
+
+export const isValidTech = async (arr) => {
+  let techList = await Technology.findAll(
+    {
+      attributes: ['techName'],
+    });
+  techList = techList.map(elem => elem.techName);
+  return arr.every(elem => techList.includes(elem));
+}
 
 export const validateFields = (object, fields) => {
   const errors = [];
