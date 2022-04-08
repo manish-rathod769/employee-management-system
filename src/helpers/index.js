@@ -19,8 +19,8 @@ export const errorResponse = (
 });
 
 export const createPassword = (dob) => {
-  const date = new Date(dob);
-  return `${date.getDate()}${date.getMonth()}${date.getFullYear()}`;
+  const date = new Date(dob).toISOString().split('T')[0].split('-').reverse().join("");
+  return date;
 }
 
 export const getTimeBetweenDates = (startDate, endDate) => {
