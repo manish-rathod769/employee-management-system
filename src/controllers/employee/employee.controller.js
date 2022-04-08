@@ -1,7 +1,8 @@
 import { createHash } from 'crypto';
 import { v4 as uuidv4 } from 'uuid';
+import { Op } from 'sequelize';
 import { errorResponse, successResponse, createPassword, getTimeBetweenDates } from '../../helpers';
-import { Employee, EmployeeContact, EmployeeAcademic, EmployeePreWork } from '../../models';
+import { Employee, EmployeeContact, EmployeeAcademic, EmployeePreWork, Technology } from '../../models';
 
 export const addEmployee = async (req, res, next) => {
   try{
@@ -65,6 +66,8 @@ export const addEmployee = async (req, res, next) => {
       employerAddress: req.body.employerAddress,
       workingTime: req.body.workingTime,
     };
+
+    // make array of known tech id from technology table
     const academicPayload = {
       employeeId: payload.id,
       highestQualification: req.body.highestQualification,
@@ -269,6 +272,47 @@ export const loginEmployee = async (req, res, next) => {
   } catch (error) {
     // render with error console.
     errorResponse(req, res, "something went wrong", 500, error);
+  }
+}
+
+
+// get technology
+export const getTechnology = async (req, res, next) => {
+  try{
+    const tech = await Technology.findAll(
+      {
+        attributes: ['techName']
+      });
+    res.status(200);
+    successResponse(req, res, tech, 200);
+  } catch (error) {
+    errorResponse(req, res, "something went wrong", 500, error);
+  }
+}
+
+export const addTechnology = async (req, res, next) => {
+  try{
+    const tech = await Technology.findOne(
+      {
+        where: {
+          techName: {
+            [Op.iLike]: `${req.body.techName}`,
+          },
+        }
+      });
+    if (tech) {
+      return errorResponse (req, res, "technology alredy exists", 409);
+    }
+    const newTech = await Technology.create(
+      {
+        techName: req.body.techName,
+      }
+    );
+    res.status(201);
+    successResponse(req, res, newTech, 201);
+  } catch (error) {
+    console.log(error);
+    errorResponse(req, res, "something went wrong", 500, error.message);
   }
 }
 

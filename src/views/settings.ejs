@@ -62,45 +62,46 @@
                       <h4 class="card-title mb-0">Technology</h4>
                     </div>
                     <div class="card-body">
-                      <form>
-                        <div class="form-group">
-                          <label>Tech. list</label>
-                          <div class="d-flex">
-                            <select
-                              class="form-control select"
-                              id=""
-                              name=""
-                            >
-                              <option>Technology</option>
-                              <option value="C++">C++</option>
-                              <option value="C#">C#</option>
-                              <option value="Java">Java</option>
-                              <option value="Objective-C">Objective-C</option>
-                              <option value="JavaScript">JavaScript</option>
-                              <option value="Perl">Perl</option>
-                              <option value="PHP">PHP</option>
-                              <option value="Ruby on Rails">Ruby on Rails</option>
-                              <option value="Android">Android</option>
-                              <option value="iOS">iOS</option>
-                              <option value="HTML">HTML</option>
-                              <option value="XML">XML</option>
-                            </select>
+                      <div class="form-group">
+                        <label>Tech. list</label>
+                        <div class="d-flex">
+                          <select
+                            class="form-control select"
+                            id="techList"
+                            name="techSelect"
+                          >
+                            <option selected disabled>Technology</option>
+                          </select>
                           <div class="team-action-icon mx-2">
                             <button
-                              href="javascript:void(0)"
+                              id="deleteTech"
                               class="btn btn-theme ctm-border-radius text-white btn-sm"
-                              ><i class="fa fa-trash" aria-hidden="true"></i></button>
-                          </div>
+                            >
+                              <i class="fa fa-trash" aria-hidden="true"></i>
+                            </button>
                           </div>
                         </div>
-
+                      </div>
+                      <form
+                        action="/technologies"
+                        method="POST"
+                        id="addTechnology"
+                      >
                         <div class="form-group d-flex">
-                          <input type="text" class="form-control" placeholder="add Technology"/>
+                          <input
+                            type="text"
+                            class="form-control"
+                            id="techName"
+                            name="techName"
+                            placeholder="add Technology"
+                          />
                           <div class="team-action-icon mx-2">
                             <button
-                              href="javascript:void(0)"
+                              type="submit"
                               class="btn btn-theme ctm-border-radius text-white btn-sm"
-                              ><i class="fa fa-plus" aria-hidden="true"></i></button>
+                            >
+                              <i class="fa fa-plus" aria-hidden="true"></i>
+                            </button>
                           </div>
                         </div>
                       </form>
@@ -121,11 +122,80 @@
     <script src="assets/js/popper.min.js"></script>
     <script src="assets/js/bootstrap.min.js"></script>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.3/jquery.validate.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.3/dist/additional-methods.min.js"></script>
+
     <script src="assets/plugins/theia-sticky-sidebar/ResizeSensor.js"></script>
     <script src="assets/plugins/theia-sticky-sidebar/theia-sticky-sidebar.js"></script>
 
     <script src="assets/plugins/select2/select2.min.js"></script>
 
     <script src="assets/js/script.js"></script>
+    <script>
+      $("#deleteTech").click(() => {});
+
+      $("#addTechnology").on("submit", (event) => {
+        event.preventDefault();
+      });
+
+      $("#addTechnology").validate({
+        rules: {
+          techName: {
+            required: true,
+            nowhitespace: true,
+          },
+        },
+        messages: {
+          techName: {
+            required: "please enter technology name",
+            nowhitespace:
+              "No space is allowed in between word. may use ( - or / )",
+          },
+        },
+        errorElement: "span",
+        errorClass: "text-danger",
+        errorPlacement: function (error, element) {
+          error.insertAfter(element.parent());
+        },
+        submitHandler: function (form) {
+          $.ajax({
+            type: 'POST',
+            url: '/technologies',
+            data: {
+              techName: `${$('#techName').val()}}`
+            },
+            success: (data) => {
+              console.log(data);
+              fetchTechnlogy();
+            },
+            error: (error) => {
+              console.log(error);
+            }
+          })
+
+          //location.reload();
+        },
+      });
+
+      const fetchTechnlogy = () => {
+        $("#techList").html(`<option selected disabled>Technology</option>`);
+        $.ajax({
+          type: "GET",
+          url: "/technologies",
+          success: function ({ data }) {
+            data.forEach((elem) => {
+              const val = elem.techName;
+              $("#techList").append(`<option value="${val}">${val}</option>`);
+            });
+          },
+          error: function (error) {
+            console.log(error);
+          },
+        });
+      };
+      fetchTechnlogy();
+
+      $(document).ready(() => {});
+    </script>
   </body>
 </html>
