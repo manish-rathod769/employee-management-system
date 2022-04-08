@@ -1,3 +1,4 @@
+/* eslint-disable import/no-extraneous-dependencies */
 require('@babel/register');
 /* eslint-disable no-console */
 const chalk = require('chalk');

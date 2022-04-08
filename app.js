@@ -41,7 +41,7 @@ app.set('view engine', 'ejs');
 
 app.use('/', employeeRoutes);
 // requiring routes
-app.use("/", clientRoutes);
-app.use("/", adminRoutes);
+app.use('/', clientRoutes);
+app.use('/', adminRoutes);
 
 module.exports = app;
