@@ -9,7 +9,7 @@ const leaveRegisterValid = joi.object({
     //remainingLeave: joi.string().trim(true).required(),
 });
 
-export const leaveRegisterValidation = async (req, res, next) => {
+exports.leaveRegisterValidation = async (req, res, next) => {
     const payload = {
         startDate: req.body.startDate,
         endDate: req.body.endDate,
@@ -25,3 +25,29 @@ export const leaveRegisterValidation = async (req, res, next) => {
         next();
     }
 }
+
+const leaveUpdateValid = joi.object({
+    startDate: joi.date(),
+    endDate: joi.date(),
+    reason: joi.string().trim(true),
+    status: joi.string().trim(true).valid('pending', 'approved', 'rejected'),
+    remainingLeave: joi.string().trim(true),
+});
+
+exports.leaveUpdateValidation = async (req, res, next) => {
+    const payload = {
+        startDate: req.body.startDate,
+        endDate: req.body.endDate,
+        reason: req.body.reason,
+        status: req.body.status,
+        remainingLeave: req.body.remainingLeave,
+    }
+
+    const { error } = leaveUpdateValid.validate(payload);
+    if (error) {
+        errorResponse(req, res, error.message, 206, error.details);
+    } else {
+        next();
+    }
+}
+
