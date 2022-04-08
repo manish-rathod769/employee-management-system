@@ -194,7 +194,7 @@ $(document).ready(() => {
       }
     },
     submitHandler: function (form) {
-      const addForm = $('#editEmployeeFormContainer');
+      const addForm = $('#form-add-employee');
       const payload = {
         lastName: addForm.find('#lastName').val(),
         firstName: addForm.find('#firstName').val(),
