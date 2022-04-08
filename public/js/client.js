@@ -9,8 +9,8 @@ let disableClient = () => {
         viewClientWithPagination();
       },
       error: (resData) => {
-        console.log(resData);
         alert(resData.responseJSON.errorMessage);
+        viewClientWithPagination();
       }
     });
   }
@@ -33,6 +33,8 @@ let clientDetails = clientId => {
     },
     error: resData => {
       alert(resData.responseJSON.errorMessage);
+      hideShowField(["#all-client", "#clients-add-div", "#clients-view-div"], ["#add-client", "#pagination", "#clients-data-body"]);
+
     }
   })
 }
