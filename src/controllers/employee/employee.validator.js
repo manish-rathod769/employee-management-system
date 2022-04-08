@@ -71,7 +71,7 @@ export const employeeValidate = async (req, res, next) => {
   if (error) {
     res.status(406);
     errorResponse(req, res, "employee data validation error", 406, error.message);
-  } else if (isValidTech(req.body.knownTech)) {
+  } else if (!isValidTech(req.body.knownTech)) {
     errorResponse(req, res, "selected technology does not exists in system", 406);
   } else {
     next();
@@ -93,7 +93,8 @@ export const loginValidate = async (req, res, next) => {
 
   const { error } = loginValidation.validate(payload);
   if(error){
-    errorResponse(req, res, "employee data validation error", 406, error.message);
+    req.flash('error', error.message);
+    return res.redirect(301, '/login');
   } else {
     next();
   }

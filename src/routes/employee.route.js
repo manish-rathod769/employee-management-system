@@ -16,8 +16,10 @@ router.get('/employees/search', );
 
 router.get('/login', employeeController.loginView);
 router.post('/login', employeeValidator.loginValidate, employeeController.loginEmployee);
+router.get('/forgot-password', employeeController.forgotPasswordView);
 router.patch('/employees/:employeeId', );
 router.get('/employee/:employeeId', employeeController.renderEmployee);
+router.get('/employee/:employeeId/change-password', employeeController.changePasswordView);
 // protected, check for employee login and empoyee side route
 router.get('/profile', employeeController.renderEmployeeProfile);
 
