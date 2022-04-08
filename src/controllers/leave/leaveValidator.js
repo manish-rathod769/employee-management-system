@@ -27,9 +27,9 @@ exports.leaveRegisterValidation = async (req, res, next) => {
 }
 
 const leaveUpdateValid = joi.object({
-    startDate: joi.date(),
-    endDate: joi.date(),
-    reason: joi.string().trim(true),
+    startDate: joi.date().required(),
+    endDate: joi.date().required(),
+    reason: joi.string().trim(true).required(),
     status: joi.string().trim(true).valid('pending', 'approved', 'rejected'),
     remainingLeave: joi.string().trim(true),
 });
