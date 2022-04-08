@@ -1,6 +1,7 @@
 import { createHash } from 'crypto';
 import { v4 as uuidv4 } from 'uuid';
 import { Op } from 'sequelize';
+import { Sequelize } from 'sequelize';
 import { errorResponse, successResponse, createPassword, getTimeBetweenDates } from '../../helpers';
 import { Employee, EmployeeContact, EmployeeAcademic, EmployeePreWork, Technology } from '../../models';
 
@@ -94,6 +95,12 @@ export const getEmployee = async (req, res, next) => {
     const page = Number(req.query.page);
     const limit = Number(req.query.limit);
     const order = /DESC/i.test(req.query.order) ? 'DESC' : 'ASC';
+    let search = '';
+
+    if (req.query.search) {
+      search = req.query.search;
+    }
+
     const startIndex = (page-1) * limit;
     
     let result = {};
@@ -106,22 +113,49 @@ export const getEmployee = async (req, res, next) => {
       result.pre = true
     }
 
+    if (search !== '') {
+      console.log('here');
     result.employee = await Employee.scope('admin').findAll(
       { 
-        include: [{ model: EmployeeAcademic, attributes: ['knownTech'] }],
+        include: [
+          { 
+            model: EmployeeAcademic, 
+            attributes: ['knownTech'],
+          }],
         attributes: ['id', 'firstName', 'lastName', 'role', 'email'],
         offset: startIndex,
         limit: limit,
         order: [
           ['firstName', order]
-        ]
+        ],
+        where: {
+          [Op.or]: [
+            { firstName: { [Op.iLike]: `%${search}%` } },
+            { lastName:  { [Op.iLike]: `%${search}%` } },
+            { email:     { [Op.iLike]: `%${search}%` } },
+            Sequelize.literal(`"Employee"."role"::TEXT ILIKE '%${search}%'`),
+          ]
+        },
       });
+    } else {
+      result.employee = await Employee.scope('admin').findAll(
+        {
+          include: [{ model: EmployeeAcademic, attributes: ['knownTech'] }],
+          attributes: ['id', 'firstName', 'lastName', 'role', 'email'],
+          offset: startIndex,
+          limit: limit,
+          order: [
+            ['firstName', order]
+          ],
+        });
+    }
+    
     // console.log(totalEmployee);
     // console.log(result);
     res.status(200);
     successResponse(req, res, result, 200);
   } catch (error) {
-    errorResponse(req, res, "something went wrong", 500, error);
+    errorResponse(req, res, "something went wrong", 500, error.message);
   } 
 }
 

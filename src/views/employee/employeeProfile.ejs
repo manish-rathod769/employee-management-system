@@ -16,7 +16,6 @@
 
     <link rel="stylesheet" href="/assets/css/style.css" />
     <title>Profile Page</title>
-
   </head>
   <body>
     <div class="inner-wrapper">
@@ -26,7 +25,6 @@
       <div class="page-wrapper">
         <div class="container-fluid">
           <div class="row">
-            
             <!--  side bar aside tag -->
             <%- include('../partials/asideEmployee'); %>
 
@@ -35,8 +33,12 @@
                 class="quicklink-sidebar-menu ctm-border-radius shadow-sm grow bg-white p-4 mb-4 card"
               >
                 <ul class="list-group list-group-horizontal-lg">
-                  <li class="list-group-item text-center active button-5 disabled">
-                    <a href="#" id="employeeDetails" class="text-white">Detail</a>
+                  <li
+                    class="list-group-item text-center active button-5 disabled"
+                  >
+                    <a href="#" id="employeeDetails" class="text-white"
+                      >Detail</a
+                    >
                   </li>
                   <li class="list-group-item text-center button-6">
                     <a href="documents.html" class="text-dark">Document</a>
@@ -59,19 +61,19 @@
               </div>
 
               <!-- employee details  -->
-              <div class="row" id="displayEmployeeDetails"> 
+              <div class="row" id="displayEmployeeDetails">
                 <!-- employee profile -->
               </div>
-              
+
               <!-- employee deshbord -->
-              <div id="employeeDeshbord">
-              
-              </div>
+              <div id="employeeDeshbord"></div>
             </div>
           </div>
         </div>
       </div>
     </div>
+
+
 
     <div class="sidebar-overlay" id="sidebar_overlay"></div>
 
@@ -87,14 +89,18 @@
 
     <script src="/assets/js/script.js"></script>
     <script>
-        $.ajax({
-          type: 'GET',
-          url: `/employees/${window.location.pathname.split('/')[2]}`,
-          success: (result) => {
-            console.log(result);
-            const { data } = result;
-            $('#displayEmployeeDetails').append(
-              `<div class="col-xl-4 col-lg-6 col-md-6 d-flex" data-employee-id=${data.id}>
+      const editProfile = (id) => {
+        
+      }
+
+      $.ajax({
+        type: "GET",
+        url: `/employees/${window.location.pathname.split("/")[2]}`,
+        success: (result) => {
+          console.log(result);
+          const { data } = result;
+          $("#displayEmployeeDetails").append(
+            `<div class="col-xl-4 col-lg-6 col-md-6 d-flex" data-employee-id=${data.id}>
                 <div class="card flex-fill ctm-border-radius shadow-sm grow">
                   <div class="card-header">
                     <h4 class="card-title mb-0">Basic Information</h4>
@@ -125,6 +131,15 @@
                       <span class="text-primary">Total Exp :</span> ${data.totalExp}
                     </p>
                   </div>
+                  <!-- <div class="team-action-icon text-right">
+                    <button type="button" 
+                      class="btn btn-theme ctm-border-radius text-white" 
+                      title="Edit"
+                      onclick="editProfile('${data.id}')"
+                      id="employeeEditButton" >
+                      <i class="fa fa-pencil"></i>
+                    </button>
+                  </div> -->
                 </div>
               </div>
               <div class="col-xl-4 col-lg-6 col-md-6 d-flex">
@@ -209,9 +224,9 @@
                   </div>
                 </div>
               </div>`
-            );
-          }
-        });
+          );
+        },
+      });
     </script>
   </body>
 </html>
