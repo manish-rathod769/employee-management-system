@@ -107,7 +107,7 @@ export const getEmployee = async (req, res) => {
       result.pre = true;
     }
 
-    if (search !== '') {
+    if (search) {
       // console.log('here');
       result.employee = await Employee.scope('admin').findAll(
         {
@@ -174,6 +174,7 @@ export const getEmployeeOne = async (req, res) => {
 export const updateEmployee = async (req, res) => {
   try {
     // find if employee with email and id exists
+    console.log(req.params);
     const employee = await Employee.scope('admin').findOne(
       {
         where: {

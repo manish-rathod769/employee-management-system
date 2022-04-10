@@ -10,7 +10,7 @@ $('#form-edit-employee').validate({
   rules: {
     firstName: {
       required: true,
-      minlength: 2
+      minlength: 2,
     },
     middleName: {
       required: true,
@@ -27,7 +27,7 @@ $('#form-edit-employee').validate({
       required: true,
     },
     joiningDate: {
-      required: true
+      required: true,
     },
     totalExp: {
       required: true,
@@ -42,7 +42,7 @@ $('#form-edit-employee').validate({
       required: true,
     },
     university: {
-      required: true
+      required: true,
     },
     knownTech: {
       required: true,
@@ -88,104 +88,104 @@ $('#form-edit-employee').validate({
     },
     workingTimeInMonth: {
       max: 12,
-      min: 1,
+      min: 0,
       digits: true,
-    }
+    },
   },
   messages: {
     firstName: {
-      required: "First Name is requrired",
-      minlength: "at least 2 character required",
+      required: 'First Name is requrired',
+      minlength: 'at least 2 character required',
     },
     lastName: {
-      required: "Last Name is requrired",
-      minlength: "at least 2 character required",
+      required: 'Last Name is requrired',
+      minlength: 'at least 2 character required',
     },
     middleName: {
-      required: "Middle Name is requrired",
-      minlength: "at least 2 character required",
+      required: 'Middle Name is requrired',
+      minlength: 'at least 2 character required',
     },
     dob: {
-      required: "please select dob",
+      required: 'please select dob',
     },
     role: {
-      required: "please select valid role",
+      required: 'please select valid role',
     },
     joiningDate: {
-      required: "please enter date",
+      required: 'please enter date',
     },
     totalExp: {
-      required: "plese enter total experiance",
-      number: "select decimal number",
+      required: 'plese enter total experiance',
+      number: 'select decimal number',
     },
 
     highestQualification: {
-      required: "highest qualification is requrired",
+      required: 'highest qualification is requrired',
     },
     collage: {
-      required: "collage is requrired",
+      required: 'collage is requrired',
     },
     university: {
-      required: "university is requrired"
+      required: 'university is requrired',
     },
     knownTech: {
-      required: "knownTech is requrired",
+      required: 'knownTech is requrired',
     },
 
     // contact details
     houseNo: {
-      required: "house number/name is required",
+      required: 'house number/name is required',
     },
     contactNo: {
-      required: "contact no is required",
-      digits: "only digit is allowed",
-      maxlength: "lenth should be 10",
-      minlength: "lenth should be 10",
+      required: 'contact no is required',
+      digits: 'only digit is allowed',
+      maxlength: 'lenth should be 10',
+      minlength: 'lenth should be 10',
     },
     secondaryEmail: {
-      email: "eneter valid email address",
+      email: 'eneter valid email address',
     },
     addressLine1: {
-      required: "address line required",
+      required: 'address line required',
     },
     landmark: {
-      required: "landmark required",
+      required: 'landmark required',
     },
     city: {
-      requrired: "city is required",
+      requrired: 'city is required',
     },
     state: {
-      required: "state is required",
+      required: 'state is required',
     },
     country: {
-      required: "country is required",
+      required: 'country is required',
     },
     pincode: {
-      required: "pincode is required",
-      digits: "only digit allowed",
-      maxlength: "pin should be of 6 digit",
-      minlength: "pin should be of 6 digit",
+      required: 'pincode is required',
+      digits: 'only digit allowed',
+      maxlength: 'pin should be of 6 digit',
+      minlength: 'pin should be of 6 digit',
     },
     workingTimeInYear: {
-      min: "please enter appropriate value",
-      digits: "only digits allowed",
+      min: 'please enter appropriate value',
+      digits: 'only digits allowed',
     },
     workingTimeInMonth: {
-      max: "choose number between 1 to 12",
-      min: "choose number between 1 to 12",
-      digits: "only digits allowed",
-    }
+      max: 'choose number between 1 to 12',
+      min: 'choose number between 1 to 12',
+      digits: 'only digits allowed',
+    },
   },
-  errorElement: "span",
-  errorClass: "text-danger",
-  errorPlacement: function (error, element) {
-    if (element.attr("name") === "dob" || element.attr("name") === "joiningDate" || element.attr('name') === "role") {
+  errorElement: 'span',
+  errorClass: 'text-danger',
+  errorPlacement(error, element) {
+    if (element.attr('name') === 'dob' || element.attr('name') === 'joiningDate' || element.attr('name') === 'role') {
       error.insertAfter(element.parent());
     } else {
       error.insertAfter(element);
     }
   },
-  submitHandler: function (form) {
+  submitHandler(form) {
     const editForm = $('#form-edit-employee');
     const payload = {
       lastName: editForm.find('#lastName').val(),
@@ -222,19 +222,18 @@ $('#form-edit-employee').validate({
       url: `/employees/${editForm.data('id')}`,
       data: payload,
       success: (data) => {
-        //console.log(data);
+        // console.log(data);
         $('#editEmployeeFormContainer').addClass('d-none');
         $('#employeeDisplayContainer').removeClass('d-none');
-        $('#form-edit-employee').reset();
         location.reload();
-        //show successfull message in toast
+        // show successfull message in toast
       },
       error: (error) => {
         console.log(error.message);
         // show error in toast and reload window
-      }
+      },
     });
-  }
+  },
 });
 
 $('#form-edit-employee').submit((event) => {
