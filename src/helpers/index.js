@@ -1,3 +1,4 @@
+import { createHash } from 'crypto';
 import { Technology } from '../models';
 
 export const successResponse = (req, res, data, code = 200) => res.send({
@@ -49,6 +50,11 @@ export const isValidTech = async (arr) => {
   );
   techList = techList.map(elem => elem.techName);
   return arr.every(elem => techList.includes(elem));
+};
+
+export const encryptPassword = async (password) => {
+  const encryptedPassword = await createHash('md5').update(password).digest('hex');
+  return encryptedPassword;
 };
 
 export const validateFields = (object, fields) => {

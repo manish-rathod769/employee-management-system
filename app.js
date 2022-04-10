@@ -7,8 +7,8 @@ import path from 'path';
 import flash from 'connect-flash';
 import session from 'express-session';
 
-
 import employeeRoutes from './src/routes/employee.route';
+
 dotenv.config();
 require('./src/config/sequelize');
 
@@ -19,19 +19,19 @@ app.use(
     extended: true,
   }),
 );
-app.use(session({ 
+app.use(session({
   secret: process.env.SECRET,
   secure: true,
   resave: true,
-  saveUninitialized: true, 
-  cookie: { maxAge: 60000 } 
+  saveUninitialized: true,
+  cookie: { maxAge: 60000, secure: true },
 }));
 app.use(cors());
 app.use(flash());
 app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/assets', express.static(path.join(__dirname, 'public')));
-//app.use('/employee/assets', express.static(path.join(__dirname, 'public')));
+// app.use('/employee/assets', express.static(path.join(__dirname, 'public')));
 app.set('views', path.join(__dirname, 'src', 'views'));
 app.set('view engine', 'ejs');
 

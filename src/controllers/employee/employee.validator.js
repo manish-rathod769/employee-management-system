@@ -98,3 +98,24 @@ export const loginValidate = async (req, res, next) => {
   }
   next();
 };
+
+const passwordValidation = joi.object({
+  currentPassword: joi.string().trim(true).required().min(8)
+    .max(12),
+  newPassword: joi.string().trim(true).required().min(8)
+    .max(12),
+  reNewPassword: joi.ref('newPassword'),
+});
+
+export const passwordValidate = async (req, res, next) => {
+  const payload = {
+    currentPassword: req.body.currentPassword,
+    newPassword: req.body.newPassword,
+    reNewPassword: req.body.reNewPassword,
+  };
+  const { error } = passwordValidation.validate(payload);
+  if (error) {
+    errorResponse(req, res, 'password validation error', 406, error.message);
+  }
+  next();
+};
