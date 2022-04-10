@@ -11,15 +11,14 @@ $('#addEmployeeBtn').click((event) => {
     success: function ({ data }) {
       data.forEach(elem => {
         const val = elem.techName;
-
         // append to select group
         $('#knownTech').append(
           `<option value="${val}">${val}</option>`
         );
-      })
+      });
       // append data to #knownTech 
     },
-    error : function (error) {
+    error: function (error) {
       console.log(error);
     }
   })
@@ -59,7 +58,7 @@ const editButton = (id) => {
       console.log(id);
       console.log(data);
       // change edit div and add edit and cancel button;
-      const form = $('#editEmployeeFormContainer');
+      const form = $('#form-edit-employee');
       form.data('id', id);
       form.find('#lastName').val(data.lastName || null);
       form.find('#firstName').val(data.firstName || null);
@@ -131,7 +130,7 @@ const displayEmployee = () => {
   const search = $('#searchKeyword').val();
   if (search) {
     query = `${query}&search=${search}`;
-    console.log(query); 
+    console.log(query);
   }
 
   console.log(order, limit);
@@ -257,7 +256,7 @@ const enlargeEmployee = (event, id, index) => {
                 </button>
               </div>
               </div>
-              <div class="col-xl-4 col-lg-6 col-md-6 d-flex" data-employee-id=${data.id}>
+              <div class="col-xl-4 col-lg-6 col-md-6 d-flex" data-employeeId=${data.id}>
                 <div class="card flex-fill ctm-border-radius shadow-sm grow">
                   <div class="card-header">
                     <h4 class="card-title mb-0">Basic Information</h4>
