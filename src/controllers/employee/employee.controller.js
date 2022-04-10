@@ -1,7 +1,6 @@
-import { createHash } from 'crypto';
 import { v4 as uuidv4 } from 'uuid';
 import { Op, Sequelize } from 'sequelize';
-import { errorResponse, successResponse, createPassword } from '../../helpers';
+import * as helpers from '../../helpers';
 import {
   Employee, EmployeeContact, EmployeeAcademic, EmployeePreWork, Technology,
 } from '../../models';
@@ -28,13 +27,11 @@ export const addEmployee = async (req, res) => {
       },
     );
     if (employee) {
-      return errorResponse(req, res, `user with email ${email} already exists`, 409);
+      return helpers.errorResponse(req, res, `user with email ${email} already exists`, 409);
     }
 
     // password is auto generated for all employees using dob as ddmmyyyy
-    const encryptedPassword = createHash('md5')
-      .update(createPassword(req.body.DOB))
-      .digest('hex');
+    const encryptedPassword = await helpers.encryptPassword(helpers.createPassword(req.body.DOB));
 
     const payload = {
       id: uuidv4(),
@@ -84,10 +81,10 @@ export const addEmployee = async (req, res) => {
     newEmployee.academic = await EmployeeAcademic.create(academicPayload);
     newEmployee.preWork = await EmployeePreWork.create(preWorkPayload);
 
-    return successResponse(req, res, newEmployee);
+    return helpers.successResponse(req, res, newEmployee);
   } catch (error) {
     // console.log(error);
-    return errorResponse(req, res, 'something went wrong', 400, { err: error });
+    return helpers.errorResponse(req, res, 'something went wrong', 400, { err: error });
   }
 };
 
@@ -152,9 +149,9 @@ export const getEmployee = async (req, res) => {
     // console.log(totalEmployee);
     // console.log(result);
     res.status(200);
-    successResponse(req, res, result, 200);
+    helpers.successResponse(req, res, result, 200);
   } catch (error) {
-    errorResponse(req, res, 'something went wrong', 500, error.message);
+    helpers.errorResponse(req, res, 'something went wrong', 500, error.message);
   }
 };
 
@@ -168,9 +165,9 @@ export const getEmployeeOne = async (req, res) => {
     );
     // console.log(employee);
     res.status(200);
-    successResponse(req, res, employee, 200);
+    helpers.successResponse(req, res, employee, 200);
   } catch (error) {
-    errorResponse(req, res, 'something went wrong', 500, error);
+    helpers.errorResponse(req, res, 'something went wrong', 500, error);
   }
 };
 
@@ -186,7 +183,7 @@ export const updateEmployee = async (req, res) => {
       },
     );
     if (!employee) {
-      return errorResponse(req, res, `user with email ${req.body.email} does not exist`, 409);
+      return helpers.errorResponse(req, res, `user with email ${req.body.email} does not exist`, 409);
     }
 
     // employee found update field
@@ -237,9 +234,9 @@ export const updateEmployee = async (req, res) => {
       { where: { employeeId: req.params.employeeId } });
 
     res.status(201);
-    return successResponse(req, res, newEmployee, 201);
+    return helpers.successResponse(req, res, newEmployee, 201);
   } catch (err) {
-    return errorResponse(req, res, 'something went wrong', 500, err.message);
+    return helpers.errorResponse(req, res, 'something went wrong', 500, err.message);
   }
 };
 
@@ -254,15 +251,15 @@ export const deleteEmployee = async (req, res) => {
       },
     );
     if (!employee) {
-      return errorResponse(req, res, 'employee record not found', 404);
+      return helpers.errorResponse(req, res, 'employee record not found', 404);
     }
     employee.isArchive = true;
     await employee.save();
 
     res.status(202);
-    return successResponse(req, res, '', 202);
+    return helpers.successResponse(req, res, '', 202);
   } catch (err) {
-    return errorResponse(req, res, 'something went wrong!', 500, err.message);
+    return helpers.errorResponse(req, res, 'something went wrong!', 500, err.message);
   }
 };
 
@@ -283,13 +280,8 @@ export const loginEmployee = async (req, res) => {
     }
 
     // encrypt password and dob to check for first login
-    const encryptedPassword = createHash('md5')
-      .update(req.body.password)
-      .digest('hex');
-    const dobPassword = createHash('md5')
-      .update(createPassword(employee.DOB))
-      .digest('hex');
-
+    const encryptedPassword = await helpers.encryptPassword(req.body.password);
+    const dobPassword = await helpers.encryptPassword(helpers.createPassword(employee.DOB));
     if (encryptedPassword !== employee.password) {
       req.flash('error', 'wrong password!');
       return res.redirect(301, '/login');
@@ -316,6 +308,31 @@ export const loginEmployee = async (req, res) => {
   }
 };
 
+export const changePassword = async (req, res) => {
+  try {
+    // take email data.
+    const employee = await Employee.scope('login').findOne(
+      {
+        where: {
+          id: req.params.employeeId,
+        },
+      },
+    );
+    // console.log(req.body.currentPassword);
+    const curruntPassword = await helpers.encryptPassword(req.body.currentPassword);
+    const encryptedPassword = await helpers.encryptPassword(req.body.newPassword);
+    // console.log(`${curruntPassword}-----${employee.password}`);
+    if (curruntPassword !== employee.password) {
+      return helpers.errorResponse(req, res, 'wrong password', 404);
+    }
+    employee.password = encryptedPassword;
+    await employee.save();
+    res.status(200);
+    return helpers.successResponse(req, res, '', 201);
+  } catch (error) {
+    return helpers.errorResponse(req, res, 'something went wrong', 500, error.message);
+  }
+};
 
 // get technology
 export const getTechnology = async (req, res) => {
@@ -326,9 +343,9 @@ export const getTechnology = async (req, res) => {
       },
     );
     res.status(200);
-    successResponse(req, res, tech, 200);
+    helpers.successResponse(req, res, tech, 200);
   } catch (error) {
-    errorResponse(req, res, 'something went wrong', 500, error);
+    helpers.errorResponse(req, res, 'something went wrong', 500, error);
   }
 };
 
@@ -344,7 +361,7 @@ export const addTechnology = async (req, res) => {
       },
     );
     if (tech) {
-      return errorResponse(req, res, 'technology alredy exists', 409);
+      return helpers.errorResponse(req, res, 'technology alredy exists', 409);
     }
     const newTech = await Technology.create(
       {
@@ -352,10 +369,10 @@ export const addTechnology = async (req, res) => {
       },
     );
     res.status(201);
-    return successResponse(req, res, newTech, 201);
+    return helpers.successResponse(req, res, newTech, 201);
   } catch (error) {
     // console.log(error);
-    return errorResponse(req, res, 'something went wrong', 500, error.message);
+    return helpers.errorResponse(req, res, 'something went wrong', 500, error.message);
   }
 };
 
@@ -383,12 +400,12 @@ export const renderEmployee = (req, res) => {
 // render login page
 export const loginView = (req, res) => {
   res.status(200);
-  if (req.flash('error')) {
-    // console.log('error EEERPR');
+  const error = req.flash('error');
+  if (error) {
     return res.render('employee/login',
       {
         is_error: true,
-        message: req.flash('error'),
+        message: error,
       });
   }
   return res.render('employee/login', { is_error: false });
