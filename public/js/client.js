@@ -22,8 +22,12 @@ const clientDetails = (clientId) => {
       $('#client-edit-state').val(resData.data.state);
       $('#client-edit-country').val(resData.data.country);
       $('#client-edit-organization').val(resData.data.organization);
+      if (resData.data.isArchive) {
+        $('#isArchive').attr('checked', true);
+      } else {
+        $('#isArchive').attr('checked', false);
+      }
       $('#client-edit-submit').val(resData.data.id);
-      $('#disable-client').val(resData.data.id);
     },
     error: (resData) => {
       alert(resData.responseJSON.errorMessage);
@@ -100,24 +104,6 @@ const fetchClientData = (index) => {
 const viewClientWithPagination = () => {
   const index = $('#current').attr('data-index');
   fetchClientData(index);
-};
-
-const disableClient = () => {
-  const clientId = $('#disable-client').val();
-  if (confirm('Are you sure ?') === true) {
-    $.ajax({
-      url: `/admin/clients/${clientId}`,
-      method: 'DELETE',
-      success: () => {
-        alert('Client disabled Successfully...');
-        viewClientWithPagination();
-      },
-      error: (resData) => {
-        alert(resData.responseJSON.errorMessage);
-        viewClientWithPagination();
-      },
-    });
-  }
 };
 
 $('#previous').on('click', () => {
@@ -267,6 +253,11 @@ if (('#client-edit-form').length) {
       clientData.forEach((obj) => {
         clientDataObj[obj.name] = obj.value;
       });
+      if ($('#isArchive').is(':checked')) {
+        clientDataObj.isArchive = true;
+      } else {
+        clientDataObj.isArchive = false;
+      }
 
       const clientId = $('#client-edit-submit').val();
       $.ajax({

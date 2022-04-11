@@ -10,6 +10,5 @@ route.get('/admin/clients/:clientId', clietControllers.getOneClientController);
 route.get('/admin/client', clietControllers.getAllClientController);
 route.post('/admin/clients', clientRegisterValidation, clietControllers.clientRegisterController);
 route.put('/admin/clients/:clientId', clientUpdateDataValidation, clietControllers.clientUpdateDataController);
-route.delete('/admin/clients/:clientId', clietControllers.clientSoftDeleteController);
 
 module.exports = route;
