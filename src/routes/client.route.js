@@ -7,6 +7,5 @@ const route = express.Router();
 route.get('/clients', clietControllers.getAllClientController);
 route.post('/clients', clientRegisterValidation, clietControllers.clientRegisterController);
 route.put('/clients/:clientId', clientUpdateDataValidation, clietControllers.clientUpdateDataController);
-route.delete('/clients/:clientId', clietControllers.clientSoftDeleteController);
 
 module.exports = route;
