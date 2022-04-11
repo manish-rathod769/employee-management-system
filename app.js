@@ -5,13 +5,11 @@ import path from 'path';
 import bodyParser from 'body-parser';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
-import path from 'path';
 import flash from 'connect-flash';
 import session from 'express-session';
 
 import employeeRoutes from './src/routes/employee.route';
 import clientRoutes from './src/routes/client.route';
-import adminRoutes from './src/routes/admin.routes';
 
 dotenv.config();
 require('./src/config/sequelize');
