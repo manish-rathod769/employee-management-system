@@ -1,7 +1,12 @@
 import { v4 as uuidv4 } from 'uuid';
 import { errorResponse } from '../../helpers';
 import { Leave } from '../../models';
-import transporter from '../../helper/mail';
+// import transporter from '../../helper/mail';
+
+
+const leaveForm = async (req, res) => {
+  res.render('add-leave', { success: '' });
+};
 
 const addLeave = async (req, res) => {
   try {
@@ -21,11 +26,12 @@ const addLeave = async (req, res) => {
     console.log(leavedata);
     const leaveobj = await Leave.create(leavedata);
     console.log(leaveobj);
-    const mailOptions = {
+    /*    const mailOptions = {
       from: 'apexapatel27321@gmail.com', // sender address
       to: 'apexapatel27321@gmail.com', // list of receivers
       subject: 'Leave Request',
-      text: `Employee ${leavedata.employeeId}, wants to take leave from ${leavedata.startDate}, to ${leavedata.endDate} due to ${reason}`,
+      text: `Employee ${leavedata.employeeId}, wants to take leave from ${leavedata.startDate},
+      to ${leavedata.endDate} due to ${reason}`,
     };
     transporter.sendMail(mailOptions, (err, info) => {
       if (err) {
@@ -33,10 +39,11 @@ const addLeave = async (req, res) => {
       } else {
         console.log(info);
       }
-    });
+    }); */
 
-    //  successResponse(req, res, leaveobj, 200);
-    res.redirect('/view/leave');
+    const getleave = await Leave.findAll({ where: { employeeId: '123', isArchive: false } });
+    console.log(getleave);
+    res.render('view-leave', { leavesdata: getleave, success: 'YOUR LEAVE SUCCESSFULLY ADDED!!' });
   } catch (e) {
     //   errorResponse(req, res, e.message, 400, e);
     res.render('add-leave');
@@ -45,9 +52,8 @@ const addLeave = async (req, res) => {
 
 const viewLeave = async (req, res) => {
   try {
-    const getleave = await Leave.findAll({ where: { employeeId: '123', isArchive: false } });
+    const getleave = await Leave.findAll({ where: { isArchive: false } });
     console.log(getleave);
-    //  successResponse(req, res, getleave, 200);
     res.render('view-leave', { leavesdata: getleave });
     // =======================admin view
     // const id = req.params.id;
@@ -83,9 +89,9 @@ const deleteLeave = async (req, res) => {
       { isArchive: true }, { returning: true, where: { id: req.params.id } },
     );
     console.log(leavedata);
-    const getleave = await Leave.findAll({ where: { id: req.params.id, isArchive: false } });
+    const getleave = await Leave.findAll({ where: { isArchive: false } });
     console.log(getleave);
-    res.render('view-leavedata', { leavesdata: getleave });
+    res.render('view-leave', { leavesdata: getleave, success: 'YOUR LEAVE IS DELETED!!!' });
     // successResponse(req, res, getleave, 200);
   } catch (e) {
     errorResponse(req, res, e.message, 400, e);
@@ -142,16 +148,11 @@ const updateLeave = async (req, res) => {
     console.log(getleave);
     const getallleave = await Leave.findAll({ where: { isArchive: false } });
     console.log(getallleave);
-    res.render('view-leave', { leavesdata: getallleave });
+    res.render('view-leave', { leavesdata: getallleave, success: 'YOUR LEAVE DETAILS UPDATED!!!' });
     // successResponse(req, res, getleave, 200);
   } catch (e) {
     errorResponse(req, res, e.message, 400, e);
   }
-};
-
-
-const leaveForm = async (req, res) => {
-  res.render('add-leave');
 };
 
 const viewLeaves = async (req, res) => {
@@ -160,7 +161,7 @@ const viewLeaves = async (req, res) => {
   res.render('update-leave', { leavesdata: getleave });
 };
 
-const acceptLeaves = async (req, res) => {
+const acceptLeaves = async (req) => {
   const getdata = await Leave.findAll({ where: { id: req.params.id } });
   console.log(getdata);
   const leavedata = {
@@ -174,7 +175,7 @@ const acceptLeaves = async (req, res) => {
   console.log(leavedata);
   const getleave = await Leave.update(leavedata, { where: { id: req.params.id } });
   console.log(getleave);
-  const mailOptions = {
+  /*  const mailOptions = {
     from: 'apexapatel27321@gmail.com', // sender address
     to: 'apexapatel27321@gmail.com', // list of receivers
     subject: 'Leave Request',
@@ -186,14 +187,14 @@ const acceptLeaves = async (req, res) => {
     } else {
       console.log(info);
     }
-  });
+  }); */
 
-  const viewleave = await Leave.findAll({ where: { employeeId: '123', isArchive: false } });
-  console.log(viewleave);
-  res.render('update-leave', { leavesdata: viewleave });
+  // const viewleave = await Leave.findAll({ where: { employeeId: '123', isArchive: false } });
+  // console.log(viewleave);
+  // res.render('update-leave', { leavesdata: viewleave });
 };
 
-const rejectLeaves = async (req, res) => {
+const rejectLeaves = async (req) => {
   const getdata = await Leave.findAll({ where: { id: req.params.id } });
   console.log(getdata);
   const leavedata = {
@@ -207,7 +208,7 @@ const rejectLeaves = async (req, res) => {
   console.log(leavedata);
   const getleave = await Leave.update(leavedata, { where: { id: req.params.id } });
   console.log(getleave);
-  const mailOptions = {
+  /* const mailOptions = {
     from: 'apexapatel27321@gmail.com', // sender address
     to: 'apexapatel27321@gmail.com', // list of receivers
     subject: 'Leave Request',
@@ -219,10 +220,10 @@ const rejectLeaves = async (req, res) => {
     } else {
       console.log(info);
     }
-  });
-  const viewleave = await Leave.findAll({ where: { employeeId: '123', isArchive: false } });
-  console.log(viewleave);
-  res.render('update-leave', { leavesdata: viewleave });
+  }); */
+  // const viewleave = await Leave.findAll({ where: { employeeId: '123', isArchive: false } });
+  // console.log(viewleave);
+  // res.render('update-leave', { leavesdata: viewleave });
 };
 module.exports = {
   addLeave,
