@@ -24,11 +24,7 @@ require('./src/config/sequelize');
 
 const app = express();
 app.use(express.urlencoded({ extended: true }));
-<<<<<<< HEAD
 app.use('/public', express.static(path.resolve(__dirname, './public')));
-=======
-app.use('/public', express.static(path.resolve(__dirname, './src/public')));
->>>>>>> add: mail feature implemented
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(session({

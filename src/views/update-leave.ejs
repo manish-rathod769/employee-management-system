@@ -70,6 +70,7 @@
                   </div>
                 </div>
 
+<<<<<<< HEAD
                 <% function formatDate(dateObject) { let d=new Date(dateObject); let day=d.getDate(); let
                   month=d.getMonth() + 1; let year=d.getFullYear(); if (day < 10) { day="0" + day; } if (month < 10) {
                   month="0" + month; } let date=year + "-" + month + "-" + day; return date; }; %>
@@ -146,6 +147,58 @@
                                                 class="btn btn-danger" id='reject_<%= leavedata.id %>'>Reject</button>
                                             </p>
                                           </h4>
+=======
+                                        </ul>
+                                    </div>
+                                </div>
+                                <% function formatDate(dateObject) { let d=new Date(dateObject); let day=d.getDate();
+                                    let month=d.getMonth() + 1; let year=d.getFullYear(); if (day < 10) { day="0" + day;
+                                    } if (month < 10) { month="0" + month; } let date=year + "-" + month + "-" + day;
+                                    return date; }; %>
+                                    <div class="ctm-border-radius shadow-sm grow card">
+                                        <div class="card-body">
+
+                                            <div class="row people-grid-row" id="displayEmployeeDetails">
+
+                                                <% leavesdata.forEach(leavedata=> { %>
+                                                    <div class="col-md-6 col-lg-6 col-xl-4">
+                                                        <div class="card widget-profile">
+                                                            <div class="card-body">
+                                                                <div class="pro-widget-content">
+                                                                    <div class="profile-info-widget">
+                                                                        <p><label class="form-label text-orange lead">Start Date :</label>
+                                                                            <span class="text-primary"> 
+                                                                                <a class="text-primary">
+                                                                                    <%= formatDate(leavedata.startDate) %>
+                                                                                </a></span></p>
+                                                                        <p><label class="form-label text-orange lead">End Date :</label>
+                                                                            <span class="text-primary"> 
+                                                                                <a class="text-primary">
+                                                                                    <%= formatDate(leavedata.endDate) %>
+                                                                                </a></span></p>
+                                                                        <p><label class="form-label text-orange lead">Reason :</label>
+                                                                                    <span class="text-primary"> 
+                                                                                        <%= leavedata.reason %>
+                                                                                    </span></p>
+                                                                        <h4>
+                                                                        <p class="float-right text-danger cursor-pointer">
+                                                                            <a href="/accept/leaves/<%= leavedata.id %>" class="btn btn-secondary" id="accept" onclick="acceptmethod('<%= leavedata.id %>')" >Accept</a></p></h4>
+
+                                                                        <h4>
+                                                                                <p class="float-right text-danger cursor-pointer">
+                                                                                    <a href="/reject/leaves/<%= leavedata.id %>" class="btn btn-secondary" id="reject" onclick="acceptmethod('<%= leavedata.id %>')">Reject</a></p></h4>
+        
+
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <% }) %>
+
+
+                                            </div>
+>>>>>>> add: view leave from admin side
                                         </div>
                                         <% } %>
                                     </div>
@@ -156,6 +209,7 @@
                             <% }) }%>
 
 
+<<<<<<< HEAD
                       </div>
                     </div>
                   </div>
@@ -251,6 +305,53 @@
       window.location.href = `/leave/view?${query}`;
     }
   </script>
+=======
+    <script src="public/plugins/theia-sticky-sidebar/ResizeSensor.js"></script>
+    <script src="public/plugins/theia-sticky-sidebar/theia-sticky-sidebar.js"></script>
+
+    <script src="public/plugins/select2/moment.min.js"></script>
+    <script src="public/js/bootstrap-datetimepicker.min.js"></script>
+
+    <script src="public/plugins/select2/select2.min.js"></script>
+
+    <script src="public/plugins/bootstrap-tagsinput/bootstrap-tagsinput.min.js"></script>
+
+    <script src="public/js/script.js"></script>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.3/jquery.validate.min.js"
+        integrity="sha512-37T7leoNS06R80c8Ulq7cdCDU5MNQBwlYoy1TX/WUsLFC2eYNqtKlV0QjH7r8JpG/S0GUMZwebnVFLPd6SU5yg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.0/jquery.validate.js"></script>
+
+    <script src="https://code.jquery.com/jquery-1.11.1.min.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/additional-methods.min.js"></script>
+
+    <script>
+      let hidden = false;
+function acceptmethod(aid){
+  console.log(aid);
+  console.log(document.getElementById("accept"));
+  
+  hidden = !hidden;
+  if(hidden){
+    document.getElementById(aid).style.visibility = 'hidden';
+    document.getElementById("reject").style.visibility = 'hidden';
+  }else{
+    document.getElementById("accept").style.visibility = 'visible';
+    document.getElementById("reject").style.visibility = 'visible';
+  }
+  
+}
+
+    </script>
+>>>>>>> add: view leave from admin side
 
 
 </body>
