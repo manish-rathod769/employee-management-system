@@ -31,6 +31,7 @@ app.use(session({
 app.use(cors());
 app.use(flash());
 app.use(bodyParser.json());
+app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/assets', express.static(path.join(__dirname, 'public')));
 // app.use('/employee/assets', express.static(path.join(__dirname, 'public')));
