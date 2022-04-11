@@ -1,15 +1,15 @@
 import express from 'express';
 import { clientRegisterValidation, clientUpdateDataValidation } from '../controllers/client/client.validator';
-import { clientRegisterController, getAllClientController, clientUpdateDataController, clientSoftDeleteController, getOneClientController } from '../controllers/client/client.controller';
+import * as clietControllers from '../controllers/client/client.controller';
 
 const route = express.Router();
 
 route.get('/admin/clients', (req, res) => res.render('clients'));
-route.get('/admin/clients/:clientId', getOneClientController);
+route.get('/admin/clients/:clientId', clietControllers.getOneClientController);
 
-route.get('/admin/client', getAllClientController);
-route.post('/admin/clients', clientRegisterValidation, clientRegisterController);
-route.put('/admin/clients/:clientId', clientUpdateDataValidation, clientUpdateDataController);
-route.delete('/admin/clients/:clientId', clientSoftDeleteController);
+route.get('/admin/client', clietControllers.getAllClientController);
+route.post('/admin/clients', clientRegisterValidation, clietControllers.clientRegisterController);
+route.put('/admin/clients/:clientId', clientUpdateDataValidation, clietControllers.clientUpdateDataController);
+route.delete('/admin/clients/:clientId', clietControllers.clientSoftDeleteController);
 
 module.exports = route;
