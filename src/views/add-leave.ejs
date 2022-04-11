@@ -42,8 +42,7 @@
                     </ul>
                   </div>
                 </div>
-
-
+              
                 <div class="ctm-border-radius shadow-sm grow card">
                   <div class="card-body">
 
@@ -51,7 +50,7 @@
 
                       <div class="mb-3">
                         <label class="form-label text-orange lead">Start Date :</label>
-                        <input type="date" class="form-control" name="startDate" id="startDate" value="" >
+                        <input type="date" class="form-control" name="startDate" id="startDate" value="">
                       </div>
                       <div class="mb-3">
                         <label class="form-label text-orange lead">End Date :</label>
@@ -116,19 +115,31 @@
 
   <script>
 
+ 
+                function formatDate(dateObject) {
+                  let d = new Date(dateObject); let day = d.getDate();
+                  let month = d.getMonth() + 1; let year = d.getFullYear(); if (day < 10) {
+                    day = "0" + day;
+                  } if (month < 10) { month = "0" + month; } let date = year + "-" + month + "-" + day;
+                  return date;
+                };
+              
+              
     $(function () {
       jQuery.validator.setDefaults({
         debug: true,
         success: "valid"
       });
 
-          
+
       $.validator.addMethod('dateBefore', function (value) {
 
-        var curr = new Date();
-        return new Date(value) >= curr;
 
-    }, 'Must be after corresponding current date');
+        var curr = new Date();
+        const format = formatDate(curr);
+        return value >= format;
+
+      }, 'Must be after corresponding current date');
 
       $.validator.addMethod('dateAfter', function (value, element, params) {
         var start = $(params);
@@ -149,8 +160,8 @@
       $("#formleave").validate({
         rules: {
           startDate: {
-           dateBefore: '#startDate',
-           required: true,
+            dateBefore: '#startDate',
+            required: true,
           },
           endDate: {
             dateAfter: '#startDate',
