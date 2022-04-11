@@ -43,8 +43,14 @@ module.exports = (sequelize, DataTypes) => {
       },
     },
   );
+<<<<<<< HEAD
   User.associate = function () {
     // associations can be defined here
   };
+=======
+  // User.associate = function (models) {
+  //   // associations can be defined here
+  // };
+>>>>>>> add: mail feature implemented
   return User;
 };
