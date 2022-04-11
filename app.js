@@ -3,6 +3,7 @@ import dotenv from 'dotenv';
 import path from 'path';
 
 import bodyParser from 'body-parser';
+import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import path from 'path';
 import flash from 'connect-flash';
