@@ -1,15 +1,26 @@
 import express from 'express';
+
+import * as leaveValidator from '../controllers/leave/leaveValidator';
+
+import * as leaveControlller from '../controllers/leave/leaveController';
+
 const router = new express.Router();
-import { leaveRegisterValidation, leaveUpdateValidation } from '../controllers/leave/leaveValidator';
-import { addLeave, viewLeave, deleteLeave, updateLeave, leaveForm, viewOwnLeave } from '../controllers/leave/leaveController';
 
-router.post('/add/leave',leaveRegisterValidation, addLeave );
-router.get('/view/leave', viewLeave);
-router.get('/view/leave/:id', viewOwnLeave);
-router.post('/update/leave/:id',leaveUpdateValidation, updateLeave);
-router.get('/delete/leave/:id', deleteLeave);
 
-router.get('/',leaveForm);
+// developer
+router.post('/add/leave', leaveValidator.leaveRegisterValidation, leaveControlller.addLeave);
+// router.get('/add/leave',addLeaveView);
+router.get('/view/leave', leaveControlller.viewLeave);
+router.get('/view/leave/:id', leaveControlller.viewOwnLeave);
+router.post('/update/leave/:id', leaveValidator.leaveUpdateValidation, leaveControlller.updateLeave);
+router.get('/delete/leave/:id', leaveControlller.deleteLeave);
 
+router.get('/', leaveControlller.leaveForm);
+
+
+// pm
+router.get('/view/leaves', leaveControlller.viewLeaves);
+router.get('/accept/leaves/:id', leaveControlller.acceptLeaves);
+router.get('/reject/leaves/:id', leaveControlller.rejectLeaves);
 
 module.exports = router;

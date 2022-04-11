@@ -67,16 +67,18 @@
                                                                                 <a class="text-primary">
                                                                                     <%= formatDate(leavedata.endDate) %>
                                                                                 </a></span></p>
-                                                                                <p><label class="form-label text-orange lead">Reason :</label>
-
-                                                                                    
+                                                                        <p><label class="form-label text-orange lead">Reason :</label>
                                                                                     <span class="text-primary"> 
-                                                                                        
-                                                                                            <%= leavedata.reason %>
-                                                                                       </span></p>
+                                                                                        <%= leavedata.reason %>
+                                                                                    </span></p>
                                                                         <h4>
                                                                         <p class="float-right text-danger cursor-pointer">
-                                                                            <a href="/view/leave/<%= leavedata.id %>" class="btn btn-secondary" >VIEW</a></p></h4>
+                                                                            <a href="/accept/leaves/<%= leavedata.id %>" class="btn btn-secondary" >Accept</a></p></h4>
+
+                                                                        <h4>
+                                                                                <p class="float-right text-danger cursor-pointer">
+                                                                                    <a href="/reject/leaves/<%= leavedata.id %>" class="btn btn-secondary" >Reject</a></p></h4>
+        
 
                                                                     </div>
                                                                 </div>
