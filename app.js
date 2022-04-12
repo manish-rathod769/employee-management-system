@@ -13,7 +13,7 @@ import projectRoutes from './src/routes/project.routes';
 import attendanceRoutes from './src/routes/attendance.route';
 import { notFound } from './src/helpers/middleware.notFound';
 
-import routes from './src/routes/leaveRouter';
+import routes from './src/routes/leave.route';
 
 
 dotenv.config();
@@ -21,7 +21,7 @@ require('./src/config/sequelize');
 
 const app = express();
 app.use(express.urlencoded({ extended: true }));
-app.use('/public', express.static(path.resolve(__dirname, './src/public')));
+app.use('/public', express.static(path.resolve(__dirname, './public')));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(session({

@@ -1,18 +1,4 @@
-// const {
-//   Model,
-// } = require('sequelize');
-
 module.exports = (sequelize, DataTypes) => {
-  // class Leave extends Model {
-  //   /**
-  //    * Helper method for defining associations.
-  //    * This method is not a part of Sequelize lifecycle.
-  //    * The `models/index` file will call this method automatically.
-  //    */
-  //   // static associate(models) {
-  //   //   // define association here
-  //   // }
-  // }
   const Leave = sequelize.define('Leave', {
     id: {
       type: DataTypes.UUID,
@@ -37,16 +23,11 @@ module.exports = (sequelize, DataTypes) => {
     },
     status: {
       type: DataTypes.ENUM('pending', 'approved', 'rejected'),
-
     },
-    remainingLeave: {
-      type: DataTypes.STRING,
-
-    },
-    isArchive: {
+    isArchived: {
       type: DataTypes.BOOLEAN,
       allowNull: false,
-
+      defaultValue: false,
     },
   });
   // Leave.associate = function (models) {
