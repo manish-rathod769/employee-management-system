@@ -82,20 +82,20 @@ const adminViewLeave = async (req, res) => {
   }
 };
 
-const deleteLeave = async (req, res) => {
-  try {
-    const leavedata = await Leave.update(
-      { isArchive: true }, { returning: true, where: { id: req.params.id } },
-    );
-    console.log(leavedata);
-    const getleave = await Leave.findAll({ where: { isArchive: false } });
-    console.log(getleave);
-    res.render('view-leave', { leavesdata: getleave, success: 'YOUR LEAVE IS DELETED!!!' });
-    // successResponse(req, res, getleave, 200);
-  } catch (e) {
-    errorResponse(req, res, e.message, 400, e);
-  }
-};
+// const deleteLeave = async (req, res) => {
+//   try {
+//     const leavedata = await Leave.update(
+//       { isArchive: true }, { returning: true, where: { id: req.params.id } },
+//     );
+//     console.log(leavedata);
+//     const getleave = await Leave.findAll({ where: { isArchive: false } });
+//     console.log(getleave);
+//     res.render('view-leave', { leavesdata: getleave, success: 'YOUR LEAVE IS DELETED!!!' });
+//     // successResponse(req, res, getleave, 200);
+//   } catch (e) {
+//     errorResponse(req, res, e.message, 400, e);
+//   }
+// };
 
 const updateLeave = async (req, res) => {
   try {
@@ -237,7 +237,6 @@ module.exports = {
   addLeave,
   viewLeave,
   viewOwnLeave,
-  deleteLeave,
   updateLeave,
   acceptLeaves,
   rejectLeaves,

@@ -13,7 +13,7 @@ router.post('/add/leave', leaveValidator.leaveRegisterValidation, leaveControlll
 router.get('/view/leave', leaveControlller.viewLeave);
 router.get('/view/leave/:id', leaveControlller.viewOwnLeave);
 router.post('/update/leave/:id', leaveValidator.leaveUpdateValidation, leaveControlller.updateLeave);
-router.get('/delete/leave/:id', leaveControlller.deleteLeave);
+// router.get('/delete/leave/:id', leaveControlller.deleteLeave);
 
 router.get('/', leaveControlller.leaveForm);
 
