@@ -48,9 +48,6 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
 
     },
-  }, {
-    sequelize,
-    modelName: 'Leave',
   });
   // Leave.associate = function (models) {
 
