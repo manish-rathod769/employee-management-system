@@ -1,64 +1,50 @@
-/* eslint-disable strict */
-
-'use strict';
-
-const {
-  Model,
-} = require('sequelize');
-
 module.exports = (sequelize, DataTypes) => {
-  class Client extends Model {
-    /**
-     * Helper method for defining associations.
-     * This method is not a part of Sequelize lifecycle.
-     * The `models/index` file will call this method automatically.
-     */
-    // static associate(models) {
-    // define association here
-    // }
-  }
-  Client.init({
-    id: {
-      type: DataTypes.UUID,
-      allowNull: false,
-      primaryKey: true,
+  const Client = sequelize.define(
+    'Client',
+    {
+      id: {
+        type: DataTypes.UUID,
+        allowNull: false,
+        primaryKey: true,
+      },
+      name: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      email: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      slackId: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      city: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      state: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      country: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      organization: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      isArchive: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+      },
     },
-    name: {
-      type: DataTypes.STRING,
-      allowNull: false,
+    {
+      sequelize,
+      timestamps: false,
+      modelName: 'Client',
     },
-    email: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-    slackId: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-    city: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-    state: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-    country: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-    organization: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-    isArchive: {
-      type: DataTypes.BOOLEAN,
-      allowNull: false,
-    },
-  }, {
-    sequelize,
-    timestamps: false,
-    modelName: 'Client',
-  });
+  );
   return Client;
 };
