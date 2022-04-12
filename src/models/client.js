@@ -35,9 +35,9 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: false,
       },
-      isArchive: {
+      isArchived: {
         type: DataTypes.BOOLEAN,
-        allowNull: false,
+        defaultValue: false,
       },
     },
     {
