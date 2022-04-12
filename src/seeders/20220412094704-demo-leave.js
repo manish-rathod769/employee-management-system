@@ -9,7 +9,6 @@ module.exports = {
       startDate: '2022-05-13',
       endDate: '2022-05-15',
       status: 'pending',
-      remainingLeave: '13 days',
       createdAt: new Date(),
       updatedAt: new Date(),
     }, {
@@ -18,7 +17,6 @@ module.exports = {
       startDate: '2022-05-13',
       endDate: '2022-05-15',
       status: 'rejected',
-      remainingLeave: '13 days',
       createdAt: new Date(),
       updatedAt: new Date(),
     }], {},

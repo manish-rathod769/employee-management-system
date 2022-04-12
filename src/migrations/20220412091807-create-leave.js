@@ -22,10 +22,7 @@ module.exports = {
     status: {
       type: Sequelize.ENUM('pending', 'approved', 'rejected'),
     },
-    remainingLeave: {
-      type: Sequelize.STRING,
-    },
-    isArchive: {
+    isArchived: {
       type: Sequelize.BOOLEAN,
     },
     createdAt: {
