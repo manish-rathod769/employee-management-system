@@ -2,12 +2,34 @@
 /* eslint-disable no-alert */
 /* eslint-disable no-restricted-globals */
 /* eslint-disable no-unused-vars */
+
 const hideShowField = (fieldsToBeHide, fieldsToBeShown) => {
   fieldsToBeHide.forEach((field) => {
     $(field).css('display', 'none');
   });
   fieldsToBeShown.forEach((field) => {
     $(field).css('display', 'block');
+  });
+};
+
+const populateCityNames = (state, flag) => {
+  $.getJSON('../josnData/stateCity.json', (data) => {
+    let cityOptions = '';
+    data[state].forEach((city) => {
+      cityOptions += `<option value='${city}'>${city}</option>`;
+    });
+    (flag) ? $('#client-edit-city').html(cityOptions) : $('#city').html(cityOptions);
+  });
+};
+
+const fetchStateNames = () => {
+  $.getJSON('../josnData/stateCity.json', (data) => {
+    let stateOptions = '';
+    Object.keys(data).forEach((key) => {
+      stateOptions += `<option value='${key}'>${key}</option>`;
+    });
+    $('#state').html(stateOptions);
+    populateCityNames($('#state').val(), 0);
   });
 };
 
@@ -20,9 +42,20 @@ const clientDetails = (clientId) => {
     success: (resData) => {
       $('#client-edit-form')[0].reset();
       $('#client-edit-name').val(resData.data.name);
-      $('#client-edit-city').val(resData.data.city);
-      $('#client-edit-state').val(resData.data.state);
-      $('#client-edit-country').val(resData.data.country);
+      $.getJSON('../josnData/stateCity.json', (data) => {
+        let stateOptions = '';
+        Object.keys(data).forEach((key) => {
+          stateOptions += (key === resData.data.state) ? `<option value='${key}' selected>${key}</option>` : `<option value='${key}'>${key}</option>`;
+        });
+        $('#client-edit-state').html(stateOptions);
+      });
+      $.getJSON('../josnData/stateCity.json', (data) => {
+        let cityOptions = '';
+        data[resData.data.state].forEach((city) => {
+          cityOptions += (city === resData.data.city) ? `<option value='${city}' selected>${city}</option>` : `<option value='${city}'>${city}</option>`;
+        });
+        $('#client-edit-city').html(cityOptions);
+      });
       $('#client-edit-organization').val(resData.data.organization);
       if (resData.data.isArchived) {
         $('#isArchived').attr('checked', true);
@@ -265,7 +298,6 @@ if (('#client-edit-form').length) {
       } else {
         clientDataObj.isArchived = false;
       }
-
       const clientId = $('#client-edit-submit').val();
       $.ajax({
         url: `/admin/clients/${clientId}`,
@@ -285,3 +317,4 @@ if (('#client-edit-form').length) {
 
 hideShowField(['#all-client', '#clients-add-div', '#clients-view-div'], ['#add-client', '#pagination', '#clients-data-body']);
 fetchClientData(1);
+fetchStateNames();
