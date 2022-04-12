@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <link rel="icon" type="image/x-icon" href="/public/img/favicon.png" />
+
+    <link rel="stylesheet" href="/public/css/bootstrap.min.css" />
+
+    <link rel="stylesheet" href="/public/css/lnr-icon.css" />
+
+    <link rel="stylesheet" href="/public/css/font-awesome.min.css" />
+
+    <link rel="stylesheet" href="/public/plugins/select2/select2.min.css" />
+
+    <link rel="stylesheet" href="/public/css/style.css" />
+    <title>LEAVE</title>
+
+</head>
+
+<body>
+    <div class="inner-wrapper">
+        <!--  header partials  -->
+        <%- include('partials/adminheader'); %>
+
+            <div class="page-wrapper">
+                <div class="container-fluid">
+                    <div class="row">
+                        <!--  side bar aside tag -->
+                        <%- include('partials/adminaside'); %>
+
+                            <div class="col-xl-9 col-lg-8 col-md-12">
+
+
+                                <div class="card shadow-sm grow ctm-border-radius">
+                                    <div class="card-body align-center">
+                                        <h4 class="card-title float-left mb-0 mt-2">Leave Details</h4><br></br>
+
+                                        <ul class="nav nav-tabs float-right border-0 tab-list-emp">
+
+                                        </ul>
+                                    </div>
+                                </div>
+                                <% function formatDate(dateObject) { let d=new Date(dateObject); let day=d.getDate();
+                                    let month=d.getMonth() + 1; let year=d.getFullYear(); if (day < 10) { day="0" + day;
+                                    } if (month < 10) { month="0" + month; } let date=year + "-" + month + "-" + day;
+                                    return date; }; %>
+                                    <div class="ctm-border-radius shadow-sm grow card">
+                                        <div class="card-body">
+
+                                            <div class="row people-grid-row" id="displayEmployeeDetails">
+
+                                                <% leavesdata.forEach(leavedata=> { %>
+                                                    <div class="col-md-6 col-lg-6 col-xl-4">
+                                                        <div class="card widget-profile">
+                                                            <div class="card-body">
+                                                                <div class="pro-widget-content">
+                                                                    <div class="profile-info-widget">
+                                                                        <p><label class="form-label text-orange lead">Employee :</label>
+                                                                            <span class="text-primary"> 
+                                                                                <%= leavedata.employeeId %>
+                                                                            </span></p>
+                                                                        <p><label class="form-label text-orange lead">Start Date :</label>
+                                                                            <span class="text-primary"> 
+                                                                                <a class="text-primary">
+                                                                                    <%= formatDate(leavedata.startDate) %>
+                                                                                </a></span></p>
+                                                                        <p><label class="form-label text-orange lead">End Date :</label>
+                                                                            <span class="text-primary"> 
+                                                                                <a class="text-primary">
+                                                                                    <%= formatDate(leavedata.endDate) %>
+                                                                                </a></span></p>
+                                                                        <p><label class="form-label text-orange lead">Reason :</label>
+                                                                            <span class="text-primary"> 
+                                                                                <%= leavedata.reason %>
+                                                                            </span></p>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <% }) %>
+
+
+                                            </div>
+                                        </div>
+                                    </div>
+                            </div>
+                    </div>
+                </div>
+            </div>
+    </div>
+    </div>
+    <div class="sidebar-overlay" id="sidebar_overlay"></div>
+
+    <script src="/public/js/jquery-3.2.1.min.js"></script>
+
+    <script src="/public/js/popper.min.js"></script>
+    <script src="/public/js/bootstrap.min.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.3/jquery.validate.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.3/dist/additional-methods.min.js"></script>
+
+    <script src="/public/plugins/theia-sticky-sidebar/ResizeSensor.js"></script>
+    <script src="/public/plugins/theia-sticky-sidebar/theia-sticky-sidebar.js"></script>
+
+    <script src="/public/plugins/select2/moment.min.js"></script>
+    <script src="/public/js/bootstrap-datetimepicker.min.js"></script>
+
+    <script src="/public/plugins/select2/select2.min.js"></script>
+
+    <script src="/public/plugins/bootstrap-tagsinput/bootstrap-tagsinput.min.js"></script>
+
+    <script src="/public/js/script.js"></script>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.3/jquery.validate.min.js"
+        integrity="sha512-37T7leoNS06R80c8Ulq7cdCDU5MNQBwlYoy1TX/WUsLFC2eYNqtKlV0QjH7r8JpG/S0GUMZwebnVFLPd6SU5yg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.0/jquery.validate.js"></script>
+
+    <script src="https://code.jquery.com/jquery-1.11.1.min.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/additional-methods.min.js"></script>
+
+    <script>
+
+    </script>
+
+
+</body>
+
+</html>

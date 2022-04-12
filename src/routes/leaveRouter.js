@@ -23,4 +23,8 @@ router.get('/view/leaves', leaveControlller.viewLeaves);
 router.get('/accept/leaves/:id', leaveControlller.acceptLeaves);
 router.get('/reject/leaves/:id', leaveControlller.rejectLeaves);
 
+// admin
+router.get('/view/oneLeave/:id', leaveControlller.adminViewLeave);
+router.get('/view/allLeave', leaveControlller.adminViewLeave);
+
 module.exports = router;
