@@ -1,14 +1,46 @@
-      <!-- Include header -->
-      <%- include("partials/header.ejs"); %>
-      <!-- /Include header -->
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <link rel="icon" type="image/x-icon" href="/assets/img/favicon.png" />
+
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/img/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/img/favicon-16x16.png">
+    <link rel="manifest" href="/assets/img/site.webmanifest">
+    <link rel="mask-icon" href="/assets/img/safari-pinned-tab.svg" color="#5bbad5">
+    <link rel="shortcut icon" href="/assets/img/favicon.ico">
+    <meta name="msapplication-TileColor" content="#da532c">
+    <meta name="msapplication-config" content="/assets/img/browserconfig.xml">
+    <meta name="theme-color" content="#ffffff">
+
+    <link rel="stylesheet" href="/assets/css/bootstrap.min.css" />
+
+    <link rel="stylesheet" href="/assets/css/lnr-icon.css" />
+
+    <link rel="stylesheet" href="/assets/css/font-awesome.min.css" />
+
+    <link rel="stylesheet" href="/assets/plugins/select2/select2.min.css" />
+
+    <link rel="stylesheet" href="/assets/css/style.css" />
+    <title>Employees Page</title>
+
+    <!--[if lt IE 9]>
+      <script src="assets/js/html5shiv.min.js"></script>
+      <script src="assets/js/respond.min.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="inner-wrapper">
+      <!--  header partials  -->
+      <%- include('partials/header'); %>
 
       <div class="page-wrapper">
         <div class="container-fluid">
           <div class="row">
-
-        <!-- Include aside -->
-        <%- include("partials/aside.ejs"); %>
-        <!-- /Include aside -->
+            <!--  side bar aside tag -->
+            <%- include('partials/aside'); %>
 
           <div class="col-xl-10 col-lg-9 col-md-12">
             <div class="card shadow-sm grow ctm-border-radius">
@@ -142,10 +174,10 @@
                       <input type="text" class="form-control" name="organization" id="client-edit-organization">
                     </div>
                     <div class="mb-3">
-                      <label class="form-label text-orange lead">Is Archive :</label>
+                      <label class="form-label text-orange lead">Is Archived :</label>
                       <div class="custom-control custom-switch float-right">
-                        <input type="checkbox" class="custom-control-input" id="isArchive">
-                        <label class="custom-control-label" for="isArchive"></label>
+                        <input type="checkbox" class="custom-control-input" id="isArchived">
+                        <label class="custom-control-label" for="isArchived"></label>
                       </div>
                     </div>
                     <div class="d-flex justify-content-between">
@@ -163,26 +195,26 @@
   </div>
 
   <div class="sidebar-overlay" id="sidebar_overlay"></div>
-  <script src="/public/js/jquery-3.2.1.min.js"></script>
+  <script src="/assets/js/jquery-3.2.1.min.js"></script>
 
-  <script src="/public/js/popper.min.js"></script>
-  <script src="/public/js/bootstrap.min.js"></script>
+  <script src="/assets/js/popper.min.js"></script>
+  <script src="/assets/js/bootstrap.min.js"></script>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.3/jquery.validate.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.3/dist/additional-methods.min.js"></script>
 
-  <script src="/public/plugins/theia-sticky-sidebar/ResizeSensor.js"></script>
-  <script src="/public/plugins/theia-sticky-sidebar/theia-sticky-sidebar.js"></script>
+  <script src="/assets/plugins/theia-sticky-sidebar/ResizeSensor.js"></script>
+  <script src="/assets/plugins/theia-sticky-sidebar/theia-sticky-sidebar.js"></script>
 
-  <script src="/public/plugins/select2/moment.min.js"></script>
-  <script src="/public/js/bootstrap-datetimepicker.min.js"></script>
+  <script src="/assets/plugins/select2/moment.min.js"></script>
+  <script src="/assets/js/bootstrap-datetimepicker.min.js"></script>
 
-  <script src="/public/plugins/select2/select2.min.js"></script>
+  <script src="/assets/plugins/select2/select2.min.js"></script>
 
-  <script src="/public/plugins/bootstrap-tagsinput/bootstrap-tagsinput.min.js"></script>
+  <script src="/assets/plugins/bootstrap-tagsinput/bootstrap-tagsinput.min.js"></script>
     
-  <script src="/public/js/script.js"></script>
-	<script src="/public/js/client.js"></script>
+  <script src="/assets/js/script.js"></script>
+	<script src="/assets/js/client.js"></script>
   
 </body>
 </html>
