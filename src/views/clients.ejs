@@ -125,16 +125,20 @@
                       <input type="text" class="form-control" name="slackId">
                     </div>
                     <div class="mb-3">
-                      <label class="form-label text-orange lead">City :</label>
-                      <input type="text" class="form-control" name="city">
+                      <label class="form-label text-orange lead">Country :</label>
+                      <select class="form-control" name="country" id="country">
+                        <option value="India" selected>India</option>
+                      </select>
                     </div>
                     <div class="mb-3">
                       <label class="form-label text-orange lead">State :</label>
-                      <input type="text" class="form-control" name="state">
+                      <select class="form-control" name="state" id="state" onchange="populateCityNames(`${this.value}`, 0)">
+                      </select>
                     </div>
                     <div class="mb-3">
-                      <label class="form-label text-orange lead">Country :</label>
-                      <input type="text" class="form-control" name="country">
+                      <label class="form-label text-orange lead">City :</label>
+                      <select class="form-control" name="city" id="city">
+                      </select>
                     </div>
                     <div class="mb-3">
                       <label class="form-label text-orange lead">Organization :</label>
@@ -158,6 +162,22 @@
                       <input type="text" class="form-control" name="name" id="client-edit-name" >
                     </div>
                     <div class="mb-3">
+                      <label class="form-label text-orange lead">Country :</label>
+                      <select class="form-control" name="country" id="client-edit-country">
+                        <option value="India" selected>India</option>
+                      </select>
+                    </div>
+                    <div class="mb-3">
+                      <label class="form-label text-orange lead">State :</label>
+                      <select class="form-control" name="state" id="client-edit-state" onchange="populateCityNames(`${this.value}`, 1)">
+                      </select>
+                    </div>
+                    <div class="mb-3">
+                      <label class="form-label text-orange lead">City :</label>
+                      <select class="form-control" name="city" id="client-edit-city">
+                      </select>
+                    </div>
+                    <!-- <div class="mb-3">
                       <label class="form-label text-orange lead">City :</label>
                       <input type="text" class="form-control" name="city" id="client-edit-city">
                     </div>
@@ -168,7 +188,7 @@
                     <div class="mb-3">
                       <label class="form-label text-orange lead">Country :</label>
                       <input type="text" class="form-control" name="country" id="client-edit-country">
-                    </div>
+                    </div> -->
                     <div class="mb-3">
                       <label class="form-label text-orange lead">Organization :</label>
                       <input type="text" class="form-control" name="organization" id="client-edit-organization">
