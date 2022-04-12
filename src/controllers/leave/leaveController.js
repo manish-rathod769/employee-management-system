@@ -1,8 +1,7 @@
 import { v4 as uuidv4 } from 'uuid';
 import { errorResponse } from '../../helpers';
 import { Leave } from '../../models';
-// import transporter from '../../helper/mail';
-
+import transporter from '../../helper/mail';
 
 const leaveForm = async (req, res) => {
   res.render('add-leave', { success: '' });
@@ -26,7 +25,7 @@ const addLeave = async (req, res) => {
     console.log(leavedata);
     const leaveobj = await Leave.create(leavedata);
     console.log(leaveobj);
-    /*    const mailOptions = {
+    const mailOptions = {
       from: 'apexapatel27321@gmail.com', // sender address
       to: 'apexapatel27321@gmail.com', // list of receivers
       subject: 'Leave Request',
@@ -39,7 +38,7 @@ const addLeave = async (req, res) => {
       } else {
         console.log(info);
       }
-    }); */
+    });
 
     const getleave = await Leave.findAll({ where: { employeeId: '123', isArchive: false } });
     console.log(getleave);
@@ -55,19 +54,6 @@ const viewLeave = async (req, res) => {
     const getleave = await Leave.findAll({ where: { isArchive: false } });
     console.log(getleave);
     res.render('view-leave', { leavesdata: getleave });
-    // =======================admin view
-    // const id = req.params.id;
-    // console.log(id);
-    // if (id) {
-    //     const getleave = await Leave.findByPk(id);
-    //     //  const getleave = await Leave.findAll({ where: { id: id, isArchive : false } });
-    //     console.log(getleave)
-    //     successResponse(req, res, getleave, 200);
-    // } else {
-    //     const getleave = await Leave.findAll({ where: { isArchive : false } });
-    //     console.log(getleave)
-    //     successResponse(req, res, getleave, 200);
-    // }
   } catch (e) {
     errorResponse(req, res, e.message, 400, e);
   }
@@ -80,6 +66,19 @@ const viewOwnLeave = async (req, res) => {
     res.render('view-leavedata', { leavesdata: getleave });
   } catch (e) {
     errorResponse(req, res, e.message, 400, e);
+  }
+};
+
+const adminViewLeave = async (req, res) => {
+  if (req.params.id) {
+    const getleave = await Leave.findAll({ where: { id: req.params.id } });
+    //  const getleave = await Leave.findAll({ where: { id: id, isArchive : false } });
+    console.log(getleave);
+    res.render('adminView-leave', { leavesdata: getleave });
+  } else {
+    const getleave = await Leave.findAll({});
+    console.log(getleave);
+    res.render('adminView-leave', { leavesdata: getleave });
   }
 };
 
@@ -102,47 +101,56 @@ const updateLeave = async (req, res) => {
   try {
     const getdata = await Leave.findByPk(req.params.id);
     const {
-      employeeId, startDate, endDate, reason, status, remainingLeave,
+      employeeId, startDate, endDate, reason, status, remainingLeave, isArchive,
     } = req.body;
-    console.log(employeeId, startDate, endDate, reason, status, remainingLeave);
+    console.log(employeeId, startDate, endDate, reason, status, remainingLeave, isArchive);
     let leavedata = {};
-    if (!startDate && !endDate) {
-      leavedata = {
-        employeeId: getdata.employeeId,
-        startDate: getdata.startDate,
-        endDate: getdata.endDate,
-        reason,
-        status,
-        remainingLeave,
-      };
-    } else if (!startDate && endDate) {
-      leavedata = {
-        employeeId: getdata.employeeId,
-        startDate: getdata.startDate,
-        endDate: new Date(endDate),
-        remainingLeave,
-        reason,
-        status,
-      };
-    } else if (startDate && !endDate) {
-      leavedata = {
-        employeeId: getdata.employeeId,
-        startDate: new Date(startDate),
-        endDate: getdata.endDate,
-        remainingLeave,
-        reason,
-        status,
-      };
-    } else {
-      leavedata = {
-        employeeId: getdata.employeeId,
-        startDate: new Date(startDate),
-        endDate: new Date(endDate),
-        remainingLeave,
-        reason,
-        status,
-      };
-    }
+    // if (!startDate && !endDate) {
+    //   leavedata = {
+    //     employeeId: getdata.employeeId,
+    //     startDate: getdata.startDate,
+    //     endDate: getdata.endDate,
+    //     reason,
+    //     status,
+    //     remainingLeave,
+    //   };
+    // } else if (!startDate && endDate) {
+    //   leavedata = {
+    //     employeeId: getdata.employeeId,
+    //     startDate: getdata.startDate,
+    //     endDate: new Date(endDate),
+    //     remainingLeave,
+    //     reason,
+    //     status,
+    //   };
+    // } else if (startDate && !endDate) {
+    //   leavedata = {
+    //     employeeId: getdata.employeeId,
+    //     startDate: new Date(startDate),
+    //     endDate: getdata.endDate,
+    //     remainingLeave,
+    //     reason,
+    //     status,
+    //   };
+    // } else {
+    //   leavedata = {
+    //     employeeId: getdata.employeeId,
+    //     startDate: new Date(startDate),
+    //     endDate: new Date(endDate),
+    //     remainingLeave,
+    //     reason,
+    //     status,
+    //   };
+    // }
+    leavedata = {
+      employeeId: getdata.employeeId,
+      startDate,
+      endDate,
+      reason,
+      status,
+      remainingLeave,
+      isArchive,
+    };
     console.log(leavedata);
     const getleave = await Leave.update(leavedata, { where: { id: req.params.id } });
     console.log(getleave);
@@ -161,7 +169,7 @@ const viewLeaves = async (req, res) => {
   res.render('update-leave', { leavesdata: getleave });
 };
 
-const acceptLeaves = async (req) => {
+const acceptLeaves = async (req, res) => {
   const getdata = await Leave.findAll({ where: { id: req.params.id } });
   console.log(getdata);
   const leavedata = {
@@ -175,7 +183,7 @@ const acceptLeaves = async (req) => {
   console.log(leavedata);
   const getleave = await Leave.update(leavedata, { where: { id: req.params.id } });
   console.log(getleave);
-  /*  const mailOptions = {
+  const mailOptions = {
     from: 'apexapatel27321@gmail.com', // sender address
     to: 'apexapatel27321@gmail.com', // list of receivers
     subject: 'Leave Request',
@@ -187,14 +195,14 @@ const acceptLeaves = async (req) => {
     } else {
       console.log(info);
     }
-  }); */
+  });
 
-  // const viewleave = await Leave.findAll({ where: { employeeId: '123', isArchive: false } });
-  // console.log(viewleave);
-  // res.render('update-leave', { leavesdata: viewleave });
+  const viewleave = await Leave.findAll({ where: { employeeId: '123', isArchive: false } });
+  console.log(viewleave);
+  res.render('update-leave', { leavesdata: viewleave });
 };
 
-const rejectLeaves = async (req) => {
+const rejectLeaves = async (req, res) => {
   const getdata = await Leave.findAll({ where: { id: req.params.id } });
   console.log(getdata);
   const leavedata = {
@@ -208,7 +216,7 @@ const rejectLeaves = async (req) => {
   console.log(leavedata);
   const getleave = await Leave.update(leavedata, { where: { id: req.params.id } });
   console.log(getleave);
-  /* const mailOptions = {
+  const mailOptions = {
     from: 'apexapatel27321@gmail.com', // sender address
     to: 'apexapatel27321@gmail.com', // list of receivers
     subject: 'Leave Request',
@@ -220,10 +228,10 @@ const rejectLeaves = async (req) => {
     } else {
       console.log(info);
     }
-  }); */
-  // const viewleave = await Leave.findAll({ where: { employeeId: '123', isArchive: false } });
-  // console.log(viewleave);
-  // res.render('update-leave', { leavesdata: viewleave });
+  });
+  const viewleave = await Leave.findAll({ where: { employeeId: '123', isArchive: false } });
+  console.log(viewleave);
+  res.render('update-leave', { leavesdata: viewleave });
 };
 module.exports = {
   addLeave,
@@ -235,4 +243,5 @@ module.exports = {
   rejectLeaves,
   viewLeaves,
   leaveForm,
+  adminViewLeave,
 };

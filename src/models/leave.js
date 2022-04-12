@@ -1,19 +1,19 @@
-const {
-  Model,
-} = require('sequelize');
+// const {
+//   Model,
+// } = require('sequelize');
 
 module.exports = (sequelize, DataTypes) => {
-  class Leave extends Model {
-    /**
-     * Helper method for defining associations.
-     * This method is not a part of Sequelize lifecycle.
-     * The `models/index` file will call this method automatically.
-     */
-    // static associate(models) {
-    //   // define association here
-    // }
-  }
-  Leave.init({
+  // class Leave extends Model {
+  //   /**
+  //    * Helper method for defining associations.
+  //    * This method is not a part of Sequelize lifecycle.
+  //    * The `models/index` file will call this method automatically.
+  //    */
+  //   // static associate(models) {
+  //   //   // define association here
+  //   // }
+  // }
+  const Leave = sequelize.define('Leave', {
     id: {
       type: DataTypes.UUID,
       allowNull: false,
@@ -52,5 +52,8 @@ module.exports = (sequelize, DataTypes) => {
     sequelize,
     modelName: 'Leave',
   });
+  // Leave.associate = function (models) {
+
+  // };
   return Leave;
 };
