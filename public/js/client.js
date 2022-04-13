@@ -13,7 +13,7 @@ const hideShowField = (fieldsToBeHide, fieldsToBeShown) => {
 };
 
 const populateCityNames = (state, flag) => {
-  $.getJSON('../josnData/stateCity.json', (data) => {
+  $.getJSON('../jsonData/stateCity.json', (data) => {
     let cityOptions = '';
     data[state].forEach((city) => {
       cityOptions += `<option value='${city}'>${city}</option>`;
@@ -23,7 +23,7 @@ const populateCityNames = (state, flag) => {
 };
 
 const fetchStateNames = () => {
-  $.getJSON('../josnData/stateCity.json', (data) => {
+  $.getJSON('../jsonData/stateCity.json', (data) => {
     let stateOptions = '';
     Object.keys(data).forEach((key) => {
       stateOptions += `<option value='${key}'>${key}</option>`;
@@ -42,14 +42,14 @@ const clientDetails = (clientId) => {
     success: (resData) => {
       $('#client-edit-form')[0].reset();
       $('#client-edit-name').val(resData.data.name);
-      $.getJSON('../josnData/stateCity.json', (data) => {
+      $.getJSON('../jsonData/stateCity.json', (data) => {
         let stateOptions = '';
         Object.keys(data).forEach((key) => {
           stateOptions += (key === resData.data.state) ? `<option value='${key}' selected>${key}</option>` : `<option value='${key}'>${key}</option>`;
         });
         $('#client-edit-state').html(stateOptions);
       });
-      $.getJSON('../josnData/stateCity.json', (data) => {
+      $.getJSON('../jsonData/stateCity.json', (data) => {
         let cityOptions = '';
         data[resData.data.state].forEach((city) => {
           cityOptions += (city === resData.data.city) ? `<option value='${city}' selected>${city}</option>` : `<option value='${city}'>${city}</option>`;
