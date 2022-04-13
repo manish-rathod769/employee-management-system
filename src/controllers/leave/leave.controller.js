@@ -186,6 +186,7 @@ const updateLeave = async (req, res) => {
     const devId = req.user.id;
     let mailOptions = {};
     const getdata = await Leave.findByPk(req.params.id);
+    //console.log(getdata);
     const {
       employeeId, startDate, endDate, reason, status, isArchived,
     } = req.body;
