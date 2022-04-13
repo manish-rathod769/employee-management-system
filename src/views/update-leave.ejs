@@ -6,6 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <link rel="icon" type="image/x-icon" href="/public/img/favicon.png" />
+<<<<<<< HEAD
   <link rel="icon" type="image/png" sizes="32x32" href="/assets/img/favicon-32x32.png">
   <link rel="icon" type="image/png" sizes="16x16" href="/assets/img/favicon-16x16.png">
   <link rel="manifest" href="/assets/img/site.webmanifest">
@@ -14,6 +15,8 @@
   <meta name="msapplication-TileColor" content="#da532c">
   <meta name="msapplication-config" content="/assets/img/browserconfig.xml">
   <meta name="theme-color" content="#ffffff">
+=======
+>>>>>>> edit: accept-reject route combined
 
   <link rel="stylesheet" href="/public/css/bootstrap.min.css" />
 
@@ -649,6 +652,11 @@
                               <div class="card-body">
                                 <div class="pro-widget-content">
                                   <div class="profile-info-widget">
+                                    <p><label class="form-label text-orange lead">Employee :</label>
+                                      <span class="text-primary">
+                                        <%= leavedata.employeeId %>
+                                      </span>
+                                    </p>
                                     <p><label class="form-label text-orange lead">Start Date :</label>
                                       <span class="text-primary">
                                         <a class="text-primary">
@@ -667,21 +675,21 @@
                                       </span>
                                     </p>
                                     <div>
-                                    <h4>
-                                      <p class="float-left text-danger cursor-pointer">
-                                        <a href="/accept/leaves/<%= leavedata.id %>" class="btn btn-secondary"
-                                          id="accept">Accept</a>
-                                      </p>
-                                    </h4>
-                                  </div>
-                                  <div>
-                                    <h4>
-                                      <p class="float-right text-danger cursor-pointer">
-                                        <a href="/reject/leaves/<%= leavedata.id %>" class="btn btn-danger"
-                                          id="reject">Reject</a>
-                                      </p>
-                                    </h4>
-                                  </div>
+                                      <h4>
+                                        <p class="float-left text-danger cursor-pointer">
+                                          <button type="button" onclick="acceptfun('<%= leavedata.id %>')"
+                                            class="btn btn-secondary" id="accept">Accept</button>
+                                        </p>
+                                      </h4>
+                                    </div>
+                                    <div>
+                                      <h4>
+                                        <p class="float-right text-danger cursor-pointer">
+                                          <button type="button" onclick="rejectfun('<%= leavedata.id %>')"
+                                            class="btn btn-danger" id="reject">Reject</button>
+                                        </p>
+                                      </h4>
+                                    </div>
 
                                   </div>
                                 </div>
@@ -740,6 +748,7 @@
 
   <script>
 <<<<<<< HEAD
+<<<<<<< HEAD
     $(document).ready(function(){
       console.log("hello")
       $('#accept').click(function(){
@@ -772,6 +781,27 @@
 
 =======
 >>>>>>> edit: routes removed and role added in controller.
+=======
+    let acceptfun = (lid) => {
+      var action = 'accept';
+      console.log(action)
+      $.ajax({
+        url: '/accept-reject/leave',
+        method: 'PUT',
+        data: { lid, action }
+      })
+    }
+
+    let rejectfun = (lid) => {
+      var action = 'reject';
+      console.log(action)
+      $.ajax({
+        url: '/accept-reject/leave',
+        method: 'PUT',
+        data: { lid, action }
+      })
+    }
+>>>>>>> edit: accept-reject route combined
   </script>
 >>>>>>> edit: model, migration and seeder file syntax changes
 
