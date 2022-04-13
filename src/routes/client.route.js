@@ -4,7 +4,9 @@ import * as clietControllers from '../controllers/client/client.controller';
 
 const route = express.Router();
 
-route.get('/clients', clietControllers.getAllClientController);
+route.get('/clients', (req, res) => res.render('clients'));
+route.get('/getClients', clietControllers.getAllClientController);
+route.get('/clients/:clientId', clietControllers.getOneClientController);
 route.post('/clients', clientRegisterValidation, clietControllers.clientRegisterController);
 route.put('/clients/:clientId', clientUpdateDataValidation, clietControllers.clientUpdateDataController);
 

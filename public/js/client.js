@@ -37,7 +37,7 @@ const clientDetails = (clientId) => {
   hideShowField(['#clients-add-div', '#add-client', '#pagination', '#clients-data-body'], ['#clients-view-div', '#all-client']);
   $('#action').text('View Client');
   $.ajax({
-    url: `/admin/clients/${clientId}`,
+    url: `/clients/${clientId}`,
     method: 'GET',
     success: (resData) => {
       $('#client-edit-form')[0].reset();
@@ -78,7 +78,7 @@ const fetchClientData = (index) => {
   const searchWord = $('#search-by').val();
 
   $.ajax({
-    url: `/admin/client?page=${index}&count=${recordCount}&sortBy=${sortBy}&sortOrder=${sortOrder}&searchWord=${searchWord}`,
+    url: `/getClients?page=${index}&count=${recordCount}&sortBy=${sortBy}&sortOrder=${sortOrder}&searchWord=${searchWord}`,
     method: 'GET',
     error: (resData) => {
       alert(resData.responseJSON.errorMessage);
@@ -232,7 +232,7 @@ if (('#client-register-form').length) {
       });
 
       $.ajax({
-        url: '/admin/clients',
+        url: '/clients',
         method: 'POST',
         data: clientDataObj,
         success: () => {
@@ -300,7 +300,7 @@ if (('#client-edit-form').length) {
       }
       const clientId = $('#client-edit-submit').val();
       $.ajax({
-        url: `/admin/clients/${clientId}`,
+        url: `/clients/${clientId}`,
         method: 'PUT',
         data: clientDataObj,
         success: () => {
