@@ -3,7 +3,7 @@ import { Op } from 'sequelize';
 import { successResponse, errorResponse } from '../../helpers/index';
 import { Client } from '../../models';
 
-export const clientRegisterController = async (req, res) => {
+export const addNewClient = async (req, res) => {
   try {
     const {
       name, email, slackId, city, state, country, organization,
@@ -32,7 +32,7 @@ export const clientRegisterController = async (req, res) => {
   }
 };
 
-export const getAllClientController = async (req, res) => {
+export const getAllClient = async (req, res) => {
   try {
     const page = Number(req.query.page) || 1;
     const count = Number(req.query.count) || 6;
@@ -52,7 +52,7 @@ export const getAllClientController = async (req, res) => {
   }
 };
 
-export const clientUpdateDataController = async (req, res) => {
+export const editClient = async (req, res) => {
   try {
     const { clientId } = req.params;
     const {
@@ -67,7 +67,7 @@ export const clientUpdateDataController = async (req, res) => {
   }
 };
 
-export const getOneClientController = async (req, res) => {
+export const getOneClient = async (req, res) => {
   try {
     const { clientId } = req.params;
     const matchedClient = await Client.findOne({ where: { id: clientId } });
