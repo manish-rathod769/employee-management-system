@@ -1,22 +1,22 @@
 <!DOCTYPE html>
 <html lang="en">
 
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <link rel="icon" type="image/x-icon" href="/public/img/favicon.png" />
+  <link rel="icon" type="image/x-icon" href="/public/img/favicon.png" />
 
-    <link rel="stylesheet" href="/public/css/bootstrap.min.css" />
+  <link rel="stylesheet" href="/public/css/bootstrap.min.css" />
 
-    <link rel="stylesheet" href="/public/css/lnr-icon.css" />
+  <link rel="stylesheet" href="/public/css/lnr-icon.css" />
 
-    <link rel="stylesheet" href="/public/css/font-awesome.min.css" />
+  <link rel="stylesheet" href="/public/css/font-awesome.min.css" />
 
-    <link rel="stylesheet" href="/public/plugins/select2/select2.min.css" />
+  <link rel="stylesheet" href="/public/plugins/select2/select2.min.css" />
 
-    <link rel="stylesheet" href="/public/css/style.css" />
-    <title>LEAVE</title>
+  <link rel="stylesheet" href="/public/css/style.css" />
+  <title>LEAVE</title>
 
 </head>
 
@@ -56,6 +56,11 @@
                               <div class="card-body">
                                 <div class="pro-widget-content">
                                   <div class="profile-info-widget">
+                                    <p><label class="form-label text-orange lead">Employee :</label>
+                                      <span class="text-primary">
+                                        <%= leavedata.employeeId %>
+                                      </span>
+                                    </p>
                                     <p><label class="form-label text-orange lead">Start Date :</label>
                                       <span class="text-primary">
                                         <a class="text-primary">
@@ -74,21 +79,21 @@
                                       </span>
                                     </p>
                                     <div>
-                                    <h4>
-                                      <p class="float-left text-danger cursor-pointer">
-                                        <a href="/accept/leaves/<%= leavedata.id %>" class="btn btn-secondary"
-                                          id="accept">Accept</a>
-                                      </p>
-                                    </h4>
-                                  </div>
-                                  <div>
-                                    <h4>
-                                      <p class="float-right text-danger cursor-pointer">
-                                        <a href="/reject/leaves/<%= leavedata.id %>" class="btn btn-danger"
-                                          id="reject">Reject</a>
-                                      </p>
-                                    </h4>
-                                  </div>
+                                      <h4>
+                                        <p class="float-left text-danger cursor-pointer">
+                                          <button type="button" onclick="acceptfun('<%= leavedata.id %>')"
+                                            class="btn btn-secondary" id="accept">Accept</button>
+                                        </p>
+                                      </h4>
+                                    </div>
+                                    <div>
+                                      <h4>
+                                        <p class="float-right text-danger cursor-pointer">
+                                          <button type="button" onclick="rejectfun('<%= leavedata.id %>')"
+                                            class="btn btn-danger" id="reject">Reject</button>
+                                        </p>
+                                      </h4>
+                                    </div>
 
                                   </div>
                                 </div>
@@ -145,6 +150,25 @@
   <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/additional-methods.min.js"></script>
 
   <script>
+    let acceptfun = (lid) => {
+      var action = 'accept';
+      console.log(action)
+      $.ajax({
+        url: '/accept-reject/leave',
+        method: 'PUT',
+        data: { lid, action }
+      })
+    }
+
+    let rejectfun = (lid) => {
+      var action = 'reject';
+      console.log(action)
+      $.ajax({
+        url: '/accept-reject/leave',
+        method: 'PUT',
+        data: { lid, action }
+      })
+    }
   </script>
 
 
