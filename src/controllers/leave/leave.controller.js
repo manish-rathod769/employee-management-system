@@ -24,21 +24,21 @@ const addLeave = async (req, res) => {
     console.log(leavedata);
     const leaveobj = await Leave.create(leavedata);
     console.log(leaveobj);
-    // const mailOptions = {
-    //   from: "noreply_mail<noreply@someemail.com>", // system address
-    //   // to: ['apexapatel27321@gmail.com','chavan.vinayak017@gmail.com'], // list of pm
-    //   to: "apexasavaliya27321@gmail.com",
-    //   subject: 'Leave Request',
-    //   text: `Employee ${leavedata.employeeId}, wants to take leave from ${leavedata.startDate},
-    //   to ${leavedata.endDate} due to ${reason}`,
-    // };
-    // transporter.sendMail(mailOptions, (err, info) => {
-    //   if (err) {
-    //    errorResponse(req, res, e.message, 400, err);
-    //  } else {
-    //    successResponse(req, res, getleave, 200);
-    //  }
-    // });
+    const mailOptions = {
+      from: "noreply_mail<noreply@someemail.com>", // system address
+      // to: ['apexapatel27321@gmail.com','chavan.vinayak017@gmail.com'], // list of pm
+      to: "apexasavaliya27321@gmail.com",
+      subject: 'Leave Request',
+      text: `Employee ${leavedata.employeeId}, wants to take leave from ${leavedata.startDate},
+      to ${leavedata.endDate} due to ${reason}`,
+    };
+    transporter.sendMail(mailOptions, (err, info) => {
+      if (err) {
+       errorResponse(req, res, e.message, 400, err);
+     } else {
+       successResponse(req, res, getleave, 200);
+     }
+    });
 
     const getleave = await Leave.findAll({ where: { employeeId: '123', isArchived: false } });
     console.log(getleave);
@@ -88,7 +88,7 @@ const viewLeave = async (req, res) => {
 };
 
 const viewOneLeave = async (req, res) => {
-  const role = 'DEV';
+  const role = 'PM';
   if (role === 'DEV') {
     try {
       const getleave = await Leave.findAll({ where: { id: req.params.id, isArchived: false } });
@@ -142,21 +142,21 @@ const updateLeave = async (req, res) => {
     console.log(leavedata);
     const getleave = await Leave.update(leavedata, { where: { id: req.params.id } });
     console.log(getleave);
-    // const mailOptions = {
-    //   from: "noreply_mail<noreply@someemail.com>", // system address
-    //   // to: ['apexapatel27321@gmail.com','chavan.vinayak017@gmail.com'], // list of pm
-    //   to: "apexasavaliya27321@gmail.com",
-    //   subject: 'Leave Request Updated',
-    //   text: `Employee ${leavedata.employeeId}, updated his/her leave from ${leavedata.startDate},
-    //   to ${leavedata.endDate} due to ${reason}`,
-    // };
-    // transporter.sendMail(mailOptions, (err, info) => {
-    //   if (err) {
-    //     errorResponse(req, res, e.message, 400, err);
-    //   } else {
-    //     successResponse(req, res, getleave, 200);
-    //   }
-    // });
+    const mailOptions = {
+      from: "noreply_mail<noreply@someemail.com>", // system address
+      // to: ['apexapatel27321@gmail.com','chavan.vinayak017@gmail.com'], // list of pm
+      to: "apexasavaliya27321@gmail.com",
+      subject: 'Leave Request Updated',
+      text: `Employee ${leavedata.employeeId}, updated his/her leave from ${leavedata.startDate},
+      to ${leavedata.endDate} due to ${reason}`,
+    };
+    transporter.sendMail(mailOptions, (err, info) => {
+      if (err) {
+        errorResponse(req, res, e.message, 400, err);
+      } else {
+        successResponse(req, res, getleave, 200);
+      }
+    });
     const getallleave = await Leave.findAll({ where: { isArchived: false } });
     console.log(getallleave);
     res.render('view-leave', { leavesdata: getallleave, success: 'YOUR LEAVE DETAILS UPDATED!!!' });
@@ -169,74 +169,63 @@ const updateLeave = async (req, res) => {
 
 // pm---------------------------------------------------------------------------------------------------------------------------------------------------
 
-const acceptLeaves = async (req, res) => {
-  const getdata = await Leave.findAll({ where: { id: req.params.id } });
+const acceptRejectLeave = async (req, res) => {
+  const leaveid = req.body;
+  const getdata = await Leave.findAll({ where: { id: leaveid.lid } });
   console.log(getdata);
-  const leavedata = {
-    employeeId: getdata[0].employeeId,
-    startDate: getdata[0].startDate,
-    endDate: getdata[0].endDate,
-    reason: getdata[0].reason,
-    status: 'approved',
-  };
-  console.log(leavedata);
-  const getleave = await Leave.update(leavedata, { where: { id: req.params.id } });
-  console.log(getleave);
-  const mailOptions = {
-    from: 'apexapatel27321@gmail.com', // sender address
-    to: 'apexapatel27321@gmail.com', // list of receivers
-    subject: 'Leave Request',
-    text: 'YOUR LEAVE IS APPROVED!!!',
-  };
+  let mailOptions = {};
+  if (leaveid.action === 'accept') {
+    const leavedata = {
+      employeeId: getdata[0].employeeId,
+      startDate: getdata[0].startDate,
+      endDate: getdata[0].endDate,
+      reason: getdata[0].reason,
+      status: 'approved',
+    };
+    console.log(leavedata);
+    const getleave = await Leave.update(leavedata, { where: { id: leaveid.lid } });
+    console.log(getleave);
+    mailOptions = {
+      from: "noreply_mail<noreply@someemail.com>", // system address
+      to: 'apexapatel27321@gmail.com', // developer's address
+      subject: 'Leave Request',
+      text: 'YOUR LEAVE IS APPROVED!!!',
+    };
+  } else if (leaveid.action === 'reject') {
+    const leavedata = {
+      employeeId: getdata[0].employeeId,
+      startDate: getdata[0].startDate,
+      endDate: getdata[0].endDate,
+      reason: getdata[0].reason,
+      status: 'rejected',
+    };
+    console.log(leavedata);
+    const getleave = await Leave.update(leavedata, { where: { id: leaveid.lid } });
+    console.log(getleave);
+    mailOptions = {
+      from: "noreply_mail<noreply@someemail.com>", // system address
+      to: 'apexapatel27321@gmail.com', // developer's address
+      subject: 'Leave Request',
+      text: 'YOUR LEAVE IS REJECTED!!!',
+    };
+  }
   transporter.sendMail(mailOptions, (err, info) => {
     if (err) {
-      console.log(err);
+      errorResponse(req, res, e.message, 400, err);
     } else {
-      console.log(info);
-    }
-  });
-
-  const viewleave = await Leave.findAll({ where: { employeeId: '123', isArchived: false } });
-  console.log(viewleave);
-  res.render('update-leave', { leavesdata: viewleave });
-};
-
-const rejectLeaves = async (req, res) => {
-  const getdata = await Leave.findAll({ where: { id: req.params.id } });
-  console.log(getdata);
-  const leavedata = {
-    employeeId: getdata[0].employeeId,
-    startDate: getdata[0].startDate,
-    endDate: getdata[0].endDate,
-    reason: getdata[0].reason,
-    status: 'rejected',
-  };
-  console.log(leavedata);
-  const getleave = await Leave.update(leavedata, { where: { id: req.params.id } });
-  console.log(getleave);
-  const mailOptions = {
-    from: 'apexapatel27321@gmail.com', // sender address
-    to: 'apexapatel27321@gmail.com', // list of receivers
-    subject: 'Leave Request',
-    text: 'YOUR LEAVE IS REJECTED!!!',
-  };
-  transporter.sendMail(mailOptions, (err, info) => {
-    if (err) {
-      console.log(err);
-    } else {
-      console.log(info);
+      successResponse(req, res, getleave, 200);
     }
   });
   const viewleave = await Leave.findAll({ where: { employeeId: '123', isArchived: false } });
   console.log(viewleave);
   res.render('update-leave', { leavesdata: viewleave });
 };
+
 module.exports = {
   addLeave,
   viewLeave,
   viewOneLeave,
   updateLeave,
-  acceptLeaves,
-  rejectLeaves,
+  acceptRejectLeave,
   leaveForm,
 };
