@@ -5,9 +5,9 @@ import * as clientControllers from '../controllers/client/client.controller';
 const route = express.Router();
 
 route.get('/clients', (req, res) => res.render('clients'));
-route.get('/clients/:clientId', clientControllers.viewOneClient);
-route.get('/viewClient', clientControllers.viewAllClient);
+route.get('/getClients', clientControllers.getAllClient);
+route.get('/clients/:clientId', clientControllers.getOneClient);
 route.post('/clients', clientRegisterValidation, clientControllers.addNewClient);
-route.put('/clients/:clientId', clientUpdateDataValidation, clientControllers.updateClient);
+route.put('/clients/:clientId', clientUpdateDataValidation, clientControllers.editClient);
 
 module.exports = route;

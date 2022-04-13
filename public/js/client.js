@@ -1,12 +1,35 @@
+/* eslint-disable no-unused-expressions */
 /* eslint-disable no-alert */
 /* eslint-disable no-restricted-globals */
 /* eslint-disable no-unused-vars */
+
 const hideShowField = (fieldsToBeHide, fieldsToBeShown) => {
   fieldsToBeHide.forEach((field) => {
     $(field).css('display', 'none');
   });
   fieldsToBeShown.forEach((field) => {
     $(field).css('display', 'block');
+  });
+};
+
+const populateCityNames = (state, flag) => {
+  $.getJSON('../josnData/stateCity.json', (data) => {
+    let cityOptions = '';
+    data[state].forEach((city) => {
+      cityOptions += `<option value='${city}'>${city}</option>`;
+    });
+    (flag) ? $('#client-edit-city').html(cityOptions) : $('#city').html(cityOptions);
+  });
+};
+
+const fetchStateNames = () => {
+  $.getJSON('../josnData/stateCity.json', (data) => {
+    let stateOptions = '';
+    Object.keys(data).forEach((key) => {
+      stateOptions += `<option value='${key}'>${key}</option>`;
+    });
+    $('#state').html(stateOptions);
+    populateCityNames($('#state').val(), 0);
   });
 };
 
@@ -17,15 +40,27 @@ const clientDetails = (clientId) => {
     url: `/clients/${clientId}`,
     method: 'GET',
     success: (resData) => {
+      $('#client-edit-form')[0].reset();
       $('#client-edit-name').val(resData.data.name);
-      $('#client-edit-city').val(resData.data.city);
-      $('#client-edit-state').val(resData.data.state);
-      $('#client-edit-country').val(resData.data.country);
+      $.getJSON('../josnData/stateCity.json', (data) => {
+        let stateOptions = '';
+        Object.keys(data).forEach((key) => {
+          stateOptions += (key === resData.data.state) ? `<option value='${key}' selected>${key}</option>` : `<option value='${key}'>${key}</option>`;
+        });
+        $('#client-edit-state').html(stateOptions);
+      });
+      $.getJSON('../josnData/stateCity.json', (data) => {
+        let cityOptions = '';
+        data[resData.data.state].forEach((city) => {
+          cityOptions += (city === resData.data.city) ? `<option value='${city}' selected>${city}</option>` : `<option value='${city}'>${city}</option>`;
+        });
+        $('#client-edit-city').html(cityOptions);
+      });
       $('#client-edit-organization').val(resData.data.organization);
-      if (resData.data.isArchive) {
-        $('#isArchive').attr('checked', true);
+      if (resData.data.isArchived) {
+        $('#isArchived').attr('checked', true);
       } else {
-        $('#isArchive').attr('checked', false);
+        $('#isArchived').attr('checked', false);
       }
       $('#client-edit-submit').val(resData.data.id);
     },
@@ -43,7 +78,7 @@ const fetchClientData = (index) => {
   const searchWord = $('#search-by').val();
 
   $.ajax({
-    url: `/viewClient?page=${index}&count=${recordCount}&sortBy=${sortBy}&sortOrder=${sortOrder}&searchWord=${searchWord}`,
+    url: `/getClients?page=${index}&count=${recordCount}&sortBy=${sortBy}&sortOrder=${sortOrder}&searchWord=${searchWord}`,
     method: 'GET',
     error: (resData) => {
       alert(resData.responseJSON.errorMessage);
@@ -52,22 +87,23 @@ const fetchClientData = (index) => {
     success: (resData) => {
       $('#clients-data').html('');
       if (resData.success) {
-        const paginationDetails = resData.data.pop();
+        const { totalCount } = resData.data.pop();
         $('#action').text('Clients');
         $('#all-client').css('display', 'none');
 
         hideShowField(['#all-client', '#clients-add-div', '#clients-view-div'], ['#add-client', '#pagination', '#clients-data-body']);
 
-        $('#clients-count').text(resData.data.length + paginationDetails.before + paginationDetails.after);
-        // eslint-disable-next-line no-unused-expressions
-        (!paginationDetails.before) ? $('#previous').addClass('disabled') : $('#previous').removeClass('disabled');
-        // eslint-disable-next-line no-unused-expressions
-        (!paginationDetails.after) ? $('#next').addClass('disabled') : $('#next').removeClass('disabled');
-
         $('#previous').attr('data-index', Number(index) - 1);
         $('#next').attr('data-index', Number(index) + 1);
         $('#current').attr('data-index', Number(index));
+        const page = $('#current').attr('data-index');
+        const beforeCount = (page - 1) * Number(recordCount);
+        const afterCount = totalCount - Number(recordCount) - beforeCount;
 
+        // Set pagination oprions
+        $('#clients-count').text(totalCount);
+        (beforeCount <= 0) ? $('#previous').addClass('disabled') : $('#previous').removeClass('disabled');
+        (afterCount <= 0) ? $('#next').addClass('disabled') : $('#next').removeClass('disabled');
         $('#current').text(index);
         if (resData.data.length) {
           resData.data.forEach((client) => {
@@ -92,7 +128,11 @@ const fetchClientData = (index) => {
           `);
           });
         } else {
-          alert('No more data found !!!');
+          $('#clients-data').append(`
+            <div class='col-12 text-center'>
+              <p><h4 class='text-danger'>Nothing to show !!!</h4></p>
+            </div>
+          `);
         }
       } else {
         alert(resData.errorMessage);
@@ -253,12 +293,11 @@ if (('#client-edit-form').length) {
       clientData.forEach((obj) => {
         clientDataObj[obj.name] = obj.value;
       });
-      if ($('#isArchive').is(':checked')) {
-        clientDataObj.isArchive = true;
+      if ($('#isArchived').is(':checked')) {
+        clientDataObj.isArchived = true;
       } else {
-        clientDataObj.isArchive = false;
+        clientDataObj.isArchived = false;
       }
-
       const clientId = $('#client-edit-submit').val();
       $.ajax({
         url: `/clients/${clientId}`,
@@ -278,3 +317,4 @@ if (('#client-edit-form').length) {
 
 hideShowField(['#all-client', '#clients-add-div', '#clients-view-div'], ['#add-client', '#pagination', '#clients-data-body']);
 fetchClientData(1);
+fetchStateNames();

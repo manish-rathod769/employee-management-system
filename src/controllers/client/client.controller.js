@@ -17,10 +17,13 @@ export const addNewClient = async (req, res) => {
       state,
       country,
       organization,
-      isArchive: false,
     };
     const isUserExist = await Client.findAll({ where: { [Op.or]: [{ email }, { slackId }] } });
-    if (isUserExist.length) throw new Error('EmailID or slackID alreay exists in the database !!!');
+
+    if (isUserExist.length) {
+      errorResponse(req, res, 'EmailID or slackID alreay exists in the database !!!', 412);
+      return;
+    }
 
     const newClient = await Client.create(clientDetails);
     successResponse(req, res, newClient, 200);
@@ -29,7 +32,7 @@ export const addNewClient = async (req, res) => {
   }
 };
 
-export const viewAllClient = async (req, res) => {
+export const getAllClient = async (req, res) => {
   try {
     const page = Number(req.query.page) || 1;
     const count = Number(req.query.count) || 6;
@@ -40,26 +43,23 @@ export const viewAllClient = async (req, res) => {
     const allClients = await Client.findAll({
       where: { [Op.or]: [{ name: { [Op.iLike]: `%${searchWord}%` } }, { email: { [Op.iLike]: `%${searchWord}%` } }, { slackId: { [Op.iLike]: `%${searchWord}%` } }, { city: { [Op.iLike]: `%${searchWord}%` } }, { state: { [Op.iLike]: `%${searchWord}%` } }, { country: { [Op.iLike]: `%${searchWord}%` } }, { organization: { [Op.iLike]: `%${searchWord}%` } }] }, attributes: ['id', 'name', 'email', 'slackId', 'organization'], order: [[`${sortBy}`, `${sortOrder}`]], offset: (page - 1) * count, limit: count,
     });
-    // if (!allClients.length) throw new Error('Employee data does not exist !!!');
-    const isDataBefore = await Client.findAll({ where: { [Op.or]: [{ name: { [Op.iLike]: `%${searchWord}%` } }, { email: { [Op.iLike]: `%${searchWord}%` } }, { slackId: { [Op.iLike]: `%${searchWord}%` } }, { city: { [Op.iLike]: `%${searchWord}%` } }, { state: { [Op.iLike]: `%${searchWord}%` } }, { country: { [Op.iLike]: `%${searchWord}%` } }, { organization: { [Op.iLike]: `%${searchWord}%` } }] }, order: [[`${sortBy}`, `${sortOrder}`]], limit: (page - 1) * count });
-    const isDataAfter = await Client.findAll({ where: { [Op.or]: [{ name: { [Op.iLike]: `%${searchWord}%` } }, { email: { [Op.iLike]: `%${searchWord}%` } }, { slackId: { [Op.iLike]: `%${searchWord}%` } }, { city: { [Op.iLike]: `%${searchWord}%` } }, { state: { [Op.iLike]: `%${searchWord}%` } }, { country: { [Op.iLike]: `%${searchWord}%` } }, { organization: { [Op.iLike]: `%${searchWord}%` } }] }, order: [[`${sortBy}`, `${sortOrder}`]], offset: page * count });
+    const totalCount = await Client.findAll({ where: { [Op.or]: [{ name: { [Op.iLike]: `%${searchWord}%` } }, { email: { [Op.iLike]: `%${searchWord}%` } }, { slackId: { [Op.iLike]: `%${searchWord}%` } }, { city: { [Op.iLike]: `%${searchWord}%` } }, { state: { [Op.iLike]: `%${searchWord}%` } }, { country: { [Op.iLike]: `%${searchWord}%` } }, { organization: { [Op.iLike]: `%${searchWord}%` } }] } });
 
-    const paginationDetails = { before: isDataBefore.length, after: isDataAfter.length };
-    allClients.push(paginationDetails);
+    allClients.push({ totalCount: totalCount.length });
     successResponse(req, res, allClients, 200);
   } catch (error) {
     errorResponse(req, res, error.message, 500, error);
   }
 };
 
-export const updateClient = async (req, res) => {
+export const editClient = async (req, res) => {
   try {
     const { clientId } = req.params;
     const {
-      name, city, state, country, organization, isArchive,
+      name, city, state, country, organization, isArchived,
     } = req.body;
     const updatedClient = await Client.update({
-      name, city, state, country, organization, isArchive,
+      name, city, state, country, organization, isArchived,
     }, { returning: true, where: { id: clientId } });
     successResponse(req, res, updatedClient[1], 200);
   } catch (error) {
@@ -67,11 +67,14 @@ export const updateClient = async (req, res) => {
   }
 };
 
-export const viewOneClient = async (req, res) => {
+export const getOneClient = async (req, res) => {
   try {
     const { clientId } = req.params;
     const matchedClient = await Client.findOne({ where: { id: clientId } });
-    if (!matchedClient) throw new Error('Client data does not exist');
+    if (!matchedClient) {
+      errorResponse(req, res, 'Client data does not exist !!!!', 412);
+      return;
+    }
     successResponse(req, res, matchedClient, 200);
   } catch (error) {
     errorResponse(req, res, error.message, 500, error);
