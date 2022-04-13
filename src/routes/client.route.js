@@ -13,3 +13,4 @@ route.post('/clients', verifyCookie, roleCheck.roleAdmin(false), clientRegisterV
 route.put('/clients/:clientId', verifyCookie, roleCheck.roleAdmin(false), clientUpdateDataValidation, clientControllers.editClient);
 
 module.exports = route;
+
