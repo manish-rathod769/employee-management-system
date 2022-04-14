@@ -46,11 +46,21 @@
 
                                 <div class="card shadow-sm grow ctm-border-radius">
                                     <div class="card-body align-right">
-                                        <h4 class="card-title float-left mb-0 mt-2">search</h4><br></br>
-
-                                        <ul class="nav nav-tabs float-right border-0 tab-list-emp">
-
-                                        </ul>
+                                        <div class="input-group">
+                                            <select class="form-control" id="size">
+                                                <option value="6">6</option>
+                                                <option value="12" selected>12</option>
+                                                <option value="24">24</option>
+                                                <option value="51">51</option>
+                                            </select>
+                                            <input type="number" class="form-control" placeholder="page number" min="1"
+                                                id="page">
+                                            <div class="input-group-append">
+                                                <button class="btn btn-theme text-white ctm-border-radius" id="search"
+                                                    type="button" onclick="myFunction();"> Search
+                                                </button>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
 
@@ -62,38 +72,59 @@
                                     <div class="ctm-border-radius shadow-sm grow card">
                                         <div class="card-body">
 
-                                            <div class="row people-grid-row" id="displayEmployeeDetails">
+                                            <div class="row people-grid-row" id="displayLeaveDetails">
 
-                                                <% leavesdata.forEach(leavedata=> { %>
+                                                <% if(!leavesdata.length) { %>
+                                                    <div class='col-12 text-center'>
+                                                        <p>
+                                                        <h4 class='text-danger'>Nothing to show !!!</h4>
+                                                        </p>
+                                                    </div>
+
+                                                    <% } else{ leavesdata.forEach(leavedata=> { %>
+
                                                     <div class="col-md-6 col-lg-6 col-xl-4">
                                                         <div class="card widget-profile">
                                                             <div class="card-body">
                                                                 <div class="pro-widget-content">
                                                                     <div class="profile-info-widget">
-                                                                        <p><label class="form-label text-orange lead">Employee :</label>
-                                                                            <span class="text-primary"> 
+                                                                        <p><label
+                                                                                class="form-label text-orange lead">Employee
+                                                                                :</label>
+                                                                            <span class="text-primary">
                                                                                 <%= leavedata.employeeId %>
-                                                                            </span></p>
-                                                                        <p><label class="form-label text-orange lead">Start Date :</label>
-                                                                            <span class="text-primary"> 
+                                                                            </span>
+                                                                        </p>
+                                                                        <p><label
+                                                                                class="form-label text-orange lead">Start
+                                                                                Date :</label>
+                                                                            <span class="text-primary">
                                                                                 <a class="text-primary">
-                                                                                    <%= formatDate(leavedata.startDate) %>
-                                                                                </a></span></p>
-                                                                        <p><label class="form-label text-orange lead">End Date :</label>
-                                                                            <span class="text-primary"> 
+                                                                                    <%= formatDate(leavedata.startDate)
+                                                                                        %>
+                                                                                </a></span>
+                                                                        </p>
+                                                                        <p><label
+                                                                                class="form-label text-orange lead">End
+                                                                                Date :</label>
+                                                                            <span class="text-primary">
                                                                                 <a class="text-primary">
                                                                                     <%= formatDate(leavedata.endDate) %>
-                                                                                </a></span></p>
-                                                                        <p><label class="form-label text-orange lead">Reason :</label>
-                                                                            <span class="text-primary"> 
+                                                                                </a></span>
+                                                                        </p>
+                                                                        <p><label
+                                                                                class="form-label text-orange lead">Reason
+                                                                                :</label>
+                                                                            <span class="text-primary">
                                                                                 <%= leavedata.reason %>
-                                                                            </span></p>
+                                                                            </span>
+                                                                        </p>
                                                                     </div>
                                                                 </div>
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    <% }) %>
+                                                    <% }) }%>
 
 
                                             </div>
@@ -143,6 +174,19 @@
     <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/additional-methods.min.js"></script>
 
     <script>
+        function myFunction() {
+            let size = document.getElementById("size").value;
+            let pageX = document.getElementById("page").value;
+            let page;
+            if (!Number.isNaN(pageX) && pageX > 0) {
+                page = pageX;
+            } else {
+                page = 1;
+            }
+            page = page - 1;
+            let query = `page=${page}&size=${size}`;
+            window.location.href = `/leave/view?${query}`;
+        }
 
     </script>
 

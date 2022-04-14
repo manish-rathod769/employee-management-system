@@ -7,13 +7,14 @@ import * as leaveControlller from '../controllers/leave/leave.controller';
 const router = new express.Router();
 
 // developer
-router.get('/', leaveControlller.leaveForm);
-router.post('/add/leave', leaveValidator.leaveRegisterValidation, leaveControlller.addLeave);
-router.get('/view/leave', leaveControlller.viewLeave);
-router.get('/view/leave/:id', leaveControlller.viewOneLeave);
-router.post('/update/leave/:id', leaveValidator.leaveUpdateValidation, leaveControlller.updateLeave);
+
+router.get('/leave/add-view', leaveControlller.leaveForm);
+router.post('/leave/add', leaveValidator.leaveRegisterValidation, leaveControlller.addLeave);
+router.get('/leave/view', leaveControlller.viewLeave);
+router.get('/leave/view/:id', leaveControlller.viewOneLeave);
+router.post('/leave/update/:id', leaveValidator.leaveUpdateValidation, leaveControlller.updateLeave);
 
 // pm
-router.put('/accept-reject/leave', leaveControlller.acceptRejectLeave);
+router.put('/leave/accept-reject', leaveControlller.acceptRejectLeave);
 
 module.exports = router;
