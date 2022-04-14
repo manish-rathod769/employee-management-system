@@ -1,5 +1,5 @@
 import { v4 as uuidv4 } from 'uuid';
-import { errorResponse } from '../../helpers';
+import { errorResponse, successResponse } from '../../helpers';
 import { Leave } from '../../models';
 import transporter from '../../helper/mail';
 
@@ -12,7 +12,6 @@ const addLeave = async (req, res) => {
     const {
       employeeId, startDate, endDate, reason,
     } = req.body;
-    console.log(employeeId, startDate, endDate, reason);
     const leavedata = {
       id: uuidv4(),
       employeeId: 123,
@@ -21,9 +20,7 @@ const addLeave = async (req, res) => {
       reason,
       status: 'pending',
     };
-    console.log(leavedata);
     const leaveobj = await Leave.create(leavedata);
-    console.log(leaveobj);
     const mailOptions = {
       from: "noreply_mail<noreply@someemail.com>", // system address
       // to: ['apexapatel27321@gmail.com','chavan.vinayak017@gmail.com'], // list of pm
@@ -41,7 +38,6 @@ const addLeave = async (req, res) => {
     });
 
     const getleave = await Leave.findAll({ where: { employeeId: '123', isArchived: false } });
-    console.log(getleave);
     res.render('view-leave', { leavesdata: getleave, success: 'YOUR LEAVE SUCCESSFULLY ADDED!!' });
   } catch (e) {
     //   errorResponse(req, res, e.message, 400, e);
@@ -50,36 +46,75 @@ const addLeave = async (req, res) => {
 };
 
 const viewLeave = async (req, res) => {
-  const role = 'DEV';
+  const role = 'HR';
   if (role === 'DEV') {
     try {
-      const getleave = await Leave.findAll({ where: { employeeId: '123', isArchived: false } });
-      console.log(getleave);
-      res.render('view-leave', { leavesdata: getleave });
+      let page = Number(req.query.page) || 0;
+      let size = Number(req.query.size) || 12;
+      const getleave = await Leave.findAndCountAll({
+        where: { employeeId: '123', isArchived: false },
+        limit: size,
+        offset: page * size
+      })
+      const arr = getleave.rows;
+      if (arr.length == 0) {
+        res.render('view-leave', { leavesdata: arr, success: "" });
+      } else {
+        res.render('view-leave', { leavesdata: arr, success: "" });
+      }
     } catch (e) {
       errorResponse(req, res, e.message, 400, e);
     }
   } else if (role === 'ADMIN') {
     try {
-      const getleave = await Leave.findAll({});
-      console.log(getleave);
-      res.render('adminView-leave', { leavesdata: getleave });
+      let page = Number(req.query.page) || 0;
+      let size = Number(req.query.size) || 12;
+      const getleave = await Leave.findAndCountAll({
+        limit: size,
+        offset: page * size
+      })
+      const arr = getleave.rows;
+      if (arr.length == 0) {
+        res.render('adminView-leave', { leavesdata: arr });
+      } else {
+        res.render('adminView-leave', { leavesdata: arr });
+      }
     } catch (e) {
       errorResponse(req, res, e.message, 400, e);
     }
   } else if (role === 'PM') {
     try {
-      const getleave = await Leave.findAll({ where: { employeeId: '123', isArchived: false } });
-      console.log(getleave);
-      res.render('update-leave', { leavesdata: getleave });
+      let page = Number(req.query.page) || 0;
+      let size = Number(req.query.size) || 12;
+      const getleave = await Leave.findAndCountAll({
+        where: { employeeId: '123', isArchived: false },
+        limit: size,
+        offset: page * size
+      })
+      const arr = getleave.rows;
+      if (arr.length == 0) {
+        res.render('update-leave', { leavesdata: arr });
+      } else {
+        res.render('update-leave', { leavesdata: arr });
+      }
     } catch (e) {
       errorResponse(req, res, e.message, 400, e);
     }
   } else if (role === 'HR') {
     try {
-      const getleave = await Leave.findAll({ where: { isArchived: false } });
-      console.log(getleave);
-      res.render('hrView-leave', { leavesdata: getleave });
+      let page = Number(req.query.page) || 0;
+      let size = Number(req.query.size) || 12;
+      const getleave = await Leave.findAndCountAll({
+        where: { isArchived: false },
+        limit: size,
+        offset: page * size
+      })
+      const arr = getleave.rows;
+      if (arr.length == 0) {
+        res.render('hrView-leave', { leavesdata: arr });
+      } else {
+        res.render('hrView-leave', { leavesdata: arr });
+      }
     } catch (e) {
       errorResponse(req, res, e.message, 400, e);
     }
@@ -92,7 +127,6 @@ const viewOneLeave = async (req, res) => {
   if (role === 'DEV') {
     try {
       const getleave = await Leave.findAll({ where: { id: req.params.id, isArchived: false } });
-      console.log(getleave);
       res.render('view-leavedata', { leavesdata: getleave });
     } catch (e) {
       errorResponse(req, res, e.message, 400, e);
@@ -100,7 +134,6 @@ const viewOneLeave = async (req, res) => {
   } else if (role === 'ADMIN') {
     try {
       const getleave = await Leave.findAll({ where: { id: req.params.id } });
-      console.log(getleave);
       res.render('adminView-leave', { leavesdata: getleave });
     } catch (e) {
       errorResponse(req, res, e.message, 400, e);
@@ -108,7 +141,6 @@ const viewOneLeave = async (req, res) => {
   } else if (role === 'PM') {
     try {
       const getleave = await Leave.findAll({ where: { id: req.params.id, isArchived: false } });
-      console.log(getleave);
       res.render('update-leave', { leavesdata: getleave });
     } catch (e) {
       errorResponse(req, res, e.message, 400, e);
@@ -116,7 +148,6 @@ const viewOneLeave = async (req, res) => {
   } else if (role === 'HR') {
     try {
       const getleave = await Leave.findAll({ where: { id: req.params.id, isArchived: false } });
-      console.log(getleave);
       res.render('hrView-leave', { leavesdata: getleave });
     } catch (e) {
       errorResponse(req, res, e.message, 400, e);
@@ -128,11 +159,9 @@ const updateLeave = async (req, res) => {
   try {
     let mailOptions = {};
     const getdata = await Leave.findByPk(req.params.id);
-    //console.log(getdata);
     const {
       employeeId, startDate, endDate, reason, status, isArchived,
     } = req.body;
-    //console.log(employeeId, startDate, endDate, reason, status, isArchived);
     const leavedata = {
       employeeId: getdata.employeeId,
       startDate,
@@ -141,7 +170,6 @@ const updateLeave = async (req, res) => {
       status,
       isArchived,
     };
-    //console.log(leavedata);
     const getleave = await Leave.update(leavedata, { where: { id: req.params.id } });
     if (leavedata.isArchived != 'on') {
       mailOptions = {
@@ -170,7 +198,6 @@ const updateLeave = async (req, res) => {
       }
     });
     const getallleave = await Leave.findAll({ where: { isArchived: false } });
-    console.log(getallleave);
     res.render('view-leave', { leavesdata: getallleave, success: 'YOUR LEAVE DETAILS UPDATED!!!' });
   }
   catch (e) {
@@ -184,7 +211,6 @@ const updateLeave = async (req, res) => {
 const acceptRejectLeave = async (req, res) => {
   const leaveid = req.body;
   const getdata = await Leave.findAll({ where: { id: leaveid.lid } });
-  console.log(getdata);
   let mailOptions = {};
   if (leaveid.action === 'accept') {
     const leavedata = {
@@ -194,9 +220,7 @@ const acceptRejectLeave = async (req, res) => {
       reason: getdata[0].reason,
       status: 'approved',
     };
-    console.log(leavedata);
     const getleave = await Leave.update(leavedata, { where: { id: leaveid.lid } });
-    console.log(getleave);
     mailOptions = {
       from: "noreply_mail<noreply@someemail.com>", // system address
       to: 'apexapatel27321@gmail.com', // developer's address
@@ -211,9 +235,7 @@ const acceptRejectLeave = async (req, res) => {
       reason: getdata[0].reason,
       status: 'rejected',
     };
-    console.log(leavedata);
     const getleave = await Leave.update(leavedata, { where: { id: leaveid.lid } });
-    console.log(getleave);
     mailOptions = {
       from: "noreply_mail<noreply@someemail.com>", // system address
       to: 'apexapatel27321@gmail.com', // developer's address
@@ -229,7 +251,6 @@ const acceptRejectLeave = async (req, res) => {
     }
   });
   const viewleave = await Leave.findAll({ where: { employeeId: '123', isArchived: false } });
-  console.log(viewleave);
   res.render('update-leave', { leavesdata: viewleave });
 };
 
