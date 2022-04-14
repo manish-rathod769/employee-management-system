@@ -46,7 +46,7 @@ const addLeave = async (req, res) => {
 };
 
 const viewLeave = async (req, res) => {
-  const role = 'HR';
+  const role = 'DEV';
   if (role === 'DEV') {
     try {
       let page = Number(req.query.page) || 0;
@@ -126,7 +126,9 @@ const viewOneLeave = async (req, res) => {
   const role = 'DEV';
   if (role === 'DEV') {
     try {
+      console.log(req.params.id)
       const getleave = await Leave.findAll({ where: { id: req.params.id, isArchived: false } });
+      console.log(getleave)
       res.render('view-leavedata', { leavesdata: getleave });
     } catch (e) {
       errorResponse(req, res, e.message, 400, e);
