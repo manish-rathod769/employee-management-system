@@ -6,7 +6,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <link rel="icon" type="image/x-icon" href="/public/img/favicon.png" />
-<<<<<<< HEAD
   <link rel="icon" type="image/png" sizes="32x32" href="/assets/img/favicon-32x32.png">
   <link rel="icon" type="image/png" sizes="16x16" href="/assets/img/favicon-16x16.png">
   <link rel="manifest" href="/assets/img/site.webmanifest">
@@ -15,8 +14,6 @@
   <meta name="msapplication-TileColor" content="#da532c">
   <meta name="msapplication-config" content="/assets/img/browserconfig.xml">
   <meta name="theme-color" content="#ffffff">
-=======
->>>>>>> edit: accept-reject route combined
 
   <link rel="stylesheet" href="/public/css/bootstrap.min.css" />
 
@@ -94,8 +91,11 @@
                   </div>
                 </div>
 <<<<<<< HEAD
+<<<<<<< HEAD
 >>>>>>> edit: model, migration and seeder file syntax changes
 =======
+=======
+>>>>>>> add: pagination in all view leave page.
 
                 <div class="card shadow-sm grow ctm-border-radius">
                   <div class="card-body align-right">
@@ -116,6 +116,7 @@
                   </div>
                 </div>
 
+<<<<<<< HEAD
 >>>>>>> add: pagination in all view leave page.
                 <% function formatDate(dateObject) { let d=new Date(dateObject); let day=d.getDate(); let
                   month=d.getMonth() + 1; let year=d.getFullYear(); if (day < 10) { day="0" + day; } if (month < 10) {
@@ -638,66 +639,75 @@
                     </ul>
                   </div>
                 </div>
+=======
+>>>>>>> add: pagination in all view leave page.
                 <% function formatDate(dateObject) { let d=new Date(dateObject); let day=d.getDate(); let
                   month=d.getMonth() + 1; let year=d.getFullYear(); if (day < 10) { day="0" + day; } if (month < 10) {
                   month="0" + month; } let date=year + "-" + month + "-" + day; return date; }; %>
                   <div class="ctm-border-radius shadow-sm grow card">
                     <div class="card-body">
 
-                      <div class="row people-grid-row" id="displayEmployeeDetails">
+                      <div class="row people-grid-row" id="displayLeaveDetails">
 
-                        <% leavesdata.forEach(leavedata=> { %>
-                          <div class="col-md-6 col-lg-6 col-xl-4">
-                            <div class="card widget-profile">
-                              <div class="card-body">
-                                <div class="pro-widget-content">
-                                  <div class="profile-info-widget">
-                                    <p><label class="form-label text-orange lead">Employee :</label>
-                                      <span class="text-primary">
-                                        <%= leavedata.employeeId %>
-                                      </span>
-                                    </p>
-                                    <p><label class="form-label text-orange lead">Start Date :</label>
-                                      <span class="text-primary">
-                                        <a class="text-primary">
-                                          <%= formatDate(leavedata.startDate) %>
-                                        </a></span>
-                                    </p>
-                                    <p><label class="form-label text-orange lead">End Date :</label>
-                                      <span class="text-primary">
-                                        <a class="text-primary">
-                                          <%= formatDate(leavedata.endDate) %>
-                                        </a></span>
-                                    </p>
-                                    <p><label class="form-label text-orange lead">Reason :</label>
-                                      <span class="text-primary">
-                                        <%= leavedata.reason %>
-                                      </span>
-                                    </p>
-                                    <div>
-                                      <h4>
-                                        <p class="float-left text-danger cursor-pointer">
-                                          <button type="button" onclick="acceptfun('<%= leavedata.id %>')"
-                                            class="btn btn-secondary" id="accept">Accept</button>
-                                        </p>
-                                      </h4>
-                                    </div>
-                                    <div>
-                                      <h4>
-                                        <p class="float-right text-danger cursor-pointer">
-                                          <button type="button" onclick="rejectfun('<%= leavedata.id %>')"
-                                            class="btn btn-danger" id="reject">Reject</button>
-                                        </p>
-                                      </h4>
-                                    </div>
+                        <% if(!leavesdata.length) { %>
+                          <div class='col-12 text-center'>
+                            <p>
+                            <h4 class='text-danger'>Nothing to show !!!</h4>
+                            </p>
+                          </div>
 
+                          <% } else{ leavesdata.forEach(leavedata=> { %>
+                            <div class="col-md-6 col-lg-6 col-xl-4">
+                              <div class="card widget-profile">
+                                <div class="card-body">
+                                  <div class="pro-widget-content">
+                                    <div class="profile-info-widget">
+                                      <p><label class="form-label text-orange lead">Employee :</label>
+                                        <span class="text-primary">
+                                          <%= leavedata.employeeId %>
+                                        </span>
+                                      </p>
+                                      <p><label class="form-label text-orange lead">Start Date :</label>
+                                        <span class="text-primary">
+                                          <a class="text-primary">
+                                            <%= formatDate(leavedata.startDate) %>
+                                          </a></span>
+                                      </p>
+                                      <p><label class="form-label text-orange lead">End Date :</label>
+                                        <span class="text-primary">
+                                          <a class="text-primary">
+                                            <%= formatDate(leavedata.endDate) %>
+                                          </a></span>
+                                      </p>
+                                      <p><label class="form-label text-orange lead">Reason :</label>
+                                        <span class="text-primary">
+                                          <%= leavedata.reason %>
+                                        </span>
+                                      </p>
+                                      <div>
+                                        <h4>
+                                          <p class="float-left text-danger cursor-pointer">
+                                            <button type="button" onclick="acceptfun('<%= leavedata.id %>')"
+                                              class="btn btn-secondary" id="accept">Accept</button>
+                                          </p>
+                                        </h4>
+                                      </div>
+                                      <div>
+                                        <h4>
+                                          <p class="float-right text-danger cursor-pointer">
+                                            <button type="button" onclick="rejectfun('<%= leavedata.id %>')"
+                                              class="btn btn-danger" id="reject">Reject</button>
+                                          </p>
+                                        </h4>
+                                      </div>
+
+                                    </div>
                                   </div>
                                 </div>
                               </div>
 >>>>>>> edit: model, migration and seeder file syntax changes
                             </div>
-                          </div>
-                          <% }) %>
+                            <% }) }%>
 
 
                       </div>
@@ -786,7 +796,7 @@
       var action = 'accept';
       console.log(action)
       $.ajax({
-        url: '/accept-reject/leave',
+        url: '/leave/accept-reject',
         method: 'PUT',
         data: { lid, action }
       })
@@ -796,12 +806,28 @@
       var action = 'reject';
       console.log(action)
       $.ajax({
-        url: '/accept-reject/leave',
+        url: '/leave/accept-reject',
         method: 'PUT',
         data: { lid, action }
       })
     }
+<<<<<<< HEAD
 >>>>>>> edit: accept-reject route combined
+=======
+    function myFunction() {
+      let size = document.getElementById("size").value;
+      let pageX = document.getElementById("page").value;
+      let page;
+      if (!Number.isNaN(pageX) && pageX > 0) {
+        page = pageX;
+      } else {
+        page = 1;
+      }
+      page = page - 1;
+      let query = `page=${page}&size=${size}`;
+      window.location.href = `/leave/view?${query}`;
+    }
+>>>>>>> add: pagination in all view leave page.
   </script>
 >>>>>>> edit: model, migration and seeder file syntax changes
 
