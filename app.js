@@ -1,8 +1,10 @@
+/* eslint-disable import/no-extraneous-dependencies */
 import express from 'express';
 import dotenv from 'dotenv';
 import path from 'path';
 
 import bodyParser from 'body-parser';
+import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import flash from 'connect-flash';
 import session from 'express-session';
@@ -29,6 +31,7 @@ app.use(session({
 }));
 app.use(cors());
 app.use(flash());
+app.use(cookieParser());
 app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/assets', express.static(path.join(__dirname, 'public')));
