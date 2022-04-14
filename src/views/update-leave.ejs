@@ -6,7 +6,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <link rel="icon" type="image/x-icon" href="/public/img/favicon.png" />
-<<<<<<< HEAD
   <link rel="icon" type="image/png" sizes="32x32" href="/assets/img/favicon-32x32.png">
   <link rel="icon" type="image/png" sizes="16x16" href="/assets/img/favicon-16x16.png">
   <link rel="manifest" href="/assets/img/site.webmanifest">
@@ -15,8 +14,6 @@
   <meta name="msapplication-TileColor" content="#da532c">
   <meta name="msapplication-config" content="/assets/img/browserconfig.xml">
   <meta name="theme-color" content="#ffffff">
-=======
->>>>>>> edit: accept-reject route combined
 
   <link rel="stylesheet" href="/public/css/bootstrap.min.css" />
 
@@ -87,7 +84,30 @@
                     </ul>
                   </div>
                 </div>
+<<<<<<< HEAD
 >>>>>>> edit: model, migration and seeder file syntax changes
+=======
+
+                <div class="card shadow-sm grow ctm-border-radius">
+                  <div class="card-body align-right">
+                    <div class="input-group">
+                      <select class="form-control" id="size">
+                        <option value="6">6</option>
+                        <option value="12" selected>12</option>
+                        <option value="24">24</option>
+                        <option value="51">51</option>
+                      </select>
+                      <input type="number" class="form-control" placeholder="page number" min="1" id="page">
+                      <div class="input-group-append">
+                        <button class="btn btn-theme text-white ctm-border-radius" id="search" type="button"
+                          onclick="myFunction();"> Search
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+>>>>>>> add: pagination in all view leave page.
                 <% function formatDate(dateObject) { let d=new Date(dateObject); let day=d.getDate(); let
                   month=d.getMonth() + 1; let year=d.getFullYear(); if (day < 10) { day="0" + day; } if (month < 10) {
                   month="0" + month; } let date=year + "-" + month + "-" + day; return date; }; %>
@@ -95,6 +115,9 @@
                     <div class="card-body">
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> add: pagination in all view leave page.
                       <div class="row people-grid-row" id="displayLeaveDetails">
 
                         <% if(!leavesdata.length) { %>
@@ -110,6 +133,7 @@
                                 <div class="card-body">
                                   <div class="pro-widget-content">
                                     <div class="profile-info-widget">
+<<<<<<< HEAD
                                       <p><label
                                         class="form-label text-orange lead">Name
                                         :</label>
@@ -124,6 +148,13 @@
                                               <%= leavedata.Employee.email %>
                                           </span>
                                       </p>
+=======
+                                      <p><label class="form-label text-orange lead">Employee :</label>
+                                        <span class="text-primary">
+                                          <%= leavedata.employeeId %>
+                                        </span>
+                                      </p>
+>>>>>>> add: pagination in all view leave page.
                                       <p><label class="form-label text-orange lead">Start Date :</label>
                                         <span class="text-primary">
                                           <a class="text-primary">
@@ -141,6 +172,7 @@
                                           <%= leavedata.reason %>
                                         </span>
                                       </p>
+<<<<<<< HEAD
                                       <p><label class="form-label text-orange lead">Status :</label>
                                         <span class="text-primary">
                                           <%= leavedata.status %>
@@ -373,13 +405,31 @@
                                         </p>
                                       </h4>
                                     </div>
+=======
+                                      <div>
+                                        <h4>
+                                          <p class="float-left text-danger cursor-pointer">
+                                            <button type="button" onclick="acceptfun('<%= leavedata.id %>')"
+                                              class="btn btn-secondary" id="accept">Accept</button>
+                                          </p>
+                                        </h4>
+                                      </div>
+                                      <div>
+                                        <h4>
+                                          <p class="float-right text-danger cursor-pointer">
+                                            <button type="button" onclick="rejectfun('<%= leavedata.id %>')"
+                                              class="btn btn-danger" id="reject">Reject</button>
+                                          </p>
+                                        </h4>
+                                      </div>
+>>>>>>> add: pagination in all view leave page.
 
+                                    </div>
                                   </div>
                                 </div>
                               </div>
                             </div>
-                          </div>
-                          <% }) %>
+                            <% }) }%>
 
 
                       </div>
@@ -469,7 +519,7 @@
       var action = 'accept';
       console.log(action)
       $.ajax({
-        url: '/accept-reject/leave',
+        url: '/leave/accept-reject',
         method: 'PUT',
         data: { lid, action }
       })
@@ -479,12 +529,28 @@
       var action = 'reject';
       console.log(action)
       $.ajax({
-        url: '/accept-reject/leave',
+        url: '/leave/accept-reject',
         method: 'PUT',
         data: { lid, action }
       })
     }
+<<<<<<< HEAD
 >>>>>>> edit: accept-reject route combined
+=======
+    function myFunction() {
+      let size = document.getElementById("size").value;
+      let pageX = document.getElementById("page").value;
+      let page;
+      if (!Number.isNaN(pageX) && pageX > 0) {
+        page = pageX;
+      } else {
+        page = 1;
+      }
+      page = page - 1;
+      let query = `page=${page}&size=${size}`;
+      window.location.href = `/leave/view?${query}`;
+    }
+>>>>>>> add: pagination in all view leave page.
   </script>
 >>>>>>> edit: model, migration and seeder file syntax changes
 
