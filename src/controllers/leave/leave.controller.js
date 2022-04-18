@@ -2,6 +2,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { errorResponse, successResponse } from '../../helpers';
 import { Leave } from '../../models';
 import transporter from '../../helper/mail';
+import { showCompletionScript } from 'yargs';
 
 const leaveForm = async (req, res) => {
   res.render('add-leave', { success: '' });
@@ -46,7 +47,7 @@ const addLeave = async (req, res) => {
 };
 
 const viewLeave = async (req, res) => {
-  const role = 'DEV';
+  const role = 'PM';
   if (role === 'DEV') {
     try {
       let page = Number(req.query.page) || 0;
@@ -123,7 +124,7 @@ const viewLeave = async (req, res) => {
 };
 
 const viewOneLeave = async (req, res) => {
-  const role = 'DEV';
+  const role = 'PM';
   if (role === 'DEV') {
     try {
       console.log(req.params.id)
@@ -249,12 +250,16 @@ const acceptRejectLeave = async (req, res) => {
     if (err) {
       errorResponse(req, res, e.message, 400, err);
     } else {
-      successResponse(req, res, getleave, 200);
+      console.log(leaveid.lid)
+      successResponse(req, res, leaveid.lid, 200);
     }
   });
+};
+
+const acceptRejectLeaveView = async (req, res) => {
   const viewleave = await Leave.findAll({ where: { employeeId: '123', isArchived: false } });
   res.render('update-leave', { leavesdata: viewleave });
-};
+}
 
 module.exports = {
   addLeave,
@@ -262,5 +267,6 @@ module.exports = {
   viewOneLeave,
   updateLeave,
   acceptRejectLeave,
+  acceptRejectLeaveView,
   leaveForm,
 };

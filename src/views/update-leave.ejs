@@ -105,6 +105,13 @@
                                           <%= leavedata.reason %>
                                         </span>
                                       </p>
+                                      <p><label class="form-label text-orange lead">Status :</label>
+                                        <span class="text-primary">
+                                          <%= leavedata.status %>
+                                        </span>
+                                      </p>
+
+                                      <br>
                                       <div>
                                         <h4>
                                           <p class="float-left text-danger cursor-pointer">
@@ -184,18 +191,33 @@
       $.ajax({
         url: '/leave/accept-reject',
         method: 'PUT',
-        data: { lid, action }
+        data: { lid, action },
+        // success: function (result) {
+        //   console.log("success")
+        //                $('#accept').hide(lid);
+        // }
       })
+      window.location.href = `/leave/accept-reject`;
+
     }
 
     let rejectfun = (lid) => {
+
       var action = 'reject';
       console.log(action)
       $.ajax({
         url: '/leave/accept-reject',
         method: 'PUT',
-        data: { lid, action }
+        data: { lid, action },
+        // success: function (result) {
+        //   console.log(lid)
+        //   console.log("reject")
+
+        //              //  $('#reject').hide(lid);
+        // }
       })
+      window.location.href = `/leave/accept-reject`;
+
     }
     function myFunction() {
       let size = document.getElementById("size").value;
