@@ -184,6 +184,9 @@
                                       </p>
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> add: accept-reject view page route add for view updated status
 =======
 >>>>>>> add: accept-reject view page route add for view updated status
                                       <p><label class="form-label text-orange lead">Status :</label>
@@ -193,6 +196,7 @@
                                       </p>
 
                                       <br>
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 =======
@@ -467,6 +471,8 @@
                                       </h4>
                                     </div>
 =======
+=======
+>>>>>>> add: accept-reject view page route add for view updated status
 =======
 >>>>>>> add: accept-reject view page route add for view updated status
                                       <div>
@@ -799,18 +805,33 @@
       $.ajax({
         url: '/leave/accept-reject',
         method: 'PUT',
-        data: { lid, action }
+        data: { lid, action },
+        // success: function (result) {
+        //   console.log("success")
+        //                $('#accept').hide(lid);
+        // }
       })
+      window.location.href = `/leave/accept-reject`;
+
     }
 
     let rejectfun = (lid) => {
+
       var action = 'reject';
       console.log(action)
       $.ajax({
         url: '/leave/accept-reject',
         method: 'PUT',
-        data: { lid, action }
+        data: { lid, action },
+        // success: function (result) {
+        //   console.log(lid)
+        //   console.log("reject")
+
+        //              //  $('#reject').hide(lid);
+        // }
       })
+      window.location.href = `/leave/accept-reject`;
+
     }
 <<<<<<< HEAD
 >>>>>>> edit: accept-reject route combined
