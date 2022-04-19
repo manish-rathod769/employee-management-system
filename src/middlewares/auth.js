@@ -4,6 +4,7 @@ import { Employee } from '../models';
 const verifyCookie = async (req, res, next) => {
   try {
     const { verifyToken } = req.cookies;
+    // Check if verifoken exist or not
     if (!verifyToken) {
       res.status(401);
       return res.render('message', { error: 'Please login first !!!', message: '', route: '/login', text: 'Login' });
