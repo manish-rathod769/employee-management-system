@@ -325,6 +325,5 @@ module.exports = {
   viewOneLeave,
   updateLeave,
   acceptRejectLeave,
-  acceptRejectLeaveView,
   leaveForm,
 };
