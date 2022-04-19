@@ -112,24 +112,25 @@
                                       </p>
 
                                       <br>
-                                      <div>
-                                        <h4>
-                                          <p class="float-left text-danger cursor-pointer">
-                                            <button type="button" onclick="acceptfun('<%= leavedata.id %>')"
-                                              class="btn btn-theme text-white ctm-border-radius"
-                                              id="accept">Accept</button>
-                                          </p>
-                                        </h4>
-                                      </div>
-                                      <div>
-                                        <h4>
-                                          <p class="float-right text-danger cursor-pointer">
-                                            <button type="button" onclick="rejectfun('<%= leavedata.id %>')"
-                                              class="btn btn-danger" id="reject">Reject</button>
-                                          </p>
-                                        </h4>
-                                      </div>
-
+                                      <% if(leavedata.status==='pending' ){ %>
+                                        <div>
+                                          <h4>
+                                            <p class="float-left text-danger cursor-pointer">
+                                              <button type="button" onclick="acceptfun('<%= leavedata.id %>')"
+                                                class="btn btn-theme text-white ctm-border-radius"
+                                                id='accept_<%= leavedata.id %>'>Accept</button>
+                                            </p>
+                                          </h4>
+                                        </div>
+                                        <div>
+                                          <h4>
+                                            <p class="float-right text-danger cursor-pointer">
+                                              <button type="button" onclick="rejectfun('<%= leavedata.id %>')"
+                                                class="btn btn-danger" id='reject_<%= leavedata.id %>'>Reject</button>
+                                            </p>
+                                          </h4>
+                                        </div>
+                                        <% } %>
                                     </div>
                                   </div>
                                 </div>
@@ -192,12 +193,12 @@
         url: '/leave/accept-reject',
         method: 'PUT',
         data: { lid, action },
-        // success: function (result) {
-        //   console.log("success")
-        //                $('#accept').hide(lid);
-        // }
+        success: function (result) {
+          console.log("success")
+          $(`#accept_${lid}`).hide(lid);
+        }
       })
-      window.location.href = `/leave/accept-reject`;
+      //window.location.href = `/leave/accept-reject`;
 
     }
 
@@ -209,14 +210,14 @@
         url: '/leave/accept-reject',
         method: 'PUT',
         data: { lid, action },
-        // success: function (result) {
-        //   console.log(lid)
-        //   console.log("reject")
+        success: function (result) {
+          console.log(lid)
+          console.log("reject")
 
-        //              //  $('#reject').hide(lid);
-        // }
+          $(`#reject_${lid}`).hide(lid);
+        }
       })
-      window.location.href = `/leave/accept-reject`;
+      //window.location.href = `/leave/accept-reject`;
 
     }
     function myFunction() {

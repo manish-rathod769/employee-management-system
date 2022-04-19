@@ -254,12 +254,10 @@ const acceptRejectLeave = async (req, res) => {
       successResponse(req, res, leaveid.lid, 200);
     }
   });
-};
-
-const acceptRejectLeaveView = async (req, res) => {
   const viewleave = await Leave.findAll({ where: { employeeId: '123', isArchived: false } });
   res.render('update-leave', { leavesdata: viewleave });
-}
+
+};
 
 module.exports = {
   addLeave,
@@ -267,6 +265,5 @@ module.exports = {
   viewOneLeave,
   updateLeave,
   acceptRejectLeave,
-  acceptRejectLeaveView,
   leaveForm,
 };

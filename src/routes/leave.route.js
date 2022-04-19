@@ -16,6 +16,5 @@ router.post('/leave/update/:id', leaveValidator.leaveUpdateValidation, leaveCont
 
 // pm
 router.put('/leave/accept-reject', leaveControlller.acceptRejectLeave);
-router.get('/leave/accept-reject', leaveControlller.acceptRejectLeaveView);
 
 module.exports = router;
