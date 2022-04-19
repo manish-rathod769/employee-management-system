@@ -1,4 +1,4 @@
-$('#asideProfile, #headerProfile').click((event) => {
+$('#asideProfile, #headerProfile, #asideHomeProfile').click((event) => {
   event.preventDefault();
   const path = window.location.pathname.split('/')[2];
   window.location = `/employee/${path}/`;
