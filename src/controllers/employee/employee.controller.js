@@ -191,6 +191,7 @@ export const getEmployee = async (req, res) => {
         }
       );
       projects = projects.map(elem => elem.projectId);
+      // If search query exists.
       if (search) {
         // console.log('here');
         result.employee = await Employee.scope('pm').findAll(
