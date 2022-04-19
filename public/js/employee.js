@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 // const compressImage = (blobURL, quality, maxWidth) => {
 //   const mime_type = "image/jpeg";
 //   const img = new Image();
@@ -40,6 +41,9 @@ const getTimeBetweenDates = (startDate, endDate) => {
   return `${year} years, ${month + 1} months`;
 };
 
+=======
+// change view between add employee form and display employee 
+>>>>>>> fix: conflicts resolved(leave)
 $('#addEmployeeBtn').click((event) => {
   event.preventDefault();
   $('#addEmployeeFormContainer').removeClass('d-none');
@@ -63,38 +67,8 @@ $('#addEmployeeBtn').click((event) => {
     error: function (error) {
       console.log(error);
     }
-  });
-  fetchStateNames($('#employee-add-state'));
+  })
 });
-
-const populateCityNames = (flag) => {
-  $.getJSON('../josnData/stateCity.json', (data) => {
-    let cityOptions = '';
-    
-    if (flag) {
-      data[$('#employee-add-state').val()].forEach((city) => {
-        cityOptions += `<option value='${city}'>${city}</option>`;
-      });
-      $('#employee-add-city').html(cityOptions);
-    } else {
-      data[$('#employee-edit-state').val()].forEach((city) => {
-        cityOptions += `<option value='${city}'>${city}</option>`;
-      });
-      $('#employee-edit-city').html(cityOptions);
-    }
-  });
-};
-
-const fetchStateNames = (elem) => {
-  $.getJSON('../josnData/stateCity.json', (data) => {
-    let stateOptions = '';
-    Object.keys(data).forEach((key) => {
-      stateOptions += `<option value='${key}'>${key}</option>`;
-    });
-    elem.append(stateOptions);
-    // populateCityNames($('#state').val(), 0);
-  });
-};
 
 const deleteButton = (id, name) => {
   //console.log(id);
@@ -133,6 +107,7 @@ const deleteButton = (id, name) => {
 const populateKnownTech = (techArray) => {
   $.ajax({
     type: 'GET',
+<<<<<<< HEAD
     url: '/technologies',
     success: function ({ data }) {
       const form = $('#form-edit-employee');
@@ -161,6 +136,8 @@ const populateKnownTech = (techArray) => {
 const editButton = (id) => {
   $.ajax({
     type: 'GET',
+=======
+>>>>>>> fix: conflicts resolved(leave)
     url: `/employees/${id}`,
     success: ({ data }) => {
 
@@ -178,10 +155,15 @@ const editButton = (id) => {
       form.find('#email').val(data.email).prop('disabled', true);
       form.find("input[type='radio'][name='gender']:checked").val(data.gender || null);
       form.find('#dob').val(data.DOB.split('T')[0]);
-      form.find(`#role option[value=${data.role}]`).attr('selected', 'selected');
+      form.find('#role').val(data.role);
       form.find('#joiningDate').val(data.joiningDate.split('T')[0]);
+<<<<<<< HEAD
       form.find('#careerStartDate').val(data.careerStartDate.split('T')[0] || null);
       // console.log(data.careerStartDate);
+=======
+      form.find('#totalExp').val(data.totalExp || null);
+
+>>>>>>> fix: conflicts resolved(leave)
       form.find('#collage').val(data.EmployeeAcademic.collage || '');
       form.find('#highestQualification').val(data.EmployeeAcademic.highestQualification || '');
       form.find('#university').val(data.EmployeeAcademic.university || null);
@@ -193,6 +175,7 @@ const editButton = (id) => {
       form.find('#addressLine2').val(data.EmployeeContact.addressLine2 || null);
       form.find('#landmark').val(data.EmployeeContact.landmark || null);
       form.find('#state').val(data.EmployeeContact.state || null);
+<<<<<<< HEAD
       $.getJSON('../josnData/stateCity.json', (states) => {
         let stateOptions = '';
         Object.keys(states).forEach((key) => {
@@ -214,11 +197,15 @@ const editButton = (id) => {
         $('#employee-edit-city').append(cityOptions);
       });
 
+=======
+      form.find('#pincode').val(data.EmployeeContact.pincode || null);
+      form.find('#city').val(data.EmployeeContact.city || null);
+>>>>>>> fix: conflicts resolved(leave)
       form.find('#country').val(data.EmployeeContact.country || null);
-      form.find('#preEmployer').val(data.EmployeePreWork.previousEmployer || 'NA');
-      form.find('#preEmployerAddress').val(data.EmployeePreWork.employerAddress || 'NA');
-      form.find('#workingTimeInYear').val(Number(data.EmployeePreWork.workingTime?.split(' ')[0]) || 0);
-      form.find('#workingTimeInMonth').val(Number(data.EmployeePreWork.workingTime?.split(' ')[2]) || 0);
+      form.find('#preEmployer').val(data.EmployeePreWork.previousEmployer || null);
+      form.find('#preEmployerAddress').val(data.EmployeePreWork.employerAddress || null);
+      form.find('#workingTimeInYear').val(Number(data.EmployeePreWork.workingTime.split(' ')[0]) || null);
+      form.find('#workingTimeInMonth').val(Number(data.EmployeePreWork.workingTime.split(' ')[2]) || null);
     },
     error: (error) => {
       // display toast for error
@@ -285,7 +272,10 @@ const displayEmployee = () => {
       }
       result.data.employee.forEach((element, index) => {
         // console.log(element);
+<<<<<<< HEAD
         const avatar = element.avatar.split('/').length > 2 ? element.avatar : "assets/img/profiles/img-6.jpg";
+=======
+>>>>>>> fix: conflicts resolved(leave)
         const tech = element.EmployeeAcademic?.knownTech || 'tech';
         $('#displayEmployeeDetails').append(
           `<div class="col-md-6 col-lg-6 col-xl-4" id="employee-card-${element.id}">
@@ -295,7 +285,7 @@ const displayEmployee = () => {
                   <div class="profile-info-widget">
                     <a class="booking-doc-img">
                       <img
-                        src=${avatar}
+                        src="assets/img/profiles/img-6.jpg"
                         alt="User Image"
                       />
                     </a>
@@ -381,7 +371,6 @@ const enlargeEmployee = (event, id, index) => {
     success: (result) => {
       // console.log(result);
       const { data } = result;
-      const totalExp = getTimeBetweenDates(data.careerStartDate, new Date());
       lastcard.after(
         `<div class="row ctm-border-radius shadow-sm grow border-dark bg-dark" id="employee-details"> 
               <div class="col-12"> 
@@ -417,13 +406,13 @@ const enlargeEmployee = (event, id, index) => {
                       <span class="text-primary">Gender :</span> ${data.gender}
                     </p>
                     <p class="card-text mb-3">
-                      <span class="text-primary">DOB :</span> ${data.DOB.split('T')[0]}
+                      <span class="text-primary">DOB :</span> ${data.DOB}
                     </p>
                     <p class="card-text mb-3">
-                      <span class="text-primary">Joining Date :</span> ${data.joiningDate.split('T')[0]}
+                      <span class="text-primary">Joining Date :</span> ${data.joiningDate}
                     </p>
                     <p class="card-text mb-3">
-                      <span class="text-primary">Total Exp :</span> ${totalExp}
+                      <span class="text-primary">Total Exp :</span> ${data.totalExp}
                     </p>
                   </div>
                 </div>
