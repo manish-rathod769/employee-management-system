@@ -9,7 +9,6 @@ import flash from 'connect-flash';
 import session from 'express-session';
 import employeeRoutes from './src/routes/employee.route';
 import clientRoutes from './src/routes/client.route';
-import adminRoutes from './src/routes/admin.routes';
 import projectRoutes from './src/routes/project.routes';
 import attendanceRoutes from './src/routes/attendance.route';
 import { notFound } from './src/helpers/middleware.notFound';
@@ -54,7 +53,6 @@ app.set('views', path.join(__dirname, 'src', 'views'));
 app.use('/', employeeRoutes);
 // requiring routes
 app.use('/', clientRoutes);
-app.use('/', adminRoutes);
 app.use('/', projectRoutes);
 
 app.use('/', attendanceRoutes);

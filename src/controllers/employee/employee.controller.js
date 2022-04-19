@@ -135,6 +135,7 @@ export const getEmployee = async (req, res) => {
           role: 'PM',
         },
       });
+    }
     else if (req.query.role === 'DEV') {
       result.employee = await Employee.scope('admin').findAll({
         attributes: ['email', 'id'],
