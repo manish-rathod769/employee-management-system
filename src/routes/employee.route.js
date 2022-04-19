@@ -1,23 +1,25 @@
 import express from 'express';
 import * as employeeController from '../controllers/employee/employee.controller';
 import * as employeeValidator from '../controllers/employee/employee.validator';
+import { upload, uploadUpdateAvatar } from '../helpers/index';
 
 const router = express.Router();
 
 router.get('/', employeeController.renderEmployeeView);
 router.get('/add-employee', employeeController.renderAddEmployeeView);
 
-router.post('/employees', employeeValidator.employeeValidate, employeeController.addEmployee);
+router.post('/employees', upload.single('avatar'), employeeValidator.employeeValidate, employeeController.addEmployee);
 router.get('/employees', employeeController.getEmployee);
 router.get('/employees/:employeeId', employeeController.getEmployeeOne);
-router.put('/employees/:employeeId', employeeValidator.employeeValidate, employeeController.updateEmployee);
+router.put('/employees/:employeeId', uploadUpdateAvatar.single('avatarUpdate'), employeeValidator.employeeValidate, employeeController.updateEmployee);
 router.delete('/employees', employeeController.deleteEmployee);
-router.get('/employees/search', );
+// router.get('/employees/search', );
 
 router.get('/login', employeeController.loginView);
 router.post('/login', employeeValidator.loginValidate, employeeController.loginEmployee);
 router.get('/forgot-password', employeeController.forgotPasswordView);
-router.patch('/employees/:employeeId', );
+router.post('/forgot-password', employeeController.forgotPassword);
+// router.patch('/employees/:employeeId', );
 router.get('/employee/:employeeId', employeeController.renderEmployee);
 router.get('/employee/:employeeId/change-password', employeeController.changePasswordView);
 router.post('/employee/:employeeId/change-password', employeeValidator.passwordValidate, employeeController.changePassword);

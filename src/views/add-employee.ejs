@@ -1,4 +1,4 @@
-<form id="form-add-employee">
+<form id="form-add-employee" method="POST">
   <div class="accordion add-employee" id="accordion-details">
     <div class="card shadow-sm grow ctm-border-radius">
       <div class="card-header" id="basic1">
@@ -103,7 +103,7 @@
               </div>
             </div>
             <div class="col-6 form-group">
-              <div> 
+              <div>
                 <select class="form-control select" name="role" id="role">
                   <option selected disabled>Role</option>
                   <option value="DEV">DEV.</option>
@@ -126,13 +126,16 @@
               </div>
             </div>
             <div class="col-6 form-group">
-              <input
-                type="text"
-                class="form-control"
-                id="totalExp"
-                name="totalExp"
-                placeholder="Total Experiance e.g. 3.11 => 3 years, 11 months"
-              />
+              <div class="cal-icon d-flex">
+                <p>career start: &nbsp;</p>
+                <input
+                  class="form-control col-10 cal-icon-input"
+                  type="date"
+                  id="careerStartDate"
+                  name="careerStartDate"
+                  placeholder="careerStartDate"
+                />
+              </div>
             </div>
           </div>
         </div>
@@ -200,11 +203,10 @@
 
           <div class="col-6 form-group">
             <select
-              name="langOpt[]"
               class="form-control select"
               multiple
               id="knownTech"
-              name="knownTech"
+              name="knownTech[]"
             >
               <option selected disabled>Known Technology</option>
             </select>
@@ -293,13 +295,11 @@
             />
           </div>
           <div class="col-6 form-group">
-            <input
-              type="text"
-              class="form-control"
-              id="city"
-              name="city"
-              placeholder="city"
-            />
+            <div>
+              <select class="form-control select" name="state" onchange="populateCityNames(true);" id="employee-add-state">
+                <option selected disabled>state</option>
+              </select>
+            </div>
           </div>
           <div class="col-6 form-group">
             <input
@@ -311,22 +311,19 @@
             />
           </div>
           <div class="col-6 form-group">
-            <input
-              type="text"
-              class="form-control"
-              id="state"
-              name="state"
-              placeholder="state"
-            />
+            <div>
+              <select class="form-control select" name="city" id="employee-add-city">
+                <option selected disabled>City</option>
+              </select>
+            </div>
           </div>
           <div class="col-6 form-group">
-            <input
-              type="text"
-              class="form-control"
-              id="country"
-              name="country"
-              placeholder="Country"
-            />
+            <div>
+              <select class="form-control select" name="country" id="employee-add-country">
+                <option selected disabled>country</option>
+                <option selected value="India">India</option>
+              </select>
+            </div>
           </div>
         </div>
       </div>
@@ -377,27 +374,67 @@
           </div>
           <div class="col-md-12 form-group mb-0">
             <div class="cal-icon d-flex">
-                <p>working time: &nbsp;</p>
-                <input
-                  type="number"
-                  class="form-control col-2"
-                  id="workingTimeInYear"
-                  name="workingTimeInYear"
-                />
-                <p>years, &nbsp;</p>
-                <input
-                  type="number"
-                  class="form-control col-2"
-                  id="workingTimeInMonth"
-                  name="workingTimeInMonth"
-                />
-                <p>months.</p>
-              </div>
+              <p>working time: &nbsp;</p>
+              <input
+                type="number"
+                class="form-control col-2"
+                id="workingTimeInYear"
+                name="workingTimeInYear"
+              />
+              <p>years, &nbsp;</p>
+              <input
+                type="number"
+                class="form-control col-2"
+                id="workingTimeInMonth"
+                name="workingTimeInMonth"
+              />
+              <p>months.</p>
+            </div>
           </div>
         </div>
       </div>
     </div>
   </div>
+
+  <div class="card ctm-border-radius shadow-sm flex-fill grow">
+  <div class="card-header">
+    <h4 class="card-title mb-0">Profile pic</h4>
+  </div>
+  <!-- <form id="avatarEmployee" enctype="multipart/form-data"> -->
+    <div class="card-body">
+      <div class="row">
+        <div class="col-12">
+          <div class="avatar-upload">
+            <div class="avatar-edit">
+              <input
+                type="file"
+                id="imageUpload"
+                name="avatar"
+                onchange="imagePreview()"
+                accept=".png, .jpg, .jpeg"
+              />
+              <label for="imageUpload"></label>
+            </div>
+            <div class="avatar-preview">
+              <div id="imagePreview"></div>
+            </div>
+          </div>
+          <div>
+            <!-- <div class="submit-section text-center btn-add">
+              <button
+                type="submit"
+                class="btn btn-theme text-white ctm-border-radius"
+              >
+                add avatar
+              </button>
+            </div> -->
+          </div>
+        </div>
+      </div>
+    </div>
+  <!-- </form> -->
+</div>
+
   <div class="row">
     <div class="col-12">
       <div class="submit-section text-center btn-add">
@@ -410,7 +447,8 @@
         <button
           type="reset"
           id="cancelAddEmployee"
-          class="btn btn-theme text-white ctm-border-radius">
+          class="btn btn-theme text-white ctm-border-radius"
+        >
           Cancel
         </button>
       </div>

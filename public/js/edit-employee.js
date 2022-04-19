@@ -6,6 +6,19 @@ $('#cancelEdit').click((event) => {
   $('#employeeDisplayContainer').removeClass('d-none');
 });
 
+const imagePreviewUpdate = () => {
+  const editForm = $('#form-edit-employee');
+  const file = editForm.find('#imageUploadUpdate')[0].files[0];
+  console.log(file);
+  if (file) {
+    const reader = new FileReader();
+    reader.onload = (evenet) => {
+      $('.avatar-preview').find('div').css('background-image', `url(${evenet.target.result})`);
+    };
+    reader.readAsDataURL(file);
+  }
+};
+
 $('#form-edit-employee').validate({
   rules: {
     firstName: {
@@ -29,9 +42,8 @@ $('#form-edit-employee').validate({
     joiningDate: {
       required: true,
     },
-    totalExp: {
+    careerStartDate: {
       required: true,
-      number: true,
     },
 
     // academic details
@@ -91,6 +103,12 @@ $('#form-edit-employee').validate({
       min: 0,
       digits: true,
     },
+
+    avatarUpdate: {
+      required: true,
+      extensions: 'jpg || png || jpeg',
+      filesize: 2,
+    },
   },
   messages: {
     firstName: {
@@ -114,9 +132,8 @@ $('#form-edit-employee').validate({
     joiningDate: {
       required: 'please enter date',
     },
-    totalExp: {
+    careerStartDate: {
       required: 'plese enter total experiance',
-      number: 'select decimal number',
     },
 
     highestQualification: {
@@ -175,18 +192,37 @@ $('#form-edit-employee').validate({
       min: 'choose number between 1 to 12',
       digits: 'only digits allowed',
     },
+
+    avatarUpdate: {
+      extensions: 'only .jpeg, .png, .jpg formate allowed',
+      filesize: 'file size morethen 2 MB not allowed',
+    },
   },
   errorElement: 'span',
   errorClass: 'text-danger',
   errorPlacement(error, element) {
     if (element.attr('name') === 'dob' || element.attr('name') === 'joiningDate' || element.attr('name') === 'role') {
       error.insertAfter(element.parent());
+    } else if (element.attr('name') === 'avatar') {
+      error.insertAfter(element.parent().parent());
     } else {
       error.insertAfter(element);
     }
   },
-  submitHandler(form) {
+  submitHandler() {
     const editForm = $('#form-edit-employee');
+    const formData = new FormData($('#form-edit-employee')[0]);
+    formData.append('email', editForm.find('#email').val());
+    formData.append('edited', true);
+    const file = editForm.find('#imageUploadUpdate')[0];
+    console.log(file);
+    // formData.append('avatar', file, file.name);
+    // console.log(formData);
+    // eslint-disable-next-line no-restricted-syntax
+    for (const pair of formData.entries()) {
+      console.log(`${pair[0]}`);
+      console.dir(pair[1]);
+    }
     const payload = {
       lastName: editForm.find('#lastName').val(),
       firstName: editForm.find('#firstName').val(),
@@ -196,7 +232,7 @@ $('#form-edit-employee').validate({
       DOB: editForm.find('#dob').val(),
       role: editForm.find('#role').val(),
       joiningDate: editForm.find('#joiningDate').val(),
-      totalExp: editForm.find('#totalExp').val(),
+      careerStartDate: editForm.find('#careerStartDate').val(),
 
       collage: editForm.find('#collage').val(),
       highestQualification: editForm.find('#highestQualification').val(),
@@ -216,11 +252,13 @@ $('#form-edit-employee').validate({
       employerAddress: editForm.find('#preEmployerAddress').val(),
       workingTime: `${editForm.find('#workingTimeInYear').val()} years, ${editForm.find('#workingTimeInMonth').val()} months`,
     };
-    console.log(payload);
+    // console.log(payload);
     $.ajax({
       type: 'PUT',
       url: `/employees/${editForm.data('id')}`,
-      data: payload,
+      data: formData,
+      contentType: false,
+      processData: false,
       success: (data) => {
         // console.log(data);
         $('#editEmployeeFormContainer').addClass('d-none');
@@ -229,7 +267,9 @@ $('#form-edit-employee').validate({
         // show successfull message in toast
       },
       error: (error) => {
-        console.log(error.message);
+        // alert(error.message);
+        // console.log(`/employees/${editForm.data('id')}`);
+        console.log(error.responseJSON);
         // show error in toast and reload window
       },
     });

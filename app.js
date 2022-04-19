@@ -2,7 +2,6 @@ import express from 'express';
 import dotenv from 'dotenv';
 import path from 'path';
 
-import bodyParser from 'body-parser';
 import cors from 'cors';
 import flash from 'connect-flash';
 import session from 'express-session';
@@ -10,17 +9,15 @@ import session from 'express-session';
 import employeeRoutes from './src/routes/employee.route';
 import clientRoutes from './src/routes/client.route';
 import adminRoutes from './src/routes/admin.routes';
+import attendanceRoutes from './src/routes/attendance.route';
+import { notFound } from './src/helpers/middleware.notFound';
 
 dotenv.config();
 require('./src/config/sequelize');
 
 const app = express();
 app.use(express.json());
-app.use(
-  bodyParser.urlencoded({
-    extended: true,
-  }),
-);
+app.use(express.urlencoded({ extended: true }));
 app.use(session({
   secret: process.env.SECRET,
   secure: true,
@@ -30,7 +27,11 @@ app.use(session({
 }));
 app.use(cors());
 app.use(flash());
-app.use(bodyParser.json());
+app.use((req, res, next) => {
+  req.locals = req.flash();
+  next();
+});
+// app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/assets', express.static(path.join(__dirname, 'public')));
 // app.use('/employee/assets', express.static(path.join(__dirname, 'public')));
@@ -42,4 +43,6 @@ app.use('/', employeeRoutes);
 app.use('/', clientRoutes);
 app.use('/', adminRoutes);
 
+app.use('/', attendanceRoutes);
+app.use(notFound);
 module.exports = app;

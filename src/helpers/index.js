@@ -1,4 +1,9 @@
+import { v4 as uuidv4 } from 'uuid';
+import fs from 'fs';
 import { createHash } from 'crypto';
+import multer from 'multer';
+import AWS from 'aws-sdk';
+import path from 'path';
 import { Technology } from '../models';
 
 export const successResponse = (req, res, data, code = 200) => res.send({
@@ -20,11 +25,6 @@ export const errorResponse = (
   data: null,
   success: false,
 });
-
-export const createPassword = (dob) => {
-  const date = new Date(dob).toISOString().split('T')[0].split('-').reverse().join('');
-  return date;
-};
 
 export const getTimeBetweenDates = (startDate, endDate) => {
   const sDate = new Date(startDate);
@@ -65,4 +65,96 @@ export const validateFields = (object, fields) => {
     }
   });
   return errors.length ? `${errors.join(', ')} are required fields.` : '';
+};
+
+export const generatePassword = () => {
+  const length = 8;
+  const charset = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+  let password = '';
+  for (let i = 0, n = charset.length; i < length; i += 1) {
+    password += charset.charAt(Math.floor(Math.random() * n));
+  }
+  return password;
+};
+
+const dest = path.join(__dirname, '..', '..', 'public', 'storage');
+const id = uuidv4();
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, dest);
+  },
+  filename: (req, file, cb) => {
+    const uniqueSuffix = `${id}`;
+    cb(null, uniqueSuffix);
+  },
+});
+export const upload = multer({ storage });
+
+const storageUpdate = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, dest);
+  },
+  filename: (req, file, cb) => {
+    const uniqueSuffix = `${req.params.employeeId}`;
+    cb(null, uniqueSuffix);
+  },
+});
+export const uploadUpdateAvatar = multer({ storage: storageUpdate });
+
+// eslint-disable-next-line no-shadow
+export const deleteFile = async (path) => {
+  try {
+    await fs.promises.unlink(path);
+    return 'file not deleted';
+  } catch (error) {
+    console.log(error);
+    return 'file deleted successfully';
+  }
+};
+
+export const cloudUpload = async (file) => {
+  const s3 = new AWS.S3({
+    accessKeyId: process.env.AWS_KEY_ID,
+    secretAccessKey: process.env.AWS_SECRET_ACCESS,
+  });
+  const { filename, path: filePath } = file;
+  const image = await fs.promises.readFile(filePath);
+
+  s3.upload(
+    {
+      Bucket: process.env.AWS_S3_BUCKET,
+      ACL: 'public-read',
+      Key: filename,
+      Body: image,
+    },
+    (err, data) => {
+      if (err) {
+        // console.log(err);
+        return err;
+      }
+      // console.log(data);
+      deleteFile(file.path);
+      return data;
+    },
+  );
+};
+
+export const retriveImage = (filename) => {
+  const s3 = new AWS.S3({
+    accessKeyId: process.env.AWS_KEY_ID,
+    secretAccessKey: process.env.AWS_SECRET_ACCESS,
+  });
+
+  const params = {
+    Bucket: process.env.AWS_S3_BUCKET,
+    Key: filename,
+  };
+  s3.getObject(params, (err, data) => {
+    if (err) {
+      return err;
+    } 
+    console.log(data);
+    const image = `data:image/jpeg;base64,${btoa(data.Body)}`;
+    
+  });
 };

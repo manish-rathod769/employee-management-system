@@ -44,9 +44,9 @@
                 <p class="account-subtitle">Access to our EMS</p>
 
                 <form action="/login" id="loginForm" method="POST">
-                  <p class="text-danger"> 
-                    <% if (is_error) { %> 
-                      <%= message %> 
+                  <p class="text-danger" id="error"> 
+                    <% if (locals.error) { %> 
+                      <%= locals.error %> 
                       <% } %> 
                     </p>
                   <div class="form-group">
@@ -157,7 +157,26 @@
           }
         },
         submitHandler: function(form) {
-          form.submit();
+          // form.submit();
+          // const loginForm -
+          $.ajax({
+            type: 'POST',
+            url: '/login',
+            data: {
+              email: $('#email').val(),
+              password: $('#password').val(),
+              role: $('#role').val(),
+            },
+            success: ({ data }) => {
+              $('#error').text('');
+              localStorage.setItem('avatar', data.avatar);
+              localStorage.setItem('name', data.name);
+              window.location = data.redirect;
+            },
+            error: (error) => {
+              $('#error').text(error.responseJSON.errorMessage);
+            }
+          });
         }
       });
     });

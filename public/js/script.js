@@ -100,3 +100,9 @@
 		} 
 		return true; 
 	});
+
+
+if (localStorage.getItem('avatar')) {
+    $('#employee-avatar-header, #employee-avatar-aside').attr('src', localStorage.getItem('avatar'));
+    $('#employee-name-aside').text(localStorage.getItem('name') || 'user');
+}

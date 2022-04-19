@@ -20,11 +20,11 @@
     <div class="user-card shadow-sm grow bg-white p-4 text-center ctm-border-radius card">
       <div class="user-info">
         <div class="user-avatar mb-4">
-          <img src="/assets/img/profiles/img-6.jpg" alt="User Avatar" class="img-fluid rounded-circle"
+          <img src="/assets/img/profiles/img-6.jpg" alt="User Avatar" id="employee-avatar-aside" class="img-fluid rounded-circle"
             width="100">
         </div>
         <div class="user-details">
-          <h4><b>Welcome Maria</b></h4>
+          <h4><b>Welcome <span id="employee-name-aside"></span> </b></h4>
         </div>
       </div>
     </div>
@@ -33,31 +33,31 @@
         <div class="card-body">
           <div class="row no-gutters">
             <div class="col-12 align-items-center shadow-none text-center">
-              <a href="/employees/:eid/profile" class="text-white active p-4 second-slider-btn ctm-border-right">
+              <a href="/employee/" id="asideProfile" class="text-white active p-4 second-slider-btn ctm-border-right">
                 <span class="lnr lnr-user pr-0 pb-lg-2 font-23"></span>
                 <span class="">Profile</span>
               </a>
             </div>
             <div class="col-12 align-items-center shadow-none text-center">
-              <a href="/employees/:eid/projects" class="text-dark p-4 ctm-border-right ctm-border-left">
+              <a href="/employees/:eid/projects" id="asideProjects" class="text-dark p-4 ctm-border-right ctm-border-left">
                 <span class="lnr lnr-chart-bars pr-0 pb-lg-2 font-23"></span>
                 <span class="">Projects</span>
               </a>
             </div>
             <div class="col-12 align-items-center shadow-none text-center">
-              <a href="/employees/:eid/pocs" class="text-dark p-4 ctm-border-right ctm-border-left">
+              <a href="/employees/:eid/pocs" id="asidePocs" class="text-dark p-4 ctm-border-right ctm-border-left">
                 <span class="lnr lnr-users pr-0 pb-lg-2 font-23"></span>
                 <span class="">POC</span>
               </a>
             </div>
             <div class="col-12 align-items-center shadow-none text-center">
-              <a href="/employees/:eid/attendences" class="text-dark p-4 ctm-border-left ctm-border-right">
+              <a href="/employee//attendence" id="asideAttendance" class="text-dark p-4 ctm-border-left ctm-border-right">
                 <span class="lnr lnr-pencil pr-0 pb-lg-2 font-23"></span>
                 <span class="">Attendence</span>
               </a>
             </div>
             <div class="col-12 align-items-center shadow-none text-center">
-              <a href="/employees/leave" class="text-dark p-4 last-slider-btn ctm-border-right ctm-border-left">
+              <a href="/employees/leave" id="asideLeave" class="text-dark p-4 last-slider-btn ctm-border-right ctm-border-left">
                 <span class="lnr lnr-list pr-0 pb-lg-2 font-23"></span>
                 <span class="">Leave</span>
               </a>

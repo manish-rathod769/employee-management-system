@@ -1,5 +1,5 @@
 import joi from 'joi';
-import { errorResponse, isValidTech } from '../../helpers';
+import { deleteFile, errorResponse, isValidTech } from '../../helpers';
 
 const validation = joi.object({
   firstName: joi.string().trim(true).required(),
@@ -10,10 +10,10 @@ const validation = joi.object({
   DOB: joi.date().less('now').required(),
   joiningDate: joi.date().required(),
   role: joi.string().trim(true).valid('ADMIN', 'DEV', 'PM', 'HR').required(),
-  totalExp: joi.number().required(),
+  careerStartDate: joi.date().required(),
 
   contactNo: joi.string().trim(true).required(),
-  secondaryEmail: joi.string().email().trim(true),
+  secondaryEmail: joi.string().email().trim(),
   houseNo: joi.string().trim(true).required(),
   addressLine1: joi.string().trim(true).required(),
   addressLine2: joi.string().trim(true),
@@ -30,20 +30,21 @@ const validation = joi.object({
   highestQualification: joi.string().trim(true).required(),
   collage: joi.string().trim(true).required(),
   university: joi.string().trim(true).required(),
-  knownTech: joi.array().items(joi.string().required()),
+  knownTech: joi.array().items(joi.string().required()).required(),
 });
 
 export const employeeValidate = async (req, res, next) => {
+  // console.log(req.body);
   const payload = {
     firstName: req.body.firstName,
     middleName: req.body.middleName,
     lastName: req.body.lastName,
     email: req.body.email,
     gender: req.body.gender,
-    DOB: req.body.DOB,
+    DOB: req.body.dob,
     role: req.body.role,
     joiningDate: req.body.joiningDate,
-    totalExp: req.body.totalExp,
+    careerStartDate: req.body.careerStartDate,
 
     collage: req.body.collage,
     highestQualification: req.body.highestQualification,
@@ -65,12 +66,23 @@ export const employeeValidate = async (req, res, next) => {
     employerAddress: req.body.employerAddress,
     workingTime: req.body.workingTime,
   };
-
+  // console.log(req.params.employeeId);
+  // console.log('FILE', req.file);
+  // console.log(req.body);
   const { error } = validation.validate(payload);
-  if (error) {
+
+  if (!req.file && !req.body.edited) {
+    errorResponse(req, res, 'please upload profile pic', 406);
+  } else if (error) {
+    if (req.file) {
+      deleteFile(req.file.path);
+    }
     res.status(406);
     errorResponse(req, res, 'employee data validation error', 406, error.message);
   } else if (!isValidTech(req.body.knownTech)) {
+    if (req.file) {
+      deleteFile(req.file.path);
+    }
     errorResponse(req, res, 'selected technology does not exists in system', 406);
   } else {
     next();

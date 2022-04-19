@@ -1,6 +1,8 @@
 import { v4 as uuidv4 } from 'uuid';
+import { sign } from 'jsonwebtoken';
 import { Op, Sequelize } from 'sequelize';
 import * as helpers from '../../helpers';
+import { sendRegistrationMail, sendForgotPasswordMail } from '../../helpers/email.helper';
 import {
   Employee, EmployeeContact, EmployeeAcademic, EmployeePreWork, Technology,
 } from '../../models';
@@ -13,10 +15,10 @@ export const addEmployee = async (req, res) => {
       middleName,
       email,
       gender,
-      DOB,
+      dob,
       role,
       joiningDate,
-      totalExp,
+      careerStartDate,
     } = req.body;
 
     // console.log();
@@ -31,20 +33,36 @@ export const addEmployee = async (req, res) => {
     }
 
     // password is auto generated for all employees using dob as ddmmyyyy
-    const encryptedPassword = await helpers.encryptPassword(helpers.createPassword(req.body.DOB));
+    const password = helpers.generatePassword();
+    const encryptedPassword = await helpers.encryptPassword(password);
+
+    // make array of known tech id from technology table
+    let techList = await Technology.findAll(
+      {
+        where: {
+          techName: {
+            [Op.like]: { [Op.any]: req.body.knownTech },
+          },
+        },
+        attributes: ['id'],
+      },
+    );
+    techList = techList.map(elem => elem.id);
 
     const payload = {
-      id: uuidv4(),
+      id: req.file.filename || uuidv4(),
       firstName,
       lastName,
       middleName,
       email,
       password: encryptedPassword,
       gender,
-      DOB: new Date(DOB),
+      DOB: new Date(dob),
       role,
       joiningDate: new Date(joiningDate),
-      totalExp,
+      careerStartDate,
+      knownTech: techList,
+      avatar: `https://employee-avatar.s3.amazonaws.com/${req.file.filename}`,
     };
     const contactDetailsPayload = {
       employeeId: payload.id,
@@ -66,7 +84,6 @@ export const addEmployee = async (req, res) => {
       workingTime: req.body.workingTime,
     };
 
-    // make array of known tech id from technology table
     const academicPayload = {
       employeeId: payload.id,
       highestQualification: req.body.highestQualification,
@@ -80,10 +97,15 @@ export const addEmployee = async (req, res) => {
     newEmployee.contact = await EmployeeContact.create(contactDetailsPayload);
     newEmployee.academic = await EmployeeAcademic.create(academicPayload);
     newEmployee.preWork = await EmployeePreWork.create(preWorkPayload);
-
-    return helpers.successResponse(req, res, newEmployee);
+    // console.log('-----------------------------------');
+    // console.log(newEmployee);
+    await helpers.cloudUpload(req.file);
+    // send mail
+    sendRegistrationMail(payload, password);
+    helpers.successResponse(req, res, newEmployee);
   } catch (error) {
-    // console.log(error);
+    console.log(error);
+    helpers.deleteFile(req.file.path);
     return helpers.errorResponse(req, res, 'something went wrong', 400, { err: error });
   }
 };
@@ -107,7 +129,21 @@ export const getEmployee = async (req, res) => {
       result.pre = true;
     }
 
-    if (search) {
+    if (req.query.role === 'PM') {
+      result.employee = await Employee.scope('admin').findAll({
+        attributes: ['email', 'id'],
+        where: {
+          role: 'PM',
+        },
+      });
+    } else if (req.query.role === 'DEV') {
+      result.employee = await Employee.scope('admin').findAll({
+        attributes: ['email', 'id'],
+        where: {
+          role: 'DEV',
+        },
+      });
+    } else if (search) {
       // console.log('here');
       result.employee = await Employee.scope('admin').findAll(
         {
@@ -116,7 +152,7 @@ export const getEmployee = async (req, res) => {
               model: EmployeeAcademic,
               attributes: ['knownTech'],
             }],
-          attributes: ['id', 'firstName', 'lastName', 'role', 'email'],
+          attributes: ['id', 'firstName', 'lastName', 'role', 'email', 'avatar'],
           offset: startIndex,
           limit,
           order: [
@@ -136,7 +172,7 @@ export const getEmployee = async (req, res) => {
       result.employee = await Employee.scope('admin').findAll(
         {
           include: [{ model: EmployeeAcademic, attributes: ['knownTech'] }],
-          attributes: ['id', 'firstName', 'lastName', 'role', 'email'],
+          attributes: ['id', 'firstName', 'lastName', 'role', 'email', 'avatar'],
           offset: startIndex,
           limit,
           order: [
@@ -145,7 +181,6 @@ export const getEmployee = async (req, res) => {
         },
       );
     }
-
     // console.log(totalEmployee);
     // console.log(result);
     res.status(200);
@@ -167,14 +202,14 @@ export const getEmployeeOne = async (req, res) => {
     res.status(200);
     helpers.successResponse(req, res, employee, 200);
   } catch (error) {
-    helpers.errorResponse(req, res, 'something went wrong', 500, error);
+    helpers.errorResponse(req, res, 'something went wrong', 500, error.message);
   }
 };
 
 export const updateEmployee = async (req, res) => {
   try {
     // find if employee with email and id exists
-    console.log(req.params);
+    // console.log(req.params);
     const employee = await Employee.scope('admin').findOne(
       {
         where: {
@@ -187,16 +222,28 @@ export const updateEmployee = async (req, res) => {
       return helpers.errorResponse(req, res, `user with email ${req.body.email} does not exist`, 409);
     }
 
+    let techList = await Technology.findAll(
+      {
+        where: {
+          techName: {
+            [Op.like]: { [Op.any]: req.body.knownTech },
+          },
+        },
+        attributes: ['id'],
+      },
+    );
+    techList = techList.map(elem => elem.id);
     // employee found update field
     const payload = {
       firstName: req.body.firstName,
       lastName: req.body.lastName,
       middleName: req.body.middleName,
       gender: req.body.gender,
-      DOB: new Date(req.body.DOB),
+      DOB: new Date(req.body.dob),
       role: req.body.role,
       joiningDate: new Date(req.body.joiningDate),
-      totalExp: req.body.totalExp,
+      careerStartDate: new Date(req.body.careerStartDate),
+      knownTech: techList,
     };
 
     // update employee associate table
@@ -223,7 +270,13 @@ export const updateEmployee = async (req, res) => {
       university: req.body.university,
       knownTech: req.body.knownTech,
     };
-
+    // console.log('----------------------------');
+    // console.log(req.file);
+    if (req.file) {
+      payload.avatar = `https://employee-avatar.s3.amazonaws.com/${req.file.filename}`;
+      await helpers.cloudUpload(req.file);
+      // console.log(upload);
+    }
     // update data in database
     const newEmployee = {};
     newEmployee.personal = await employee.update(payload);
@@ -235,9 +288,9 @@ export const updateEmployee = async (req, res) => {
       { where: { employeeId: req.params.employeeId } });
 
     res.status(201);
-    return helpers.successResponse(req, res, newEmployee, 201);
-  } catch (err) {
-    return helpers.errorResponse(req, res, 'something went wrong', 500, err.message);
+    helpers.successResponse(req, res, newEmployee, 201);
+  } catch (error) {
+    return helpers.errorResponse(req, res, 'something went wrong', 500, error.message);
   }
 };
 
@@ -277,31 +330,49 @@ export const loginEmployee = async (req, res) => {
     );
     if (!employee) {
       req.flash('error', 'employee does not exist');
-      return res.redirect(301, '/login');
+      return helpers.errorResponse(req, res, 'Email does not exist', 404);
+      // return res.redirect(301, '/login');
     }
 
     // encrypt password and dob to check for first login
     const encryptedPassword = await helpers.encryptPassword(req.body.password);
-    const dobPassword = await helpers.encryptPassword(helpers.createPassword(employee.DOB));
     if (encryptedPassword !== employee.password) {
       req.flash('error', 'wrong password!');
-      return res.redirect(301, '/login');
+      return helpers.errorResponse(req, res, 'wrong password', 401);
+      // return res.redirect(301, '/login');
     }
 
     // check for role
     if (employee.role !== req.body.role) {
       req.flash('error', `${req.body.email} doesn't have ${req.body.role} rights`);
-      return res.redirect(301, '/login');
+      return helpers.errorResponse(req, res, `${req.body.email} doesn't have ${req.body.role} rights`, 401);
+      // return res.redirect(301, '/login');
     }
 
-    // if dob password match redirect to set password page.
-    if (encryptedPassword !== dobPassword) {
-      // redirect to the profile page
-      return res.redirect(301, `/employee/${employee.id}`);
+    // Generate Cookie, Store in DB and store in cookie
+    const verifyToken = sign({ email: employee.email, role: employee.role }, process.env.verifyToken, { expiresIn: '1d' });
+    employee.verifyToken = verifyToken;
+    await employee.save();
+    res.cookie('verifyToken', verifyToken);
+
+    const result = {
+      avatar: employee.avatar,
+      name: employee.firstName,
+    };
+    // if default password match redirect to set password page.
+    if (employee.idDefaultPassword) {
+      // redirect to change password page
+      res.status(200);
+      result.redirect = `employee/${employee.id}/change-password`;
+      return helpers.successResponse(req, res, result, 200);
+      // eturn res.redirect(`employee/${employee.id}/change-password`);
     }
 
-    // redirect to change password page
-    return res.redirect(`employee/${employee.id}/change-password`);
+    // redirect to the profile page
+    res.status(200);
+    result.redirect = `/employee/${employee.id}`;
+    return helpers.successResponse(req, res, result, 200);
+    // return res.redirect(301, `/employee/${employee.id}`);
   } catch (error) {
     // render with error console.
     req.flash('error', 'something went wrong');
@@ -327,13 +398,39 @@ export const changePassword = async (req, res) => {
       return helpers.errorResponse(req, res, 'wrong password', 404);
     }
     employee.password = encryptedPassword;
+    employee.idDefaultPassword = false;
     await employee.save();
     res.status(200);
-    return helpers.successResponse(req, res, '', 201);
+    return helpers.successResponse(req, res, 'password changed successfully!', 201);
   } catch (error) {
     return helpers.errorResponse(req, res, 'something went wrong', 500, error.message);
   }
 };
+
+export const forgotPassword = async (req, res) => {
+  try {
+    const employee = await Employee.scope('login').findOne(
+      {
+        where: {
+          email: req.body.email,
+        },
+      },
+    );
+    if (!employee) {
+      helpers.errorResponse(req, res, 'employee does not exists', 404);
+    }
+    const password = helpers.generatePassword();
+    const encryptedPassword = await helpers.encryptPassword(password);
+    employee.password = encryptedPassword;
+    employee.idDefaultPassword = true;
+    await employee.save();
+    sendForgotPasswordMail(employee, password);
+    res.status(200);
+    helpers.successResponse(req, res, 'new password is sent to employee mail', 200);
+  } catch (error) {
+    helpers.errorResponse(req, res, 'something went wrong', 500, error.message);
+  }
+}
 
 // get technology
 export const getTechnology = async (req, res) => {
@@ -401,15 +498,8 @@ export const renderEmployee = (req, res) => {
 // render login page
 export const loginView = (req, res) => {
   res.status(200);
-  const error = req.flash('error');
-  if (error) {
-    return res.render('employee/login',
-      {
-        is_error: true,
-        message: error,
-      });
-  }
-  return res.render('employee/login', { is_error: false });
+  console.log(req.locals);
+  return res.render('employee/login');
 };
 export const forgotPasswordView = (req, res) => {
   res.status(200);

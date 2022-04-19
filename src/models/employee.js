@@ -39,6 +39,10 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.DATE,
         allowNull: false,
       },
+      avatar: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
       verifyToken: {
         type: DataTypes.STRING,
         allowNull: true,
@@ -49,12 +53,20 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
         defaultValue: false,
       },
+      idDefaultPassword: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: true,
+        allowNull: false,
+      },
       joiningDate: {
         type: DataTypes.DATE,
         allowNull: false,
       },
-      totalExp: {
-        type: DataTypes.DECIMAL,
+      knownTech: {
+        type: DataTypes.ARRAY(DataTypes.STRING),
+      },
+      careerStartDate: {
+        type: DataTypes.DATE,
         allowNull: false,
       },
     },
