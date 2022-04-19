@@ -266,11 +266,7 @@ const displayEmployee = () => {
     type: 'GET',
     url: `/employees?${query}`,
     success: (result) => {
-<<<<<<< HEAD
       // console.log(result);
-=======
-      console.log(result);
->>>>>>> 5896bb37e7ab5a09806433308cdb8a300f3520f5
       $('#previousEmployeeRecord').removeClass('disabled');
       $('#nextEmployeeRecord').removeClass('disabled');
       if (!result.data.pre) {
@@ -281,10 +277,6 @@ const displayEmployee = () => {
       }
       result.data.employee.forEach((element, index) => {
         // console.log(element);
-<<<<<<< HEAD
-=======
-        console.log(element.avatar);
->>>>>>> 5896bb37e7ab5a09806433308cdb8a300f3520f5
         const avatar = element.avatar.split('/').length > 2 ? element.avatar : "assets/img/profiles/img-6.jpg";
         const tech = element.EmployeeAcademic?.knownTech || 'tech';
         $('#displayEmployeeDetails').append(
