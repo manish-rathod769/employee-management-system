@@ -184,6 +184,9 @@
 
                                       <br>
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> edit: condition added to update status page(leave)
                                       <% if(leavedata.status==='pending' ){ %>
                                         <div>
                                           <h4>
@@ -201,6 +204,7 @@
                                                 class="btn btn-danger" id='reject_<%= leavedata.id %>'>Reject</button>
                                             </p>
                                           </h4>
+<<<<<<< HEAD
 =======
                                         </ul>
                                     </div>
@@ -431,6 +435,10 @@
                                       </div>
 >>>>>>> add: pagination in all view leave page.
 
+=======
+                                        </div>
+                                        <% } %>
+>>>>>>> edit: condition added to update status page(leave)
                                     </div>
                                   </div>
                                 </div>
@@ -529,12 +537,12 @@
         url: '/leave/accept-reject',
         method: 'PUT',
         data: { lid, action },
-        // success: function (result) {
-        //   console.log("success")
-        //                $('#accept').hide(lid);
-        // }
+        success: function (result) {
+          console.log("success")
+          $(`#accept_${lid}`).hide(lid);
+        }
       })
-      window.location.href = `/leave/accept-reject`;
+      //window.location.href = `/leave/accept-reject`;
 
     }
 
@@ -546,14 +554,14 @@
         url: '/leave/accept-reject',
         method: 'PUT',
         data: { lid, action },
-        // success: function (result) {
-        //   console.log(lid)
-        //   console.log("reject")
+        success: function (result) {
+          console.log(lid)
+          console.log("reject")
 
-        //              //  $('#reject').hide(lid);
-        // }
+          $(`#reject_${lid}`).hide(lid);
+        }
       })
-      window.location.href = `/leave/accept-reject`;
+      //window.location.href = `/leave/accept-reject`;
 
     }
 <<<<<<< HEAD
