@@ -142,11 +142,7 @@ export const getEmployee = async (req, res) => {
           role: 'DEV',
         },
       });
-<<<<<<< HEAD
     } else if (req.user.role === 'HR' || req.user.role === 'ADMIN') {
-=======
-    } else if (req.role === 'HR' || req.role === 'ADMIN') {
->>>>>>> fix: employee pm scope
       if (search) {
         // console.log('here');
         result.employee = await Employee.scope('admin').findAll(
