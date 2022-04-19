@@ -50,7 +50,6 @@ module.exports = (sequelize, DataTypes) => {
       },
       isArchive: {
         type: DataTypes.BOOLEAN,
-        allowNull: false,
         defaultValue: false,
       },
       idDefaultPassword: {
@@ -94,6 +93,9 @@ module.exports = (sequelize, DataTypes) => {
       foreignKey: 'employeeId',
     });
     Employee.hasOne(models.EmployeePreWork, {
+      foreignKey: 'employeeId',
+    });
+    Employee.hasMany(models.ProjectEmployee, {
       foreignKey: 'employeeId',
     });
   };

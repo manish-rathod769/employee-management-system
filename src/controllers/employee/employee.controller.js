@@ -128,7 +128,6 @@ export const getEmployee = async (req, res) => {
     if (startIndex > 0) {
       result.pre = true;
     }
-
     if (req.query.role === 'PM') {
       result.employee = await Employee.scope('admin').findAll({
         attributes: ['email', 'id'],
@@ -136,14 +135,15 @@ export const getEmployee = async (req, res) => {
           role: 'PM',
         },
       });
-    } else if (req.query.role === 'DEV') {
+    else if (req.query.role === 'DEV') {
       result.employee = await Employee.scope('admin').findAll({
         attributes: ['email', 'id'],
         where: {
           role: 'DEV',
         },
       });
-    } else if (search) {
+    }
+    else if (search) {
       // console.log('here');
       result.employee = await Employee.scope('admin').findAll(
         {

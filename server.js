@@ -31,6 +31,7 @@ process.on('uncaughtException', (uncaughtExc) => {
 
 // Handle unhandled promise rejections
 process.on('unhandledRejection', (err) => {
+  console.log(err);
   console.log(chalk.bgRed('UNHANDLED REJECTION! 💥 Shutting down...'));
   console.log(err.name, err.message);
   // Close server & exit process

@@ -254,6 +254,8 @@ const displayEmployee = () => {
         $('#nextEmployeeRecord').addClass('disabled');
       }
       result.data.employee.forEach((element, index) => {
+        // console.log(element);
+        const tech = element.EmployeeAcademic?.knownTech || 'tech';
         console.log(element.avatar);
         const avatar = element.avatar.split('/').length > 2 ? element.avatar : "assets/img/profiles/img-6.jpg";
         const tech = element.EmployeeAcademic.knownTech || 'tech';

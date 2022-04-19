@@ -26,7 +26,7 @@ module.exports = {
     organization: {
       type: Sequelize.STRING,
     },
-    isArchive: {
+    isArchived: {
       type: Sequelize.BOOLEAN,
       defaultValue: false,
     },
