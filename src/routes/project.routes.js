@@ -14,6 +14,10 @@ route.get('/project/:projectId/employees', verifyCookie, roleCheck.roleAdmin(fal
 route.get('/project/:projectId/clients', verifyCookie, roleCheck.roleAdmin(false), projectClient);
 route.get('/projects', verifyCookie, roleCheck.role_Admin_PM_HR(true), (req, res) => res.render('project'));
 
+<<<<<<< HEAD
 route.get('/employee/:employeeId/projects', verifyCookie, roleCheck.roleDEV(true), renderEmployeeProjectView);
+=======
+route.get('/employee/:employeeId/projects', verifyCookie, roleCheck.roleDEV(true), (req, res) => res.render('employee/project'));
+>>>>>>> fix: navigation issue solve
 
 module.exports = route;

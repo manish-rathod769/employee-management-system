@@ -57,7 +57,7 @@ export const encryptPassword =  (password) => {
   const encryptedPassword =  createHash('md5').update(password).digest('hex');
   return encryptedPassword;
 };
-console.log(encryptPassword("20031988"));
+
 export const validateFields = (object, fields) => {
   const errors = [];
   fields.forEach((f) => {
