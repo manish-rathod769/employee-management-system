@@ -129,4 +129,4 @@ export const getOneClient = async (req, res) => {
   } catch (error) {
     errorResponse(req, res, error.message, 500, error);
   }
-};
+};  
