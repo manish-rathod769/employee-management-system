@@ -218,6 +218,7 @@
             <button type="button" class="close" data-dismiss="modal">
               &times;
             </button>
+<<<<<<< HEAD
             <h4 class="modal-title mb-3">Edit Poc</h4>
             <form id="pocEditForm"> 
             <div class="form-group">
@@ -225,6 +226,14 @@
             </div>
             <div class="form-group">
               <input type="email" id="pocEditContact" name="contactEmployee" class="form-control" placeholder="contact employee email" required/>
+=======
+            <h4 class="modal-title mb-3">Add Poc</h4>
+            <div class="form-group">
+              <input type="text" id="pocEditField" class="form-control" disabled placeholder="Field"/>
+            </div>
+            <div class="form-group">
+              <input type="email" id="pocEditContact" class="form-control" placeholder="contact employee email" required/>
+>>>>>>> add: POC model, UI, controller, ADMIN pannel
             </div>
             <button
               type="button"
@@ -234,12 +243,20 @@
               Cancel
             </button>
             <button
+<<<<<<< HEAD
               type="submit"
               class="btn btn-theme text-white ctm-border-radius float-right button-1"
             >
               Edit
             </button>
             </form>
+=======
+              type="button"
+              class="btn btn-theme text-white ctm-border-radius float-right button-1"
+            >
+              Add
+            </button>
+>>>>>>> add: POC model, UI, controller, ADMIN pannel
           </div>
         </div>
       </div>
@@ -405,6 +422,7 @@
             console.log(error);
             $(".toast-header").removeClass("bg-success").addClass("bg-danger").addClass("text-dark");
             $(".toast-title").text("POC");
+<<<<<<< HEAD
             $(".toast-body").text(error.responseJSON.errorMessage);
             $(".toast").toast({
               delay: 4000,
@@ -439,6 +457,9 @@
             $(".toast-header").removeClass("bg-success").addClass("bg-danger").addClass("text-dark");
             $(".toast-title").text("POC");
             $(".toast-body").text(error.responseJSON.errorMessage);
+=======
+            $(".toast-body").text(error.responseJSON?.errorMessage || 'request error');
+>>>>>>> add: POC model, UI, controller, ADMIN pannel
             $(".toast").toast({
               delay: 4000,
             });
