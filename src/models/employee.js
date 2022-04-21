@@ -114,6 +114,11 @@ module.exports = (sequelize, DataTypes) => {
     Employee.hasMany(models.Poc, {
       foreignKey: 'employeeId',
     });
+    Employee.belongsToMany(models.Technology, {
+      through: 'EmployeeTech',
+      foreignKey: 'employeeId',
+      uniqueKey: 'empTech'
+    });
   };
   return Employee;
 };

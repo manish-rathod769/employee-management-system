@@ -52,6 +52,7 @@ $('#addEmployeeBtn').click((event) => {
     type: 'GET',
     url: '/technologies',
     success: function ({ data }) {
+      $('#knownTech').html('<option selected disabled>Known Technology</option>');
       data.forEach(elem => {
         const val = elem.techName;
         // append to select group
@@ -137,6 +138,7 @@ const editButton = (id) => {
     url: '/technologies',
     success: function ({ data }) {
       const form = $('#form-edit-employee');
+      form.find('#knownTech').html('<option selected disabled>Known Technology</option>');
       data.forEach(elem => {
         const val = elem.techName;
         // append to select group
@@ -188,7 +190,7 @@ const editButton = (id) => {
       $.getJSON('../josnData/stateCity.json', (states) => {
         let stateOptions = '';
         Object.keys(states).forEach((key) => {
-          stateOptions += (key.toLowerCase() === data.EmployeeContact.state) ? `<option value='${key}' selected>${key}</option>` : `<option value='${key}'>${key}</option>`;
+          stateOptions += (key.toLowerCase() === data.EmployeeContact.state.toLowerCase()) ? `<option value='${key}' selected>${key}</option>` : `<option value='${key}'>${key}</option>`;
         });
         $('#employee-edit-state').append(stateOptions);
       });
@@ -201,7 +203,7 @@ const editButton = (id) => {
         let cityOptions = '';
         console.log(state);
         cityData[state].forEach((city) => {
-          cityOptions += (city.toLowerCase() === data.EmployeeContact.city) ? `<option value='${city}' selected>${city}</option>` : `<option value='${city}'>${city}</option>`;
+          cityOptions += (city.toLowerCase() === data.EmployeeContact.city.toLowerCase()) ? `<option value='${city}' selected>${city}</option>` : `<option value='${city}'>${city}</option>`;
         });
         $('#employee-edit-city').append(cityOptions);
       });

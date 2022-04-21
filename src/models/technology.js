@@ -12,5 +12,12 @@ module.exports = (sequelize, DataTypes) => {
       },
     },
   );
+  Technology.associate = (models) => {
+    Technology.belongsToMany(models.Employee, {
+      through: 'EmployeeTech',
+      foreignKey: 'techId',
+      uniqueKey: 'empTech'
+    });
+  };
   return Technology;
 };

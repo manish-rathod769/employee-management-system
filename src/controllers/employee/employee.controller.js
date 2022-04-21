@@ -4,7 +4,7 @@ import { Op, Sequelize } from 'sequelize';
 import * as helpers from '../../helpers';
 import { sendRegistrationMail, sendForgotPasswordMail } from '../../helpers/email.helper';
 import {
-  Employee, EmployeeContact, EmployeeAcademic, EmployeePreWork, Technology, ProjectEmployee,
+  Employee, EmployeeContact, EmployeeAcademic, EmployeePreWork, Technology, ProjectEmployee, EmployeeTech,
 } from '../../models';
 
 export const addEmployee = async (req, res) => {
@@ -47,7 +47,7 @@ export const addEmployee = async (req, res) => {
         attributes: ['id'],
       },
     );
-    techList = techList.map(elem => elem.id);
+    const techIdList = techList.map(elem => elem.id);
 
     const payload = {
       id: req.file.filename || uuidv4(),
@@ -61,7 +61,7 @@ export const addEmployee = async (req, res) => {
       role,
       joiningDate: new Date(joiningDate),
       careerStartDate,
-      knownTech: techList,
+      knownTech: techIdList,
       avatar: `https://employee-avatar.s3.amazonaws.com/${req.file.filename}`,
     };
     const contactDetailsPayload = {
@@ -97,6 +97,11 @@ export const addEmployee = async (req, res) => {
     newEmployee.contact = await EmployeeContact.create(contactDetailsPayload);
     newEmployee.academic = await EmployeeAcademic.create(academicPayload);
     newEmployee.preWork = await EmployeePreWork.create(preWorkPayload);
+
+    await techList.forEach(elem => {
+      newEmployee.personal.addTechnology(elem);
+    });
+    
     // console.log('-----------------------------------');
     // console.log(JSON.stringify(newEmployee,null, 2));
     await helpers.cloudUpload(req.file);
@@ -151,7 +156,11 @@ export const getEmployee = async (req, res) => {
               {
                 model: EmployeeAcademic,
                 attributes: ['knownTech'],
-              }],
+              },
+              // {
+              //   model: Technology,
+              // }
+            ],
             attributes: ['id', 'firstName', 'lastName', 'role', 'email', 'avatar'],
             offset: startIndex,
             limit,
@@ -171,7 +180,11 @@ export const getEmployee = async (req, res) => {
       } else {
         result.employee = await Employee.scope('admin').findAll(
           {
-            include: [{ model: EmployeeAcademic, attributes: ['knownTech'] }],
+            include: [{ model: EmployeeAcademic, attributes: ['knownTech'] },
+              // {
+              //   model: Technology,
+              // }
+            ],
             attributes: ['id', 'firstName', 'lastName', 'role', 'email', 'avatar'],
             offset: startIndex,
             limit,
@@ -209,7 +222,11 @@ export const getEmployee = async (req, res) => {
                 model: EmployeeAcademic,
                 attributes: ['knownTech'],
                 requered: true,
-              }],
+              },
+              // {
+              //   model: Technology,
+              // }
+            ],
             attributes: ['id', 'firstName', 'lastName', 'role', 'email', 'avatar'],
             offset: startIndex,
             limit,
@@ -239,7 +256,11 @@ export const getEmployee = async (req, res) => {
                   }
                 },
               }, 
-              { model: EmployeeAcademic, attributes: ['knownTech'] }],
+              { model: EmployeeAcademic, attributes: ['knownTech'] },
+              // {
+              //   model: Technology,
+              // }
+            ],
             attributes: ['id', 'firstName', 'lastName', 'role', 'email', 'avatar'],
             offset: startIndex,
             limit,
@@ -266,7 +287,11 @@ export const getEmployeeOne = async (req, res) => {
     const employee = await Employee.scope('admin').findOne(
       {
         where: { id: req.params.employeeId },
-        include: [EmployeeContact, EmployeeAcademic, EmployeePreWork],
+        include: [EmployeeContact, EmployeeAcademic, EmployeePreWork,
+            // {
+            //   model: Technology,
+            // }
+        ],
       },
     );
     // console.log(employee);
@@ -303,7 +328,7 @@ export const updateEmployee = async (req, res) => {
         attributes: ['id'],
       },
     );
-    techList = techList.map(elem => elem.id);
+    const techIdList = techList.map(elem => elem.id);
     // employee found update field
     const payload = {
       firstName: req.body.firstName,
@@ -314,7 +339,7 @@ export const updateEmployee = async (req, res) => {
       role: req.body.role,
       joiningDate: new Date(req.body.joiningDate),
       careerStartDate: new Date(req.body.careerStartDate),
-      knownTech: techList,
+      knownTech: techIdList,
     };
 
     // update employee associate table
@@ -357,7 +382,12 @@ export const updateEmployee = async (req, res) => {
       { where: { employeeId: req.params.employeeId } });
     newEmployee.preWork = await EmployeePreWork.update(preWorkPayload,
       { where: { employeeId: req.params.employeeId } });
-
+    await EmployeeTech.destroy({
+      where: {
+        employeeId: employee.id,
+      }
+    });
+    await newEmployee.personal.addTechnology(techList);
     res.status(201);
     helpers.successResponse(req, res, newEmployee, 201);
   } catch (error) {
