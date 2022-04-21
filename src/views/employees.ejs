@@ -32,7 +32,7 @@
     <![endif]-->
   </head>
   <body>
-    <div class="inner-wrapper">
+    <div class="inner-wrapper position-relative">
       <!--  header partials  -->
       <%- include('partials/header'); %>
 
@@ -53,15 +53,15 @@
               <div class="quicklink-sidebar-menu ctm-border-radius shadow-sm grow bg-white card">
                 <div class="card-body">
                   <ul class="list-group list-group-horizontal-lg">
-                    <li class="list-group-item text-center active button-5">
+                    <li class="list-group-item text-center active button-5 disabled">
                       <a href="/" class="text-white">All</a>
                     </li>
-                    <li class="list-group-item text-center button-6">
+                    <!-- <li class="list-group-item text-center button-6">
                       <a class="text-dark" href="/employees-team">Teams</a>
                     </li>
                     <li class="list-group-item text-center button-6">
                       <a class="text-dark" href="/employees-offices">Offices</a>
-                    </li>
+                    </li> -->
                   </ul>
                 </div>
               </div>
@@ -69,7 +69,7 @@
                 <div class="card-body align-center">
                   <h4 class="card-title float-left mb-0 mt-2"><%= totalEmployee %> Employees</h4>
                   <ul class="nav nav-tabs float-right border-0 tab-list-emp">
-                    <li class="nav-item">
+                    <!-- <li class="nav-item">
                       <a
                         class="nav-link active border-0 font-23 grid-view"
                         href="/"
@@ -82,7 +82,7 @@
                         href="/employees-list"
                         ><i class="fa fa-list-ul" aria-hidden="true"></i
                       ></a>
-                    </li>
+                    </li> -->
                     <li class="nav-item pl-3">
                       <a
                         href="#"
@@ -200,6 +200,27 @@
       </div>
     </div>
 
+    <!-- Toasts -->
+    <div aria-live="polite" aria-atomic="true">
+
+        <!-- Position it -->
+        <div class="fixed-bottom w-25" style="bottom: 2rem; left: 2rem;">
+            <div class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+                <div class="toast-header">
+                    <strong class="mr-auto toast-title">Toast Title</strong>
+                    <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="toast-body">
+                    Some Toast Body      
+                </div>
+          </div>
+        </div>
+    </div>
+
+  </div>
+
     <!-- delete concent modal -->
     <div id="EmployeeDeleteConcentModal">
       <div class="modal fade" id="delete" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
@@ -258,8 +279,9 @@
     <script src="assets/js/add-employee.js"></script>
     <script src="assets/js/edit-employee.js"></script>
     <script src="assets/js/employee.js"></script>
-
     <script>
+      $('.aside-module-name').text('Employees');
+      $('#employeeLink').removeClass('text-dark').addClass('active').addClass('text-white');
     </script>
   </body>
 </html>

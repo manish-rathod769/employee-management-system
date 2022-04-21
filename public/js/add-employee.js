@@ -9,11 +9,13 @@ $('#cancelAddEmployee').click((event) => {
 const imagePreview = () => {
   const addForm = $('#form-add-employee');
   const file = addForm.find('#imageUpload')[0].files[0];
+  // const blobURL = window.URL.createObjectURL(file);
+  // console.log(blobURL);
   if (file) {
     const reader = new FileReader();
     reader.onload = (evenet) => {
-      const file2 = compressImage(evenet.target.result, 50, 800);
-      console.log(file2);
+      // const file2 = compressImage(blobURL, 50, 800);
+      // console.log(file2);
       // $('.avatar-preview').after(file2);
       $('.avatar-preview').find('div').css('background-image', `url(${evenet.target.result})`);
     };
@@ -273,12 +275,25 @@ $(document).ready(() => {
         processData: false,
         success: (data) => {
           // console.log(data);
+          $('.toast-header').removeClass('bg-danger').addClass('bg-success').addClass('text-dark');
+          $('.toast-title').text('Employee Register');
+          $('.toast-body').text("employee registered successfully");
+          $('.toast').toast({
+            delay: 5000,
+          });
+          $('.toast').toast('show');
           $('#addEmployeeFormContainer').addClass('d-none');
           $('#employeeDisplayContainer').removeClass('d-none');
-          window.location.reload();
+          setTimeout(() => window.location.reload(), 3000);
         },
         error: (error) => {
-          alert(error.responseJSON.errorMessage);
+          $('.toast-header').removeClass('bg-success').addClass('bg-danger').addClass('text-dark');
+          $('.toast-title').text('Employee Register');
+          $('.toast-body').text(error.responseJSON.errorMessage);
+          $('.toast').toast({
+            delay: 5000,
+          });
+          $('.toast').toast('show');
           // console.log(error.message);
         },
       });

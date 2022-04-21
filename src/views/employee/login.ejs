@@ -171,6 +171,7 @@
               $('#error').text('');
               localStorage.setItem('avatar', data.avatar);
               localStorage.setItem('name', data.name);
+              localStorage.setItem('id', data.id);
               window.location = data.redirect;
             },
             error: (error) => {

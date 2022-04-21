@@ -4,6 +4,7 @@ import { createHash } from 'crypto';
 import multer from 'multer';
 import AWS from 'aws-sdk';
 import path from 'path';
+import Jimp from 'jimp';
 import { Technology } from '../models';
 
 export const successResponse = (req, res, data, code = 200) => res.send({
@@ -52,8 +53,8 @@ export const isValidTech = async (arr) => {
   return arr.every(elem => techList.includes(elem));
 };
 
-export const encryptPassword = async (password) => {
-  const encryptedPassword = await createHash('md5').update(password).digest('hex');
+export const encryptPassword =  (password) => {
+  const encryptedPassword =  createHash('md5').update(password).digest('hex');
   return encryptedPassword;
 };
 
@@ -112,13 +113,29 @@ export const deleteFile = async (path) => {
   }
 };
 
+// compress file with Jimp and upload to s3
+const compress = async (filePath) => {
+  try {
+    // console.log(filePath);
+    const image = await Jimp.read(filePath);
+    await image.resize(400, Jimp.AUTO);
+    await image.quality(60);
+    await image.writeAsync(filePath+'.jpg');
+    return image;
+  } catch (err) {
+    // console.log(err);
+    return err;
+  }
+}
 export const cloudUpload = async (file) => {
   const s3 = new AWS.S3({
     accessKeyId: process.env.AWS_KEY_ID,
     secretAccessKey: process.env.AWS_SECRET_ACCESS,
   });
   const { filename, path: filePath } = file;
-  const image = await fs.promises.readFile(filePath);
+  const img = await compress(filePath);
+  // console.log(img);
+  const image = await fs.promises.readFile(filePath+'.jpg');
 
   s3.upload(
     {
@@ -130,10 +147,12 @@ export const cloudUpload = async (file) => {
     (err, data) => {
       if (err) {
         // console.log(err);
+        deleteFile(filePath + '.jpg');
         return err;
       }
       // console.log(data);
       deleteFile(file.path);
+      deleteFile(filePath+'.jpg');
       return data;
     },
   );

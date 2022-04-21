@@ -1,3 +1,5 @@
+import { Op } from 'sequelize';
+
 module.exports = (sequelize, DataTypes) => {
   const Employee = sequelize.define(
     'Employee',
@@ -79,6 +81,17 @@ module.exports = (sequelize, DataTypes) => {
           where: { isArchive: false },
           attributes: { exclude: ['password', 'verifyToken'] },
         },
+        pm: {
+          where: { 
+            [Op.and]: [
+              { isArchive: false }, 
+              { role: {
+                  [Op.or]: ["PM", "DEV"], 
+                }
+              },
+            ]},
+          attributes: { exclude: ['password', 'verifyToken']},
+        },
         login: {
           attributes: { include: ['password', 'verifyToken'] },
         },
@@ -96,6 +109,9 @@ module.exports = (sequelize, DataTypes) => {
       foreignKey: 'employeeId',
     });
     Employee.hasMany(models.ProjectEmployee, {
+      foreignKey: 'employeeId',
+    });
+    Employee.hasMany(models.Poc, {
       foreignKey: 'employeeId',
     });
   };

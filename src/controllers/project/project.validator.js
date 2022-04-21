@@ -4,7 +4,7 @@ import { errorResponse } from '../../helpers/index';
 
 const validation = joi.object({
     name: joi.string().min(3).max(50).trim(true).required(),
-    type:joi.string().min(3).max(50).trim(true).required(),
+		type: joi.string().valid('Fixed', 'Dedicated').required(),
     probable_end_date:joi.string().required(),
     isArchived:joi.string().default(false)
 });

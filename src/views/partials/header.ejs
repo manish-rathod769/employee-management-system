@@ -20,7 +20,7 @@
               <div class="col-lg-12 col-md-12 col-sm-12">
                 <div class="user-notification-block align-right d-inline-block">
                   <div class="top-nav-search">
-                    <form>
+                    <!-- <form>
                       <input
                         type="text"
                         class="form-control"
@@ -29,13 +29,13 @@
                       <button class="btn" type="submit">
                         <i class="fa fa-search"></i>
                       </button>
-                    </form>
+                    </form> -->
                   </div>
                 </div>
 
                 <div class="user-notification-block align-right d-inline-block">
                   <ul class="list-inline m-0">
-                    <li
+                    <!-- <li
                       class="list-inline-item"
                       data-toggle="tooltip"
                       data-placement="top"
@@ -50,7 +50,16 @@
                           class="lnr lnr-briefcase position-relative"
                         ></span>
                       </a>
-                    </li>
+                    </li> -->
+                    <li
+                      class="list-inline-item "
+                      data-toggle="tooltip"
+                      data-placement="top"
+                      title=""
+                      data-original-title=""
+                    >
+                    <span class="font-23 menu-style text-white align-middle header-name-admin"> </span> 
+                    </li> 
                   </ul>
                 </div>
 
@@ -67,7 +76,7 @@
                         src="/assets/img/profiles/img-6.jpg"
                         alt="user avatar"
                         id="employee-avatar"
-                        class="rounded-circle img-fluid"
+                        class="rounded-circle img-fluid employee-avatar-admin"
                         width="55"
                       />
                     </div>
@@ -76,7 +85,7 @@
                   <div
                     class="dropdown-menu notification-dropdown-menu shadow-lg border-0 p-3 m-0 dropdown-menu-right"
                   >
-                    <a class="dropdown-item p-2" href="employment.html">
+                    <!-- <a class="dropdown-item p-2" href="employment.html">
                       <span class="media align-items-center">
                         <span class="lnr lnr-user mr-3"></span>
                         <span class="media-body text-truncate">
@@ -91,12 +100,20 @@
                           <span class="text-truncate">Settings</span>
                         </span>
                       </span>
-                    </a>
-                    <a class="dropdown-item p-2" href="login.html">
+                    </a> -->
+                    <a class="dropdown-item p-2" href="/logout">
                       <span class="media align-items-center">
                         <span class="lnr lnr-power-switch mr-3"></span>
                         <span class="media-body text-truncate">
                           <span class="text-truncate">Logout</span>
+                        </span>
+                      </span>
+                    </a>
+                    <a class="dropdown-item p-2" id="change-password" href="javascript:void(0)">
+                      <span class="media align-items-center">
+                        <span class="lnr lnr-lock mr-3"></span>
+                        <span class="media-body text-truncate">
+                          <span class="text-truncate">Change password</span>
                         </span>
                       </span>
                     </a>
@@ -128,37 +145,25 @@
                       src="/assets/img/profiles/img-6.jpg"
                       alt="user avatar"
                       id="employee-avatar"
-                      class="rounded-circle img-fluid"
+                      class="rounded-circle img-fluid employee-avatar-admin"
                       width="55"
                     />
                   </div>
                 </a>
               </div>
               <div class="user-notification-block align-center">
-                <div class="top-nav-search">
-                  <form>
-                    <input
-                      type="text"
-                      class="form-control"
-                      placeholder="Search here"
-                    />
-                    <button class="btn" type="submit">
-                      <i class="fa fa-search"></i>
-                    </button>
-                  </form>
-                </div>
               </div>
               <hr />
               <div class="user-menu-items px-3 m-0">
-                <a class="px-0 pb-2 pt-0" href="index.html">
+                <!-- <a class="px-0 pb-2 pt-0" href="index.html">
                   <span class="media align-items-center">
                     <span class="lnr lnr-home mr-3"></span>
                     <span class="media-body text-truncate text-left">
                       <span class="text-truncate text-left">Dashboard</span>
                     </span>
                   </span>
-                </a>
-                <a class="p-2" href="employees.html">
+                </a> -->
+                <a class="p-2" href="/">
                   <span class="media align-items-center">
                     <span class="lnr lnr-users mr-3"></span>
                     <span class="media-body text-truncate text-left">
@@ -166,23 +171,23 @@
                     </span>
                   </span>
                 </a>
-                <a class="p-2" href="company.html">
+                <a class="p-2" href="/clients">
                   <span class="media align-items-center">
-                    <span class="lnr lnr-apartment mr-3"></span>
+                    <span class="lnr lnr-briefcase mr-3"></span>
                     <span class="media-body text-truncate text-left">
-                      <span class="text-truncate text-left">Company</span>
+                      <span class="text-truncate text-left">Clients</span>
                     </span>
                   </span>
                 </a>
-                <a class="p-2" href="calendar.html">
+                <a class="p-2" href="/projects">
                   <span class="media align-items-center">
-                    <span class="lnr lnr-calendar-full mr-3"></span>
+                    <span class="lnr lnr-briefcase mr-3"></span>
                     <span class="media-body text-truncate text-left">
-                      <span class="text-truncate text-left">Calendar</span>
+                      <span class="text-truncate text-left">Projects</span>
                     </span>
                   </span>
                 </a>
-                <a class="p-2" href="leave.html">
+                <a class="p-2" href="/leave">
                   <span class="media align-items-center">
                     <span class="lnr lnr-briefcase mr-3"></span>
                     <span class="media-body text-truncate text-left">
@@ -190,31 +195,8 @@
                     </span>
                   </span>
                 </a>
-                <a class="p-2" href="reviews.html">
-                  <span class="media align-items-center">
-                    <span class="lnr lnr-star mr-3"></span>
-                    <span class="media-body text-truncate text-left">
-                      <span class="text-truncate text-left">Reviews</span>
-                    </span>
-                  </span>
-                </a>
-                <a class="p-2" href="reports.html">
-                  <span class="media align-items-center">
-                    <span class="lnr lnr-rocket mr-3"></span>
-                    <span class="media-body text-truncate text-left">
-                      <span class="text-truncate text-left">Reports</span>
-                    </span>
-                  </span>
-                </a>
-                <a class="p-2" href="manage.html">
-                  <span class="media align-items-center">
-                    <span class="lnr lnr-sync mr-3"></span>
-                    <span class="media-body text-truncate text-left">
-                      <span class="text-truncate text-left">Manage</span>
-                    </span>
-                  </span>
-                </a>
-                <a class="p-2" href="settings.html">
+
+                <a class="p-2" href="/setting">
                   <span class="media align-items-center">
                     <span class="lnr lnr-cog mr-3"></span>
                     <span class="media-body text-truncate text-left">
@@ -222,7 +204,7 @@
                     </span>
                   </span>
                 </a>
-                <a class="p-2" href="employment.html">
+                <a class="p-2" href="/profile">
                   <span class="media align-items-center">
                     <span class="lnr lnr-user mr-3"></span>
                     <span class="media-body text-truncate text-left">
@@ -230,7 +212,7 @@
                     </span>
                   </span>
                 </a>
-                <a class="p-2" href="login.html">
+                <a class="p-2" href="/logout">
                   <span class="media align-items-center">
                     <span class="lnr lnr-power-switch mr-3"></span>
                     <span class="media-body text-truncate text-left">

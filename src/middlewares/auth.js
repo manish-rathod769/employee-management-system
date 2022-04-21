@@ -1,14 +1,13 @@
 import { verify } from 'jsonwebtoken';
-import { errorResponse } from '../helpers';
 import { Employee } from '../models';
 
 const verifyCookie = async (req, res, next) => {
   try {
     const { verifyToken } = req.cookies;
-
-    // Ck=heck if verifoken exist or not
+    // Check if verifoken exist or not
     if (!verifyToken) {
-      errorResponse(req, res, 'Please login first !!!', 500);
+      res.status(401);
+      return res.render('message', { error: 'Please login first !!!', message: '', route: '/login', text: 'Login' });
     }
 
     // Return Data od user. Here it will return emailID.
@@ -18,21 +17,22 @@ const verifyCookie = async (req, res, next) => {
       attributes: ['email', 'role', 'verifyToken'],
     });
     if (!matchedEmp) {
-      errorResponse(req, res, 'Data does not exist !!!', 409);
-      return;
+      res.status(401);
+      return res.render('message', { error: 'Data does not exist !!!', message: '', route: '/login', text: 'Login' });
     }
 
     // Check if verifyToken matched or not
     if (verifyToken !== matchedEmp.verifyToken) {
-      errorResponse(req, res, 'Verify token does not matcch !!!', 409);
-      return;
+      res.status(401);
+      return res.render('message', { error: 'Verify token does not matcch !!!', message: '', route: '/login', text: 'Login' });
     }
 
     // If token matched then send user's data to next route
-    req.user = { email: payload.email, role: payload.role };
+    req.user = { id: payload.id, email: payload.email, role: payload.role };
     next();
   } catch (error) {
-    errorResponse(req, res, error.message, 409);
+    res.status(401);
+    return res.render('message', { error: 'Verify token does not matcch !!!', message: '', route: '/login', text: 'Login' });
   }
 };
 

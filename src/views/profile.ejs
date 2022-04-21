@@ -16,17 +16,15 @@
 
     <link rel="stylesheet" href="assets/css/style.css" />
     <title>Profile Page</title>
-
   </head>
   <body>
     <div class="inner-wrapper">
       <!--  header partials  -->
       <%- include('partials/header'); %>
 
-      <div class="page-wrapper">
+      <div class="page-wrapper position-relative">
         <div class="container-fluid">
           <div class="row">
-            
             <!--  side bar aside tag -->
             <%- include('partials/aside'); %>
 
@@ -34,7 +32,8 @@
               <div
                 class="quicklink-sidebar-menu ctm-border-radius shadow-sm grow bg-white p-4 mb-4 card"
               >
-                <ul class="list-group list-group-horizontal-lg">
+                <h4>Profile</h4>
+                <!-- <ul class="list-group list-group-horizontal-lg">
                   <li class="list-group-item text-center active button-5">
                     <a href="#" id="employeeDetails" class="text-white">Detail</a>
                   </li>
@@ -55,18 +54,38 @@
                       >Settings</a
                     >
                   </li>
-                </ul>
+                </ul> -->
               </div>
 
               <!-- employee details  -->
-              <div class="row" id="displayEmployeeDetails"> 
+              <div class="row" id="displayEmployeeDetails">
                 <!-- employee profile -->
               </div>
-              
+
               <!-- employee deshbord -->
             </div>
           </div>
         </div>
+
+        <!-- Toasts -->
+        <div aria-live="polite" aria-atomic="true">
+
+            <!-- Position it -->
+            <div class="fixed-bottom w-25" style="bottom: 2rem; left: 2rem;">
+                <div class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+                    <div class="toast-header">
+                        <strong class="mr-auto toast-title">Toast Title</strong>
+                        <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="toast-body">
+                        Some Toast Body      
+                    </div>
+              </div>
+            </div>
+        </div>
+
       </div>
     </div>
 
@@ -83,22 +102,40 @@
     <script src="assets/plugins/theia-sticky-sidebar/theia-sticky-sidebar.js"></script>
 
     <script src="assets/js/script.js"></script>
+        <script>
+      $('.aside-module-name').text('Profile');
+      $('#profileLink').removeClass('text-dark').addClass('active').addClass('text-white');
+    </script>
     <script>
+      const getTimeBetweenDates = (startDate, endDate) => {
+        const sDate = new Date(startDate);
+        const eDate = new Date(endDate);
+        let year = eDate.getFullYear() - sDate.getFullYear();
+        let month = eDate.getMonth() - sDate.getMonth();
+        if (month < 0) {
+          year -= 1;
+          month += 11;
+        }
+        return `${year} years, ${month + 1} months`;
+      };
       // $('#employeeDetails').click((event) => {
       //   event.preventDefault();
-        // const active = $('#employeeDetails').parent().siblings('.active');
-        // active.addClass('button-6').removeClass('button-5 active');
-        // active.children('a').addClass('text-dark').removeClass('text-white');
-        // $('#employeeDetails').parent().addClass('button-5 active').removeClass('button-6');
-        // $('#employeeDetails').addClass('text-white').removeClass('text-dark');
-        $(document).ready(() => {
+      // const active = $('#employeeDetails').parent().siblings('.active');
+      // active.addClass('button-6').removeClass('button-5 active');
+      // active.children('a').addClass('text-dark').removeClass('text-white');
+      // $('#employeeDetails').parent().addClass('button-5 active').removeClass('button-6');
+      // $('#employeeDetails').addClass('text-white').removeClass('text-dark');
+      $(document).ready(() => {
         $.ajax({
-          type: 'GET',
-          url: '/employees/513a15a5-6a65-4ce9-9b31-95565faee161',
+          type: "GET",
+          url: `/employees/${localStorage.getItem('id')}`,
           success: (result) => {
-            console.log(result);
             const { data } = result;
-            $('#displayEmployeeDetails').append(
+            const totalExp = getTimeBetweenDates(
+              data.careerStartDate,
+              new Date()
+            );
+            $("#displayEmployeeDetails").append(
               `<div class="col-xl-4 col-lg-6 col-md-6 d-flex" data-employee-id=${data.id}>
                 <div class="card flex-fill ctm-border-radius shadow-sm grow">
                   <div class="card-header">
@@ -121,28 +158,14 @@
                       <span class="text-primary">Gender :</span> ${data.gender}
                     </p>
                     <p class="card-text mb-3">
-                      <span class="text-primary">DOB :</span> ${data.DOB}
+                      <span class="text-primary">DOB :</span> ${data.DOB.split('T')[0]}
                     </p>
                     <p class="card-text mb-3">
-                      <span class="text-primary">Joining Date :</span> ${data.joiningDate}
+                      <span class="text-primary">Joining Date :</span> ${data.joiningDate.split('T')[0]}
                     </p>
                     <p class="card-text mb-3">
-                      <span class="text-primary">Total Exp :</span> ${data.totalExp}
+                      <span class="text-primary">Total Exp :</span> ${totalExp}
                     </p>
-                    <a
-                      href="javascript:void(0)"
-                      class="btn btn-theme ctm-border-radius text-white btn-sm"
-                      data-toggle="modal"
-                      data-target="#add_basicInformation"
-                      ><i class="fa fa-plus" aria-hidden="true"></i
-                    ></a>
-                    <a
-                      href="javascript:void(0)"
-                      class="btn btn-theme ctm-border-radius text-white btn-sm"
-                      data-toggle="modal"
-                      data-target="#edit_basicInformation"
-                      ><i class="fa fa-pencil" aria-hidden="true"></i
-                    ></a>
                   </div>
                 </div>
               </div>
@@ -182,20 +205,6 @@
                     <p class="card-text mb-3">
                       <span class="text-primary">Coutry : </span>${data.EmployeeContact.country}
                     </p>
-                    <a
-                      href="javascript:void(0)"
-                      class="btn btn-theme ctm-border-radius text-white btn-sm"
-                      data-toggle="modal"
-                      data-target="#add_Contact"
-                      ><i class="fa fa-plus" aria-hidden="true"></i
-                    ></a>
-                    <a
-                      href="javascript:void(0)"
-                      class="btn btn-theme ctm-border-radius text-white btn-sm"
-                      data-toggle="modal"
-                      data-target="#edit_Contact"
-                      ><i class="fa fa-pencil" aria-hidden="true"></i
-                    ></a>
                   </div>
                 </div>
               </div>
@@ -243,7 +252,16 @@
                 </div>
               </div>`
             );
-          }
+          },
+          error: (error) => {
+            $('.toast-header').addClass('bg-danger').addClass('text-dark');
+              $('.toast-title').text('Profile');
+              $('.toast-body').text(error.responseJSON.errorMessage);
+              $('.toast').toast({
+                delay: 4000,
+              });
+              $('.toast').toast('show');
+          },
         });
       });
     </script>

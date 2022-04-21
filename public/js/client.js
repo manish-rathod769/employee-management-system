@@ -1,7 +1,37 @@
 /* eslint-disable no-unused-expressions */
-/* eslint-disable no-alert */
 /* eslint-disable no-restricted-globals */
 /* eslint-disable no-unused-vars */
+
+const displayError = (err) => {
+  $('#message-body').removeClass('d-none');
+  $('#message-body').html(`
+    <div class="card shadow-sm ctm-border-radius" id="error-body">
+      <div class="card-body d-flex justify-content-between">
+        <p class='text-danger font-weight-bold'>${err}</p>
+      </div>
+    </div>
+  `);
+  setTimeout(() => {
+    $('#message-body').html('');
+    $('#message-body').addClass('d-none');
+  }, 5000);
+}
+
+const displaySuccessMessage = (message) => {
+  $('#message-body').removeClass('d-none');
+  $('#message-body').html(`
+    <div class="card shadow-sm ctm-border-radius" id="error-body">
+      <div class="card-body d-flex justify-content-between">
+        <p class='text-success font-weight-bold'><b>${message}</b></p>
+      </div>
+    </div>
+  `);
+  setTimeout(() => {
+    $('#message-body').html('');
+    $('#message-body').addClass('d-none');
+    viewClientWithPagination();
+  }, 5000);
+}
 
 const hideShowField = (fieldsToBeHide, fieldsToBeShown) => {
   fieldsToBeHide.forEach((field) => {
@@ -10,6 +40,7 @@ const hideShowField = (fieldsToBeHide, fieldsToBeShown) => {
   fieldsToBeShown.forEach((field) => {
     $(field).css('display', 'block');
   });
+  $('#client-register-form')[0].reset();
 };
 
 const populateCityNames = (state, flag) => {
@@ -65,7 +96,7 @@ const clientDetails = (clientId) => {
       $('#client-edit-submit').val(resData.data.id);
     },
     error: (resData) => {
-      alert(resData.responseJSON.errorMessage);
+      displayError(resData.responseJSON.errorMessage);
       hideShowField(['#all-client', '#clients-add-div', '#clients-view-div'], ['#add-client', '#pagination', '#clients-data-body']);
     },
   });
@@ -81,7 +112,7 @@ const fetchClientData = (index) => {
     url: `/getClients?page=${index}&count=${recordCount}&sortBy=${sortBy}&sortOrder=${sortOrder}&searchWord=${searchWord}`,
     method: 'GET',
     error: (resData) => {
-      alert(resData.responseJSON.errorMessage);
+      displayError(resData.responseJSON.errorMessage);
       $('#search-by').val('');
     },
     success: (resData) => {
@@ -135,7 +166,7 @@ const fetchClientData = (index) => {
           `);
         }
       } else {
-        alert(resData.errorMessage);
+        displayError(resData.responseJSON.errorMessage);
       }
     },
   });
@@ -236,11 +267,10 @@ if (('#client-register-form').length) {
         method: 'POST',
         data: clientDataObj,
         success: () => {
-          alert('Client Data Added Successfully...');
-          viewClientWithPagination();
+          displaySuccessMessage('Client Data Added Successfully...');
         },
         error: (resData) => {
-          alert(resData.responseJSON.errorMessage);
+          displayError(resData.responseJSON.errorMessage);
         },
       });
     },
@@ -304,11 +334,11 @@ if (('#client-edit-form').length) {
         method: 'PUT',
         data: clientDataObj,
         success: () => {
-          alert('Client Data Updated Successfully...');
-          viewClientWithPagination();
+          // alert('Client Data Updated Successfully...');
+          displaySuccessMessage('Client Data Updated Successfully...');
         },
         error: (resData) => {
-          alert(resData.responseJSON.errorMessage);
+          displayError(resData.responseJSON.errorMessage);
         },
       });
     },

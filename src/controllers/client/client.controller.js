@@ -1,7 +1,7 @@
 import { v4 as uuidv4 } from 'uuid';
 import { Op } from 'sequelize';
 import { successResponse, errorResponse } from '../../helpers/index';
-import { Client } from '../../models';
+import { Client, ProjectEmployee, ProjectClient } from '../../models';
 
 export const addNewClient = async (req, res) => {
   try {
@@ -39,14 +39,64 @@ export const getAllClient = async (req, res) => {
     const sortBy = req.query.sortBy || 'name';
     const sortOrder = req.query.sortOrder || 'ASC';
     const searchWord = req.query.searchWord || '';
+    
+    // Clients Data for ADMIN or HR
+    if (['ADMIN', 'HR'].includes(req.user.role)) {
+      // Required all clients data for dropdown
+      if(Boolean(req.query.all)) {
+        const allClients = await Client.findAll({ where: { isArchived: false } });
+        return successResponse(req, res, allClients, 500);
+      }
+      // Clients data with pagination 
+      else{
+        const allClients = await Client.findAll({
+          where: { [Op.or]: [{ name: { [Op.iLike]: `%${searchWord}%` } }, { email: { [Op.iLike]: `%${searchWord}%` } }, { slackId: { [Op.iLike]: `%${searchWord}%` } }, { city: { [Op.iLike]: `%${searchWord}%` } }, { state: { [Op.iLike]: `%${searchWord}%` } }, { country: { [Op.iLike]: `%${searchWord}%` } }, { organization: { [Op.iLike]: `%${searchWord}%` } }] }, attributes: ['id', 'name', 'email', 'slackId', 'organization'], order: [[`${sortBy}`, `${sortOrder}`]], offset: (page - 1) * count, limit: count,
+        });
+        const totalCount = await Client.findAll({ where: { [Op.or]: [{ name: { [Op.iLike]: `%${searchWord}%` } }, { email: { [Op.iLike]: `%${searchWord}%` } }, { slackId: { [Op.iLike]: `%${searchWord}%` } }, { city: { [Op.iLike]: `%${searchWord}%` } }, { state: { [Op.iLike]: `%${searchWord}%` } }, { country: { [Op.iLike]: `%${searchWord}%` } }, { organization: { [Op.iLike]: `%${searchWord}%` } }] } });
+    
+        allClients.push({ totalCount: totalCount.length });
+        return successResponse(req, res, allClients, 200);
+      }
+    }
+    // Clients Data for PM 
+    else if (req.user.role === 'PM'){
+      // Project's ProjectsId which are allocated to PM
+      let projectsId = await ProjectEmployee.findAll({ 
+        where: { employeeId: req.user.id },
+        attributes: ['projectId'],
+      });
+      projectsId = projectsId.map(elem => elem.projectId);
+      
+      // Client's client id which are associated with project
+      let clientsId = await ProjectClient.findAll({
+        where: { projectId: projectsId },
+      });
+      clientsId = clientsId.map(elem => elem.clientId);
 
-    const allClients = await Client.findAll({
-      where: { [Op.or]: [{ name: { [Op.iLike]: `%${searchWord}%` } }, { email: { [Op.iLike]: `%${searchWord}%` } }, { slackId: { [Op.iLike]: `%${searchWord}%` } }, { city: { [Op.iLike]: `%${searchWord}%` } }, { state: { [Op.iLike]: `%${searchWord}%` } }, { country: { [Op.iLike]: `%${searchWord}%` } }, { organization: { [Op.iLike]: `%${searchWord}%` } }] }, attributes: ['id', 'name', 'email', 'slackId', 'organization'], order: [[`${sortBy}`, `${sortOrder}`]], offset: (page - 1) * count, limit: count,
-    });
-    const totalCount = await Client.findAll({ where: { [Op.or]: [{ name: { [Op.iLike]: `%${searchWord}%` } }, { email: { [Op.iLike]: `%${searchWord}%` } }, { slackId: { [Op.iLike]: `%${searchWord}%` } }, { city: { [Op.iLike]: `%${searchWord}%` } }, { state: { [Op.iLike]: `%${searchWord}%` } }, { country: { [Op.iLike]: `%${searchWord}%` } }, { organization: { [Op.iLike]: `%${searchWord}%` } }] } });
+      // Client's Data
+      const clientsData = await Client.findAll({
+        where: { 
+          [Op.and]: [{ id: clientsId }, { [Op.or]: [{ name: { [Op.iLike]: `%${searchWord}%` } }, { email: { [Op.iLike]: `%${searchWord}%` } }, { slackId: { [Op.iLike]: `%${searchWord}%` } }, { city: { [Op.iLike]: `%${searchWord}%` } }, { state: { [Op.iLike]: `%${searchWord}%` } }, { country: { [Op.iLike]: `%${searchWord}%` } }, { organization: { [Op.iLike]: `%${searchWord}%` } }] }],
+        },
+        attributes: ['id', 'name', 'email', 'slackId', 'organization'],
+        distinct: true,
+        order: [[`${sortBy}`, `${sortOrder}`]],
+        offset: (page - 1) * count,
+        limit: count,
+      })
 
-    allClients.push({ totalCount: totalCount.length });
-    successResponse(req, res, allClients, 200);
+      // Pagination Details
+      const totalCount = await Client.findAll({
+        where: { 
+          [Op.and]: [{ id: clientsId }, { [Op.or]: [{ name: { [Op.iLike]: `%${searchWord}%` } }, { email: { [Op.iLike]: `%${searchWord}%` } }, { slackId: { [Op.iLike]: `%${searchWord}%` } }, { city: { [Op.iLike]: `%${searchWord}%` } }, { state: { [Op.iLike]: `%${searchWord}%` } }, { country: { [Op.iLike]: `%${searchWord}%` } }, { organization: { [Op.iLike]: `%${searchWord}%` } }] }],
+        },
+        attributes: ['id', 'name', 'email', 'slackId', 'organization'],
+        distinct: true,
+      });
+      clientsData.push({ totalCount: totalCount.length });
+      return successResponse(req, res, clientsData, 200);
+    }
+    
   } catch (error) {
     errorResponse(req, res, error.message, 500, error);
   }

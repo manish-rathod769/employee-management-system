@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -29,7 +30,7 @@
         <div class="dot"></div>
       </div>
     </div>
-    
+
     <div class="inner-wrapper login-body">
       <div class="login-wrapper">
         <div class="container">
@@ -37,13 +38,18 @@
             <div class="login-left">
               <img class="img-fluid" src="/assets/img/logo.png" alt="Logo" />
             </div>
-            <div class="login-right d-flex flex-column justify-content-around">
-              <div class="d-flex flex-column text-center">
-                <p class="text-danger font-weight-bold display-3">404</p>
-                <h2 class="text-danger mt-3">Page Not Found !!!</h2>
-              </div>
-              <div>
-                <p class="btn btn-theme button-1 text-white ctm-border-radius p-2 add-person ctm-btn-padding" onclick="history.back()">Back</p>
+            <div class="login-right">
+              <div class="login-right-wrap text-center">
+              <% if (error) { %>
+                <h1 class="text-danger"><%= error %></h1>
+              <% } else { %>
+                <h1 class="text-success"><%= message %></h1>
+              <% }
+                if (route) { %>
+                <a href="<%= route %>" class="btn btn-theme button-1 text-white ctm-border-radius p-2 add-person ctm-btn-padding mt-5"><%= text %></a>
+              <% }else { %>
+                <p class="btn btn-theme button-1 text-white ctm-border-radius p-2 add-person ctm-btn-padding mt-5" onclick="history.back()"><%= text %></p>
+              <% } %>
               </div>
             </div>
           </div>
@@ -65,5 +71,10 @@
     <script src="/assets/plugins/select2/select2.min.js"></script>
 
     <script src="/assets/js/script.js"></script>
+    <script>
+      if('<%- message %>'){
+        localStorage.clear();
+      }
+    </script>
   </body>
 </html>

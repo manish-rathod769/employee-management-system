@@ -14,6 +14,14 @@ module.exports = {
           updatedAt: new Date(),
         },
         {
+          employeeId: '483f371d-7768-43cd-81c1-ad4ba8b40c52',
+          previousEmployer: 'softCom',
+          employerAddress: 'ahmedabad, gujatat',
+          workingTime: '5 years 6 month',
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
+        {
           employeeId: '8ccf51cb-d271-4ba9-bb2d-a59702052e55',
           previousEmployer: 'infex',
           employerAddress: 'vadodara, gujatat',

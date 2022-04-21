@@ -103,6 +103,22 @@
 
 
 if (localStorage.getItem('avatar')) {
-    $('#employee-avatar-header, #employee-avatar-aside').attr('src', localStorage.getItem('avatar'));
-    $('#employee-name-aside').text(localStorage.getItem('name') || 'user');
+    $('.employee-avatar-header, #employee-avatar-aside, .employee-avatar-admin' ).attr('src', localStorage.getItem('avatar'));
 }
+if (localStorage.getItem('name')) {
+    let name = localStorage.getItem('name');
+    name = name.charAt(0).toUpperCase() + name.slice(1);
+    $('.employee-name-aside, .header-name-admin').text(name);
+}
+
+$('#asideLeave, #headerLeave').on('cick', (event) => {
+    event.preventDefault();
+    const path = window.location.pathname.split('/')[2];
+    window.location = `/employee/${localStorage.getItem('id')
+}/leave`;
+});
+
+$('#change-password').on('cick', (event) => {
+    event.preventDefault();
+    window.location = `/employee/${localStorage.getItem('id')}/change-password`
+});

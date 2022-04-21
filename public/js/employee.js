@@ -1,28 +1,32 @@
-const compressImage = (source_img_base64, quality, maxWidth) => {
-  const mime_type = "image/jpeg";
-  const source_img_obj = new Image();
-  source_img_obj.src = source_img_base64;
-  source_img_obj.height = 1000;
-  source_img_obj.width = 1000;
-  maxWidth = maxWidth || 1000;
-  const natW = source_img_obj.naturalWidth;
-  const natH = source_img_obj.naturalHeight;
-  const ratio = natH / natW;
-  if (natW > maxWidth) {
-    natW = maxWidth;
-    natH = ratio * maxWidth;
-  }
-
-  let cvs = document.createElement('canvas');
-  cvs.width = natW;
-  cvs.height = natH;
-
-  const ctx = cvs.getContext("2d").drawImage(source_img_obj, 0, 0, natW, natH);
-  const newImageData = cvs.toDataURL(mime_type, (quality || 60) / 100);
-  const result_image_obj = new Image();
-  result_image_obj.src = newImageData;
-  return result_image_obj;
-}
+// const compressImage = (blobURL, quality, maxWidth) => {
+//   const mime_type = "image/jpeg";
+//   const img = new Image();
+//   img.src = blobURL;
+//   img.onload = function(event) {
+//     window.URL.revokeObjectURL(blobURL);
+//   }
+//   // source_img_obj.src = source_img_base64;
+//   // source_img_obj.height = 1000;
+//   // source_img_obj.width = 1000;
+//   maxWidth = maxWidth || 1000;
+//   const natW = img.naturalWidth;
+//   const natH = img.naturalHeight;
+//   const ratio = natH / natW;
+//   if (natW > maxWidth) {
+//     natW = maxWidth;
+//     natH = ratio * maxWidth;
+//   }
+//   let canvas = document.createElement('canvas');
+//   canvas.width = natW;
+//   canvas.height = natH;
+//   const ctx = canvas.getContext("2d").drawImage(img, 0, 0, natW, natH);
+//   const newImageData = canvas.toDataURL(mime_type, (60 / 100));
+//   const result_image_obj = new Image();
+//   result_image_obj.src = newImageData;
+//   console.log(ctx);
+//   $('.avatar-preview').parent().append(result_image_obj);
+//   return result_image_obj;
+// }
 
 const getTimeBetweenDates = (startDate, endDate) => {
   const sDate = new Date(startDate);
@@ -105,11 +109,23 @@ const deleteButton = (id, name) => {
         id: id,
       },
       success: (data) => {
-        console.log(data);
+        $('.toast-header').removeClass('bg-danger').addClass('bg-success').addClass('text-dark');
+        $('.toast-title').text('Employee Delete');
+        $('.toast-body').text('employee deleted successfully!');
+        $('.toast').toast({
+          delay: 5000,
+        });
+        $('.toast').toast('show');
         displayEmployee();
       },
       error: (error) => {
-        console.log(error);
+        $('.toast-header').removeClass('bg-success').addClass('bg-danger').addClass('text-dark');
+        $('.toast-title').text('Employee Delete');
+        $('.toast-body').text(error.responseJSON.errorMessage);
+        $('.toast').toast({
+          delay: 5000,
+        });
+        $('.toast').toast('show');
       }
     });
   });
@@ -198,7 +214,13 @@ const editButton = (id) => {
     },
     error: (error) => {
       // display toast for error
-      console.log(error);
+      $('.toast-header').removeClass('bg-success').addClass('bg-danger').addClass('text-dark');
+      $('.toast-title').text('Employee Delete');
+      $('.toast-body').text(error.responseJSON.errorMessage);
+      $('.toast').toast({
+        delay: 4000,
+      });
+      $('.toast').toast('show');
     }
   });
 };
@@ -236,15 +258,15 @@ const displayEmployee = () => {
   const search = $('#searchKeyword').val();
   if (search) {
     query = `${query}&search=${search}`;
-    console.log(query);
+    // console.log(query);
   }
 
-  console.log(order, limit);
+  // console.log(order, limit);
   $.ajax({
     type: 'GET',
     url: `/employees?${query}`,
     success: (result) => {
-      //console.log(result.data);
+      // console.log(result);
       $('#previousEmployeeRecord').removeClass('disabled');
       $('#nextEmployeeRecord').removeClass('disabled');
       if (!result.data.pre) {
@@ -255,17 +277,15 @@ const displayEmployee = () => {
       }
       result.data.employee.forEach((element, index) => {
         // console.log(element);
-        const tech = element.EmployeeAcademic?.knownTech || 'tech';
-        console.log(element.avatar);
         const avatar = element.avatar.split('/').length > 2 ? element.avatar : "assets/img/profiles/img-6.jpg";
-        const tech = element.EmployeeAcademic.knownTech || 'tech';
+        const tech = element.EmployeeAcademic?.knownTech || 'tech';
         $('#displayEmployeeDetails').append(
           `<div class="col-md-6 col-lg-6 col-xl-4" id="employee-card-${element.id}">
             <div class="card widget-profile">
               <div class="card-body">
                 <div class="pro-widget-content text-center">
                   <div class="profile-info-widget">
-                    <a href="employment.html" class="booking-doc-img">
+                    <a class="booking-doc-img">
                       <img
                         src=${avatar}
                         alt="User Image"
@@ -488,7 +508,13 @@ const enlargeEmployee = (event, id, index) => {
       }, 1000);
     },
     error: (error) => {
-      console.log(error);
+      $('.toast-header').removeClass('bg-success').addClass('bg-danger').addClass('text-dark');
+      $('.toast-title').text('Employee Details');
+      $('.toast-body').text(error.responseJSON.errorMessage);
+      $('.toast').toast({
+        delay: 5000,
+      });
+      $('.toast').toast('show');
     }
   });
 };

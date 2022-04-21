@@ -1,18 +1,24 @@
 import express from 'express';
 import * as employeeController from '../controllers/employee/employee.controller';
 import * as employeeValidator from '../controllers/employee/employee.validator';
+import { getPoc, renderPocView, addPoc } from '../controllers/setting/poc.controller';
 import { upload, uploadUpdateAvatar } from '../helpers/index';
+import verifyCookie from '../middlewares/auth';
+import * as roleCheck from '../middlewares/role';
 
 const router = express.Router();
 
-router.get('/', employeeController.renderEmployeeView);
-router.get('/add-employee', employeeController.renderAddEmployeeView);
+router.get('/', verifyCookie, roleCheck.role_Admin_PM_HR(true), employeeController.renderEmployeeView);
+// router.get('/', employeeController.renderEmployeeView);
+// router.get('/add-employee', verifyCookie, roleCheck.roleAdmin, employeeController.renderAddEmployeeView);
 
-router.post('/employees', upload.single('avatar'), employeeValidator.employeeValidate, employeeController.addEmployee);
-router.get('/employees', employeeController.getEmployee);
-router.get('/employees/:employeeId', employeeController.getEmployeeOne);
-router.put('/employees/:employeeId', uploadUpdateAvatar.single('avatarUpdate'), employeeValidator.employeeValidate, employeeController.updateEmployee);
-router.delete('/employees', employeeController.deleteEmployee);
+router.post('/employees', verifyCookie, roleCheck.roleAdmin(false), upload.single('avatar'), employeeValidator.employeeValidate, employeeController.addEmployee);
+// router.post('/employees', upload.single('avatar'), employeeValidator.employeeValidate, employeeController.addEmployee);
+// router.get('/employees', employeeController.getEmployee);
+router.get('/employees', verifyCookie, roleCheck.role_Admin_PM_HR(false), employeeController.getEmployee);
+router.get('/employees/:employeeId', verifyCookie, employeeController.getEmployeeOne);
+router.put('/employees/:employeeId', verifyCookie, roleCheck.roleAdmin(false), uploadUpdateAvatar.single('avatarUpdate'), employeeValidator.employeeValidate, employeeController.updateEmployee);
+router.delete('/employees', verifyCookie, roleCheck.roleAdmin(false), employeeController.deleteEmployee);
 // router.get('/employees/search', );
 
 router.get('/login', employeeController.loginView);
@@ -20,16 +26,22 @@ router.post('/login', employeeValidator.loginValidate, employeeController.loginE
 router.get('/forgot-password', employeeController.forgotPasswordView);
 router.post('/forgot-password', employeeController.forgotPassword);
 // router.patch('/employees/:employeeId', );
-router.get('/employee/:employeeId', employeeController.renderEmployee);
-router.get('/employee/:employeeId/change-password', employeeController.changePasswordView);
-router.post('/employee/:employeeId/change-password', employeeValidator.passwordValidate, employeeController.changePassword);
+router.get('/employee/:employeeId', verifyCookie, roleCheck.roleDEV(true), employeeController.renderEmployee);
+router.get('/employee/:employeeId/change-password', verifyCookie, employeeController.changePasswordView);
+router.post('/employee/:employeeId/change-password', verifyCookie, employeeValidator.passwordValidate, employeeController.changePassword);
 // protected, check for employee login and empoyee side route
-router.get('/profile', employeeController.renderEmployeeProfile);
+router.get('/profile', verifyCookie, roleCheck.role_Admin_PM_HR(true), employeeController.renderEmployeeProfile);
 
 
 // general settings-route
-router.get('/technologies', employeeController.getTechnology);
-router.post('/technologies', employeeController.addTechnology);
-router.get('/setting', employeeController.settingView);
+// router.get('/technologies', employeeController.getTechnology);
+router.get('/technologies', verifyCookie, roleCheck.role_Admin_PM_HR(false), employeeController.getTechnology);
+router.post('/technologies', verifyCookie, roleCheck.roleAdmin(false), employeeController.addTechnology);
+router.get('/setting', verifyCookie, roleCheck.role_Admin_PM_HR(true), employeeController.settingView);
+router.get('/logout', verifyCookie, employeeController.logOut);
 
+router.get('/employee/:employeeId/poc', verifyCookie, roleCheck.roleDEV(true), renderPocView);
+router.get('/poc', verifyCookie, roleCheck.role_All(false), getPoc); // for perticular Employee POC dynaminc(possibility)
+router.post('/poc', verifyCookie, roleCheck.roleAdmin(false), addPoc);
+router.put('/poc', verifyCookie, roleCheck.roleAdmin(false), );
 module.exports = router;

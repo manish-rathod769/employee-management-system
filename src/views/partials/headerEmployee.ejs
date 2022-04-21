@@ -16,7 +16,7 @@
                     <div class="user-info align-right dropdown d-inline-block header-dropdown">
                       <a href="javascript:void(0)" data-toggle="dropdown" class=" menu-style dropdown-toggle">
                         <div class="user-avatar d-inline-block">
-                          <img src="/assets/img/profiles/img-6.jpg" alt="user avatar" id="employee-avatar-header" class="rounded-circle img-fluid"
+                          <img src="/assets/img/profiles/img-6.jpg" alt="user avatar" class="employee-avatar-header rounded-circle img-fluid"
                             width="55">
                         </div>
                       </a>
@@ -26,6 +26,14 @@
                             <span class="lnr lnr-power-switch mr-3"></span>
                             <span class="media-body text-truncate">
                               <span class="text-truncate">Logout</span>
+                            </span>
+                          </span>
+                        </a>
+                        <a class="dropdown-item p-2" id="change-password" href="/">
+                          <span class="media align-items-center">
+                            <span class="lnr lnr-lock mr-3"></span>
+                            <span class="media-body text-truncate">
+                              <span class="text-truncate">Change password</span>
                             </span>
                           </span>
                         </a>
@@ -44,14 +52,14 @@
                   <div class="user-info align-center bg-theme text-center">
                     <a href="javascript:void(0)" class="d-block menu-style text-white">
                       <div class="user-avatar d-inline-block mr-3">
-                        <img src="/assets/img/profiles/img-6.jpg" alt="user avatar" id="employee-avatar-header" class="rounded-circle img-fluid"
+                        <img src="/assets/img/profiles/img-6.jpg" alt="user avatar" class="employee-avatar-header rounded-circle img-fluid"
                           width="55">
                       </div>
                     </a>
                   </div>
                   <hr>
                   <div class="user-menu-items px-3 m-0">
-                    <a class="p-2" href="/employees/:eid/profile">
+                    <a class="p-2" id="headerProfile" href="/employees/:eid/profile">
                       <span class="media align-items-center">
                         <span class="lnr lnr-user mr-3"></span>
                         <span class="media-body text-truncate text-left">
@@ -59,7 +67,7 @@
                         </span>
                       </span>
                     </a>
-                    <a class="p-2" href="/employees/:eid/projects">
+                    <a class="p-2" id="headerProjects" href="/employees/:eid/projects">
                       <span class="media align-items-center">
                         <span class="lnr lnr-chart-bars mr-3"></span>
                         <span class="media-body text-truncate text-left">
@@ -67,7 +75,7 @@
                         </span>
                       </span>
                     </a>
-                    <a class="p-2" href="/employees/:eid/pocs">
+                    <a class="p-2" id="headerPocs" href="/employees/:eid/pocs">
                       <span class="media align-items-center">
                         <span class="lnr lnr-users mr-3"></span>
                         <span class="media-body text-truncate text-left">
@@ -75,7 +83,7 @@
                         </span>
                       </span>
                     </a>
-                    <a class="p-2" href="/employees/:eid/attendences">
+                    <a class="p-2" id="headerAttendance" href="/employees/:eid/attendences">
                       <span class="media align-items-center">
                         <span class="lnr lnr-pencil mr-3"></span>
                         <span class="media-body text-truncate text-left">
@@ -83,7 +91,7 @@
                         </span>
                       </span>
                     </a>
-                    <a class="p-2" href="/employees/:eid/leaves">
+                    <a class="p-2" id="headerLeave" href="/employees/:eid/leaves">
                       <span class="media align-items-center">
                         <span class="lnr lnr-list mr-3"></span>
                         <span class="media-body text-truncate text-left">

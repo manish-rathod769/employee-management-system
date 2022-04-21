@@ -4,7 +4,7 @@ import { Op, Sequelize } from 'sequelize';
 import * as helpers from '../../helpers';
 import { sendRegistrationMail, sendForgotPasswordMail } from '../../helpers/email.helper';
 import {
-  Employee, EmployeeContact, EmployeeAcademic, EmployeePreWork, Technology,
+  Employee, EmployeeContact, EmployeeAcademic, EmployeePreWork, Technology, ProjectEmployee,
 } from '../../models';
 
 export const addEmployee = async (req, res) => {
@@ -98,7 +98,7 @@ export const addEmployee = async (req, res) => {
     newEmployee.academic = await EmployeeAcademic.create(academicPayload);
     newEmployee.preWork = await EmployeePreWork.create(preWorkPayload);
     // console.log('-----------------------------------');
-    // console.log(newEmployee);
+    // console.log(JSON.stringify(newEmployee,null, 2));
     await helpers.cloudUpload(req.file);
     // send mail
     sendRegistrationMail(payload, password);
@@ -135,57 +135,127 @@ export const getEmployee = async (req, res) => {
           role: 'PM',
         },
       });
-    else if (req.query.role === 'DEV') {
+    } else if (req.query.role === 'DEV') {
       result.employee = await Employee.scope('admin').findAll({
         attributes: ['email', 'id'],
         where: {
           role: 'DEV',
         },
       });
-    }
-    else if (search) {
-      // console.log('here');
-      result.employee = await Employee.scope('admin').findAll(
-        {
-          include: [
-            {
-              model: EmployeeAcademic,
-              attributes: ['knownTech'],
-            }],
-          attributes: ['id', 'firstName', 'lastName', 'role', 'email', 'avatar'],
-          offset: startIndex,
-          limit,
-          order: [
-            ['firstName', order],
-          ],
-          where: {
-            [Op.or]: [
-              { firstName: { [Op.iLike]: `%${search}%` } },
-              { lastName: { [Op.iLike]: `%${search}%` } },
-              { email: { [Op.iLike]: `%${search}%` } },
-              Sequelize.literal(`"Employee"."role"::TEXT ILIKE '%${search}%'`),
+    } else if (req.user.role === 'HR' || req.user.role === 'ADMIN') {
+      if (search) {
+        // console.log('here');
+        result.employee = await Employee.scope('admin').findAll(
+          {
+            include: [
+              {
+                model: EmployeeAcademic,
+                attributes: ['knownTech'],
+              }],
+            attributes: ['id', 'firstName', 'lastName', 'role', 'email', 'avatar'],
+            offset: startIndex,
+            limit,
+            order: [
+              ['firstName', order],
+            ],
+            where: {
+              [Op.or]: [
+                { firstName: { [Op.iLike]: `%${search}%` } },
+                { lastName: { [Op.iLike]: `%${search}%` } },
+                { email: { [Op.iLike]: `%${search}%` } },
+                Sequelize.literal(`"Employee"."role"::TEXT ILIKE '%${search}%'`),
+              ],
+            },
+          },
+        );
+      } else {
+        result.employee = await Employee.scope('admin').findAll(
+          {
+            include: [{ model: EmployeeAcademic, attributes: ['knownTech'] }],
+            attributes: ['id', 'firstName', 'lastName', 'role', 'email', 'avatar'],
+            offset: startIndex,
+            limit,
+            order: [
+              ['firstName', order],
             ],
           },
-        },
-      );
-    } else {
-      result.employee = await Employee.scope('admin').findAll(
+        );
+      }
+    } else if (req.user.role === 'PM') {
+      let projects = await ProjectEmployee.findAll(
         {
-          include: [{ model: EmployeeAcademic, attributes: ['knownTech'] }],
-          attributes: ['id', 'firstName', 'lastName', 'role', 'email', 'avatar'],
-          offset: startIndex,
-          limit,
-          order: [
-            ['firstName', order],
-          ],
-        },
+          where: {
+            employeeId: req.user.id,
+          },
+          attributes: ['projectId'],
+        }
       );
+      projects = projects.map(elem => elem.projectId);
+      if (search) {
+        // console.log('here');
+        result.employee = await Employee.scope('pm').findAll(
+          {
+            include: [
+              {
+                model: ProjectEmployee,
+                where: {
+                  projectId: {
+                    [Op.in]: projects,
+                  },
+                },
+              },
+              {
+                model: EmployeeAcademic,
+                attributes: ['knownTech'],
+                requered: true,
+              }],
+            attributes: ['id', 'firstName', 'lastName', 'role', 'email', 'avatar'],
+            offset: startIndex,
+            limit,
+            distinct: true,
+            order: [
+              ['firstName', order],
+            ],
+            where: {
+              [Op.or]: [
+                { firstName: { [Op.iLike]: `%${search}%` } },
+                { lastName: { [Op.iLike]: `%${search}%` } },
+                { email: { [Op.iLike]: `%${search}%` } },
+                Sequelize.literal(`"Employee"."role"::TEXT ILIKE '%${search}%'`),
+              ],
+            },
+          },
+        );
+      } else {
+        result.employee = await Employee.scope('pm').findAll(
+          {
+            include: [
+              {
+                model: ProjectEmployee,
+                where: { 
+                  projectId: {
+                    [Op.in]: projects
+                  }
+                },
+              }, 
+              { model: EmployeeAcademic, attributes: ['knownTech'] }],
+            attributes: ['id', 'firstName', 'lastName', 'role', 'email', 'avatar'],
+            offset: startIndex,
+            limit,
+            distinct: true,
+            order: [
+              ['firstName', order],
+            ],
+          },
+        );
+      }
     }
     // console.log(totalEmployee);
     // console.log(result);
     res.status(200);
     helpers.successResponse(req, res, result, 200);
   } catch (error) {
+    // console.log(JSON.stringify(error));
     helpers.errorResponse(req, res, 'something went wrong', 500, error.message);
   }
 };
@@ -350,7 +420,7 @@ export const loginEmployee = async (req, res) => {
     }
 
     // Generate Cookie, Store in DB and store in cookie
-    const verifyToken = sign({ email: employee.email, role: employee.role }, process.env.verifyToken, { expiresIn: '1d' });
+    const verifyToken = sign({ id: employee.id, email: employee.email, role: employee.role }, process.env.verifyToken, { expiresIn: '1d' });
     employee.verifyToken = verifyToken;
     await employee.save();
     res.cookie('verifyToken', verifyToken);
@@ -358,6 +428,7 @@ export const loginEmployee = async (req, res) => {
     const result = {
       avatar: employee.avatar,
       name: employee.firstName,
+      id: employee.id,
     };
     // if default password match redirect to set password page.
     if (employee.idDefaultPassword) {
@@ -370,7 +441,12 @@ export const loginEmployee = async (req, res) => {
 
     // redirect to the profile page
     res.status(200);
-    result.redirect = `/employee/${employee.id}`;
+    console.log(employee.role);
+    if (employee.role === 'DEV') {
+      result.redirect = `/employee/${employee.id}`;
+    } else {
+      result.redirect = `/`;
+    }
     return helpers.successResponse(req, res, result, 200);
     // return res.redirect(301, `/employee/${employee.id}`);
   } catch (error) {
@@ -379,6 +455,16 @@ export const loginEmployee = async (req, res) => {
     return res.redirect(301, '/login');
   }
 };
+
+export const logOut = async (req, res) => {
+  try {
+    res.clearCookie('verifyToken');
+    res.status(200);
+    return res.render('message', { error: '', message: 'Logged out successfullt !!!', route: '/login', text: 'Login' });
+  } catch (error) {
+    return helpers.successResponse(req, res, result, 200);
+  }
+}
 
 export const changePassword = async (req, res) => {
   try {
@@ -400,8 +486,10 @@ export const changePassword = async (req, res) => {
     employee.password = encryptedPassword;
     employee.idDefaultPassword = false;
     await employee.save();
+
+    const  result = { redirect: `/login`};
     res.status(200);
-    return helpers.successResponse(req, res, 'password changed successfully!', 201);
+    return helpers.successResponse(req, res, result, 201);
   } catch (error) {
     return helpers.errorResponse(req, res, 'something went wrong', 500, error.message);
   }
@@ -499,7 +587,7 @@ export const renderEmployee = (req, res) => {
 export const loginView = (req, res) => {
   res.status(200);
   console.log(req.locals);
-  return res.render('employee/login');
+  return res.render('employee/login', {error: ''});
 };
 export const forgotPasswordView = (req, res) => {
   res.status(200);

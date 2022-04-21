@@ -1,3 +1,34 @@
+const displayError = (err) => {
+  $('#message-body').removeClass('d-none');
+  $('#message-body').html(`
+    <div class="card shadow-sm ctm-border-radius" id="error-body">
+      <div class="card-body d-flex justify-content-between">
+        <p class='text-danger font-weight-bold'>${err}</p>
+      </div>
+    </div>
+  `);
+  setTimeout(() => {
+    $('#message-body').html('');
+    $('#message-body').addClass('d-none');
+  }, 5000);
+}
+
+const displaySuccessMessage = (message) => {
+  $('#message-body').removeClass('d-none');
+  $('#message-body').html(`
+    <div class="card shadow-sm ctm-border-radius" id="error-body">
+      <div class="card-body d-flex justify-content-between">
+        <p class='text-success font-weight-bold'><b>${message}</b></p>
+      </div>
+    </div>
+  `);
+  setTimeout(() => {
+    $('#message-body').html('');
+    $('#message-body').addClass('d-none');
+    viewProjectsWithPagination();
+  }, 5000);
+}
+
 let projectDetails = projectId => {
   hideShowField(['#projects-add-div', '#add-project', '#pagination', '#projects-data-body'], ['#projects-view-div', '#all-project']);
   $('#action').text('View project');
@@ -34,7 +65,7 @@ let projectDetails = projectId => {
         fetchPM(pms);
       },
       error: (resData) => {
-        console.log(resData);
+        displayError(resData.responseJSON.errorMessage);
       }
     });
 
@@ -48,14 +79,14 @@ let projectDetails = projectId => {
         fetchClient(clients);
       },
       error: (resData) => {
-        console.log(resData);
+        displayError(resData.responseJSON.errorMessage);
       }
     });
 
       // $('#client-edit-submit').val(resData.data.id);
     },
     error: resData => {
-      alert(resData.responseJSON.errorMessage);
+      displayError(resData.responseJSON.errorMessage);
     }
   })
 }
@@ -76,32 +107,38 @@ function formatDate(dateObject) {
 };
 
 let fetchprojectData = (index) => {
+  const sortBy = $("#sort-by").val();
+  const sortOrder = $("#sort-order").val();
+  const searchWord = $("#search-by").val();
   const recordCount = $('#select-record-count').val();
   $.ajax({
-    url: `/fetchproject?page=${index}&count=${recordCount}`,
+    url: `/fetchproject??page=${index}&count=${recordCount}&sortBy=${sortBy}&sortOrder=${sortOrder}&searchWord=${searchWord}`,
     method: 'GET',
     error: (resData) => {
-      console.log(resData);
-      alert(resData.responseJSON.errorMessage);
+      displayError(resData.responseJSON.errorMessage);
     },
     success: (resData) => {
       $('#projects-data').html('');
       if(resData.success){  
-        const paginationDetails = resData.data.pop();
+        const { totalCount } = resData.data.pop();
         $('#action').text('projects');
         $('#all-project').css('display','none');
 
         hideShowField(['#all-project', '#projects-add-div', '#projects-view-div'], ['#add-project', '#pagination', '#projects-data-body']);
 
-        $('#projects-count').text(resData.data.length + paginationDetails.before + paginationDetails.after);
-        (!paginationDetails.before) ? $('#previous').addClass('disabled') : $('#previous').removeClass('disabled');
-        (!paginationDetails.after) ? $('#next').addClass('disabled') : $('#next').removeClass('disabled');
-        
-        $('#previous').attr('data-index', Number(index)-1);
-        $('#next').attr('data-index', Number(index)+1);
+        $('#previous').attr('data-index', Number(index) - 1);
+        $('#next').attr('data-index', Number(index) + 1);
         $('#current').attr('data-index', Number(index));
+        const page = $('#current').attr('data-index');
+        const beforeCount = (page - 1) * Number(recordCount);
+        const afterCount = totalCount - Number(recordCount) - beforeCount;
 
+        // Set pagination oprions
+        $('#clients-count').text(totalCount);
+        (beforeCount <= 0) ? $('#previous').addClass('disabled') : $('#previous').removeClass('disabled');
+        (afterCount <= 0) ? $('#next').addClass('disabled') : $('#next').removeClass('disabled');
         $('#current').text(index);
+
         if(resData.data.length){
           resData.data.forEach( project => {
             $('#projects-data').append(`
@@ -125,18 +162,21 @@ let fetchprojectData = (index) => {
             `);
           });
         }else{
-          alert('No more data found !!!');
+          $('#projects-data').append(`
+            <div class='col-12 text-center'>
+              <p><h4 class='text-danger'>Nothing to show !!!</h4></p>
+            </div>
+          `);
         }
     }else{
-      alert(resData.errorMessage);
+      displayError(resData.responseJSON.errorMessage);
     }
     }
   });
 }
 
 let showThisMuchRecord = () => {
-  const index = $('#current').attr('data-index');
-  fetchprojectData(index);
+  viewProjectsWithPagination();
 }
 
 let hideShowField = (fieldsToBeHide, fieldsToBeShown) => {
@@ -165,8 +205,11 @@ $('#add-project').on('click', () => {
 
 $('#all-project').on('click', () => {
   hideShowField(['#all-project', '#projects-add-div', '#projects-view-div'], ['#projects-data-body', '#pagination', '#add-project']);
-  const index = $('#current').attr('data-index');
-  fetchprojectData(index);
+  viewProjectsWithPagination();
+});
+
+$('#search-by').on('input paste', () => {
+  viewProjectsWithPagination();
 });
 
 if(('#project-add-form').length){
@@ -196,7 +239,7 @@ if(('#project-add-form').length){
   });
 }
 
-let viewClientWithPagination = () => {
+let viewProjectsWithPagination = () => {
   const index = $('#current').attr('data-index');
   fetchprojectData(index);
 }
@@ -220,19 +263,16 @@ $('#project-edit-form').on('submit', (event) => {
   projectDataObj.client = clients;
   projectDataObj.pm = pms;
   projectDataObj.dev = devs;
-  console.log(projectDataObj);
   $.ajax({
     url: `/projects/${projectId}`,
     method: 'PUT',
     data: projectDataObj,
     success: () => {
-      alert('Project data updated successfully...');
-      const index = $('#current').attr('data-index');
-      fetchprojectData(index);
+      displaySuccessMessage('Project Data Updated Successfully...');
+      viewProjectsWithPagination();
     },
     error: (resData) => {
-      console.log(resData);
-      alert(resData.responseJSON.errorMessage);
+      displayError(resData.responseJSON.errorMessage);
     }
   });
 });
@@ -277,23 +317,20 @@ $('#project-add-form').on('submit', (event) => {
     method: 'POST',
     data: projectDataObj,
     success: (res) => {
-      alert('Project Data Added Successfully...');
-      const index = $('#current').attr('data-index');
-      fetchprojectData(index);
+      displaySuccessMessage('Project Data Added Successfully...');
+      viewProjectsWithPagination();
     },
     error: (resData) => {
-      console.log(resData);
-      // alert(resData.errorJSON.errorMessage);
+      displayError(resData.responseJSON.errorMessage);
     }
   });
 }); 
 
 let fetchClient = (clients) => {
   $.ajax({
-    url: '/clients',
+    url: `/getClients?all=${true}`,
     method: 'GET',
     success: (resData) => {
-      resData.data.pop();
       let clientOption = '';
       resData.data.forEach(client => {
         clientOption += (clients.includes(client.id)) ? `<option value=${client.id} selected>${client.email}</option>` : `<option value=${client.id}>${client.email}</option>`;
@@ -302,7 +339,7 @@ let fetchClient = (clients) => {
       $('#client').html(clientOption);
     },
     error: (errData) => {
-      console.log(errData);
+      displayError(resData.responseJSON.errorMessage);
     }
   });
 }
@@ -322,7 +359,7 @@ let fetchPM = (pms) => {
       $('#pm').html(pmOption);
     },
     error: (errData) => {
-      console.log(errData);
+      displayError(resData.responseJSON.errorMessage);
     }
   });
 }
@@ -340,7 +377,7 @@ let fetchDev = (devs) => {
       $('#dev').html(devOption);
     },
     error: (errData) => {
-      console.log(errData);
+      displayError(resData.responseJSON.errorMessage);
     }
   });
 }

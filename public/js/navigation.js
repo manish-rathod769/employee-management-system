@@ -1,30 +1,35 @@
-$('#asideProfile').click((event) => {
+$('#asideProfile, #headerProfile').click((event) => {
   event.preventDefault();
   const path = window.location.pathname.split('/')[2];
   window.location = `/employee/${path}/`;
 });
 
-$('#asideProject').click((event) => {
+$('#asideProjects, #headerProjects').click((event) => {
   event.preventDefault();
   const path = window.location.pathname.split('/')[2];
-  window.location = `/employee/${path}/projects`;
+  console.log('hello');
+  window.location = `/employee/${localStorage.getItem('id')}/projects`;
 });
 
-$('#asideAttendance').click((event) => {
+$('#asideAttendance, #headerAttendance').click((event) => {
   event.preventDefault();
   const path = window.location.pathname.split('/')[2];
-  console.log(path);
-  window.location = `/employee/${path}/attendance`;
+  window.location = `/employee/${localStorage.getItem('id')}/attendance`;
 });
 
-$('#asidePocs').click((event) => {
+$('#asidePocs, #headerPocs').click((event) => {
   event.preventDefault();
   const path = window.location.pathname.split('/')[2];
-  window.location = `/employee/${path}/pocs`;
+  window.location = `/employee/${localStorage.getItem('id')}/poc`;
 });
 
-$('#asideLeave').click((event) => {
+$('#asideLeave, #headerLeave').click((event) => {
   event.preventDefault();
   const path = window.location.pathname.split('/')[2];
-  window.location = `/employee/${path}/leave`;
+  window.location = `/employee/${path}/leave`;    
+});
+
+$('#change-password').click((event) => {
+  event.preventDefault();
+  window.location = `/employee/${localStorage.getItem('id')}/change-password`
 });

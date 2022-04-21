@@ -27,7 +27,7 @@
       <!--  header partials  -->
       <%- include('../partials/headerEmployee'); %>
 
-      <div class="page-wrapper">
+      <div class="page-wrapper position-relative">
         <div class="container-fluid">
           <div class="row">
             <!--  side bar aside tag -->
@@ -124,6 +124,26 @@
             </div>
           </div>
         </div>
+
+      <!-- Toasts -->
+      <div aria-live="polite" aria-atomic="true">
+
+          <!-- Position it -->
+          <div class="fixed-bottom w-25" style="bottom: 2rem; left: 2rem;">
+              <div class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+                  <div class="toast-header">
+                      <strong class="mr-auto toast-title">Toast Title</strong>
+                      <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                      </button>
+                  </div>
+                  <div class="toast-body">
+                      Some Toast Body      
+                  </div>
+            </div>
+          </div>
+      </div>
+
       </div>
     </div>
 
@@ -145,6 +165,8 @@
     <script src="/assets/js/script.js"></script>
     <script src="/assets/js/navigation.js"></script>
     <script>
+        $('.aside-module-name').text('Attendance');
+        $('#asideAttendance').removeClass('text-dark').addClass('active').addClass('text-white');
       const getTotalMinutes = (startTime, endTime) => {
         let newHour = new Date(endTime).getHours() - new Date(startTime).getHours();
         if (newHour < 0) {
@@ -276,26 +298,43 @@
           },
           error: (error) => {
             console.log(error);
+              $('.toast-header').removeClass('bg-danger').addClass('bg-success').addClass('text-dark');
+              $('.toast-title').text('Attendance');
+              $('.toast-body').text('Attendance punch In successfully!');
+              $('.toast').toast({ delay: 4000 });
+              $('.toast').toast('show');
           },
         });
       };
       tableConstructor(null, null);
 
-      const attandanceStartStop = (data) => {
+      const attandanceStartStop = (data, punch) => {
         $.ajax({
           type: "POST",
           url: window.location.pathname,
           data,
           success: function (result) {
             // console.log("result", result.data);
-            tableConstructor(null, null);
+            if (punch) {
+              $('.toast-header').removeClass('bg-warning').addClass('bg-success').addClass('text-dark');
+              $('.toast-title').text('Attendance');
+              $('.toast-body').text('Attendance punch In successfully!');
+              $('.toast').toast({ delay: 4000 });
+              $('.toast').toast('show');
+            } else {
+              $('.toast-header').removeClass('bg-success').addClass('bg-warning').addClass('text-dark');
+              $('.toast-title').text('Attendance');
+              $('.toast-body').text('Attendance punch out successfully!');
+              $('.toast').toast({ delay: 4000 });
+              $('.toast').toast('show');
+              tableConstructor(null, null);
+            }
           },
           error: function (error) {
             $("#error-message").text(error.responseJSON.errorMessage);
             setTimeout(() => {
               $("#error-message").text("");
             }, 2000);
-            console.log("result", error);
           },
         });
       };
@@ -313,14 +352,14 @@
         // $("#startTime").attr('disabled', true);
         attandanceStartStop({
           startDate: new Date(),
-        });
+        }, true);
       };
       const endTimeBtn = () => {
         // $("#startTime").attr('disabled', false);
         // $("#endTime").attr('disabled', true);
         attandanceStartStop({
           endDate: new Date(),
-        });
+        }, false);
       };
     </script>
   </body>

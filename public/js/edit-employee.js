@@ -261,15 +261,28 @@ $('#form-edit-employee').validate({
       processData: false,
       success: (data) => {
         // console.log(data);
+        $('.toast-header').removeClass('bg-danger').addClass('bg-success').addClass('text-dark');
+        $('.toast-title').text('Employee Update');
+        $('.toast-body').text("employee Updated successfully");
+        $('.toast').toast({
+          delay: 5000,
+        });
+        $('.toast').toast('show');
         $('#editEmployeeFormContainer').addClass('d-none');
         $('#employeeDisplayContainer').removeClass('d-none');
-        location.reload();
+        setTimeout(() => window.location.reload(), 3000);
         // show successfull message in toast
       },
       error: (error) => {
         // alert(error.message);
         // console.log(`/employees/${editForm.data('id')}`);
-        console.log(error.responseJSON);
+        $('.toast-header').removeClass('bg-success').addClass('bg-danger').addClass('text-dark');
+        $('.toast-title').text('Employee Register');
+        $('.toast-body').text(error.responseJSON.errorMessage);
+        $('.toast').toast({
+          delay: 5000,
+        });
+        $('.toast').toast('show');
         // show error in toast and reload window
       },
     });
