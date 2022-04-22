@@ -263,7 +263,11 @@ const acceptRejectLeave = async (req, res) => {
       reason: getdata[0].reason,
       status: 'approved',
     };
+<<<<<<< HEAD
     
+=======
+
+>>>>>>> edit: daily Attendance isOnLeave:true(leave)
     var sDate = getdata[0].startDate;
     var eDate = getdata[0].endDate;
     function getDates(d1, d2) {
@@ -327,3 +331,4 @@ module.exports = {
   acceptRejectLeave,
   leaveForm,
 };
+
