@@ -325,7 +325,6 @@ $('#project-add-form').on('submit', (event) => {
     }
   });
 }); 
-
 let fetchClient = (clients) => {
   $.ajax({
     url: `/getClients?all=${true}`,
