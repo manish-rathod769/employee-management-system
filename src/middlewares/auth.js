@@ -36,4 +36,12 @@ const verifyCookie = async (req, res, next) => {
   }
 };
 
-module.exports = verifyCookie;
+const checkAJAX = (req, res, next) => {
+  if (req.xhr) {
+    next();
+  } else {
+    res.redirect(301, '/404');
+  }
+}
+
+module.exports = { verifyCookie, checkAJAX };
