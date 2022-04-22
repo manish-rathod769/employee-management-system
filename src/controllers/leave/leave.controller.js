@@ -152,9 +152,7 @@ const viewOneLeave = async (req, res) => {
   const role = req.user.role;
   if (role === 'DEV') {
     try {
-      console.log(req.params.id)
       const getleave = await Leave.findAll({ where: { id: req.params.id, isArchived: false } });
-      console.log(getleave)
       res.render('view-leavedata', { leavesdata: getleave });
     } catch (e) {
       errorResponse(req, res, e.message, 400, e);

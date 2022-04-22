@@ -13,7 +13,7 @@ import projectRoutes from './src/routes/project.routes';
 import attendanceRoutes from './src/routes/attendance.route';
 import { notFound } from './src/helpers/middleware.notFound';
 
-import routes from './src/routes/leave.route';
+import leaveRoutes from './src/routes/leave.route';
 
 
 import leaveRoutes from './src/routes/leave.route';
