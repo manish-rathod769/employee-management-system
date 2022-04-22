@@ -1,5 +1,3 @@
-<<<<<<< HEAD
-<<<<<<< HEAD
 // const compressImage = (blobURL, quality, maxWidth) => {
 //   const mime_type = "image/jpeg";
 //   const img = new Image();
@@ -29,33 +27,6 @@
 //   $('.avatar-preview').parent().append(result_image_obj);
 //   return result_image_obj;
 // }
-=======
-const compressImage = (source_img_base64, quality, maxWidth) => {
-  const mime_type = "image/jpeg";
-  const source_img_obj = new Image();
-  source_img_obj.src = source_img_base64;
-  source_img_obj.height = 1000;
-  source_img_obj.width = 1000;
-  maxWidth = maxWidth || 1000;
-  const natW = source_img_obj.naturalWidth;
-  const natH = source_img_obj.naturalHeight;
-  const ratio = natH / natW;
-  if (natW > maxWidth) {
-    natW = maxWidth;
-    natH = ratio * maxWidth;
-  }
-
-  let cvs = document.createElement('canvas');
-  cvs.width = natW;
-  cvs.height = natH;
-
-  const ctx = cvs.getContext("2d").drawImage(source_img_obj, 0, 0, natW, natH);
-  const newImageData = cvs.toDataURL(mime_type, (quality || 60) / 100);
-  const result_image_obj = new Image();
-  result_image_obj.src = newImageData;
-  return result_image_obj;
-}
->>>>>>> edit: mail file moved to helpers from helper
 
 const getTimeBetweenDates = (startDate, endDate) => {
   const sDate = new Date(startDate);
@@ -71,12 +42,6 @@ const getTimeBetweenDates = (startDate, endDate) => {
   return `${year} years, ${month + 1} months`;
 };
 
-<<<<<<< HEAD
-=======
-// change view between add employee form and display employee 
->>>>>>> fix: conflicts resolved(leave)
-=======
->>>>>>> edit: mail file moved to helpers from helper
 $('#addEmployeeBtn').click((event) => {
   event.preventDefault();
   $('#addEmployeeFormContainer').removeClass('d-none');
@@ -301,11 +266,7 @@ const displayEmployee = () => {
     type: 'GET',
     url: `/employees?${query}`,
     success: (result) => {
-<<<<<<< HEAD
       // console.log(result);
-=======
-      console.log(result);
->>>>>>> edit: mail file moved to helpers from helper
       $('#previousEmployeeRecord').removeClass('disabled');
       $('#nextEmployeeRecord').removeClass('disabled');
       if (!result.data.pre) {
@@ -316,15 +277,7 @@ const displayEmployee = () => {
       }
       result.data.employee.forEach((element, index) => {
         // console.log(element);
-<<<<<<< HEAD
-<<<<<<< HEAD
         const avatar = element.avatar.split('/').length > 2 ? element.avatar : "assets/img/profiles/img-6.jpg";
-=======
->>>>>>> fix: conflicts resolved(leave)
-=======
-        console.log(element.avatar);
-        const avatar = element.avatar.split('/').length > 2 ? element.avatar : "assets/img/profiles/img-6.jpg";
->>>>>>> edit: mail file moved to helpers from helper
         const tech = element.EmployeeAcademic?.knownTech || 'tech';
         $('#displayEmployeeDetails').append(
           `<div class="col-md-6 col-lg-6 col-xl-4" id="employee-card-${element.id}">
