@@ -287,10 +287,9 @@ $('#project-add-form').on('submit', (event) => {
     }
   });
 }); 
-
 let fetchClient = (clients) => {
   $.ajax({
-    url: '/clients',
+    url: '/getClients',
     method: 'GET',
     success: (resData) => {
       resData.data.pop();

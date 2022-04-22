@@ -1,8 +1,7 @@
 import { v4 as uuidv4 } from 'uuid';
 import { errorResponse, successResponse } from '../../helpers';
 import { Leave } from '../../models';
-import transporter from '../../helper/mail';
-import { showCompletionScript } from 'yargs';
+import transporter from '../../helpers/mail';
 
 const leaveForm = async (req, res) => {
   res.render('add-leave', { success: '' });
@@ -25,14 +24,14 @@ const addLeave = async (req, res) => {
     const mailOptions = {
       from: "noreply_mail<noreply@someemail.com>", // system address
       // to: ['apexapatel27321@gmail.com','chavan.vinayak017@gmail.com'], // list of pm
-      to: "apexasavaliya27321@gmail.com",
+      to: "apexapatel27321@gmail.com",
       subject: 'Leave Request',
       text: `Employee ${leavedata.employeeId}, wants to take leave from ${leavedata.startDate},
       to ${leavedata.endDate} due to ${reason}`,
     };
     transporter.sendMail(mailOptions, (err, info) => {
       if (err) {
-        errorResponse(req, res, e.message, 400, err);
+        errorResponse(req, res, err.message, 400, err);
       } else {
         successResponse(req, res, getleave, 200);
       }

@@ -10,7 +10,7 @@ const addProject = async (req, res) => {
       projectId: uuidv4(),
       name,
       type,
-      status: "NotStarted",
+      status: 'Not Started',
       probable_end_date,
     };
     const newProject = await Project.create(payload);
