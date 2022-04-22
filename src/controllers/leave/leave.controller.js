@@ -185,17 +185,11 @@ const updateLeave = async (req, res) => {
     };
     const getleave = await Leave.update(leavedata, { where: { id: req.params.id } });
     let projectIds = await ProjectEmployee.findAll({ where: { employeeId: devId } });
-    // console.log(projectIds);
     projectIds = projectIds.map(element => element.projectId);
-    // console.log(projectIds);
     let empIds = await ProjectEmployee.findAll({ where: { projectId: projectIds } });
-    //  console.log(empIds);
     empIds = empIds.map(element => element.employeeId);
-    //  console.log(empIds);
     let roleData = await Employee.findAll({ where: { id: empIds, role: 'PM' } })
-    //  console.log(roleData);
     roleData = roleData.map(element => element.email);
-    //  console.log(roleData);
     roleData.forEach(element => {
       if (leavedata.isArchived != 'on') {
         mailOptions = {
