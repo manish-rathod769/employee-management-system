@@ -6,6 +6,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <link rel="icon" type="image/x-icon" href="/public/img/favicon.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/img/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/img/favicon-16x16.png">
+    <link rel="manifest" href="/assets/img/site.webmanifest">
+    <link rel="mask-icon" href="/assets/img/safari-pinned-tab.svg" color="#5bbad5">
+    <link rel="shortcut icon" href="/assets/img/favicon.ico">
+    <meta name="msapplication-TileColor" content="#da532c">
+    <meta name="msapplication-config" content="/assets/img/browserconfig.xml">
+    <meta name="theme-color" content="#ffffff">
 
     <link rel="stylesheet" href="/public/css/bootstrap.min.css" />
 
@@ -23,15 +31,15 @@
 <body>
     <div class="inner-wrapper">
         <!--  header partials  -->
-        <%- include('partials/header'); %>
+        <%- include('partials/headerEmployee'); %>
 
             <div class="page-wrapper">
                 <div class="container-fluid">
                     <div class="row">
                         <!--  side bar aside tag -->
-                        <%- include('partials/aside'); %>
+                        <%- include('partials/asideEmployee'); %>
 
-                            <div class="col-xl-9 col-lg-8 col-md-12">
+                            <div class="col-xl-10 col-lg-9 col-md-12">
 
                                 <% if(success !='' ){ %>
                                     <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
@@ -178,6 +186,7 @@
     <script src="/public/plugins/bootstrap-tagsinput/bootstrap-tagsinput.min.js"></script>
 
     <script src="/public/js/script.js"></script>
+    <script src="/public/js/navigation.js"></script>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 

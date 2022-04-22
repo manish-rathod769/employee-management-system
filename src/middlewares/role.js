@@ -60,7 +60,7 @@ export const roleHR = (flagRender) => {
 export const roleDEV = (flagRender) => {
   return (req, res, next) => {
     try {
-      if(req.user.role === 'DEV'){
+     if(req.user.role === 'DEV'){
         next();
       } else {
         throw new Error('You do not have permission to access this route !!!');

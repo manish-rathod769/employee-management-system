@@ -26,7 +26,8 @@ $('#asidePocs, #headerPocs').click((event) => {
 $('#asideLeave, #headerLeave').click((event) => {
   event.preventDefault();
   const path = window.location.pathname.split('/')[2];
-  window.location = `/employee/${path}/leave`;    
+//  window.location = `/employee/${path}/leave`; 
+window.location = `/leave/add-view`;   
 });
 
 $('#change-password').click((event) => {

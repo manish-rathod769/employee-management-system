@@ -1,6 +1,6 @@
 import { v4 as uuidv4 } from 'uuid';
 import { errorResponse, successResponse } from '../../helpers';
-import { Leave } from '../../models';
+import { Leave, ProjectEmployee, Employee } from '../../models';
 import transporter from '../../helpers/mail';
 
 const leaveForm = async (req, res) => {
@@ -9,50 +9,58 @@ const leaveForm = async (req, res) => {
 
 const addLeave = async (req, res) => {
   try {
+    const devId = req.user.id;
     const {
       employeeId, startDate, endDate, reason,
     } = req.body;
     const leavedata = {
       id: uuidv4(),
-      employeeId: 123,
+      employeeId: devId,
       startDate: new Date(startDate),
       endDate: new Date(endDate),
       reason,
       status: 'pending',
     };
     const leaveobj = await Leave.create(leavedata);
-    const mailOptions = {
-      from: "noreply_mail<noreply@someemail.com>", // system address
-      // to: ['apexapatel27321@gmail.com','chavan.vinayak017@gmail.com'], // list of pm
-      to: "apexapatel27321@gmail.com",
-      subject: 'Leave Request',
-      text: `Employee ${leavedata.employeeId}, wants to take leave from ${leavedata.startDate},
-      to ${leavedata.endDate} due to ${reason}`,
-    };
-    transporter.sendMail(mailOptions, (err, info) => {
-      if (err) {
-        errorResponse(req, res, err.message, 400, err);
-      } else {
-        successResponse(req, res, getleave, 200);
-      }
+    let projectIds = await ProjectEmployee.findAll({ where: { employeeId: devId } });
+    projectIds = projectIds.map(element => element.projectId);
+    let empIds = await ProjectEmployee.findAll({ where: { projectId: projectIds } });
+    empIds = empIds.map(element => element.employeeId);
+    let roleData = await Employee.findAll({ where: { id: empIds, role: 'PM' } })
+    roleData = roleData.map(element => element.email);
+    console.log(roleData);
+    roleData.forEach(element => {
+      const mailOptions = {
+        from: "noreply_mail<noreply@someemail.com>", // system address
+        to: element,
+        subject: 'Leave Request',
+        text: `Employee ${req.user.email}, wants to take leave from ${leavedata.startDate},
+        to ${leavedata.endDate} due to ${reason}`,
+      };
+      transporter.sendMail(mailOptions, (err, info) => {
+        if (err) {
+          errorResponse(req, res, err.message, 400, err);
+        } else {
+          successResponse(req, res, getleave, 200);
+        }
+      });
     });
-
-    const getleave = await Leave.findAll({ where: { employeeId: '123', isArchived: false } });
+    const getleave = await Leave.findAll({ where: { employeeId: devId, isArchived: false } });
     res.render('view-leave', { leavesdata: getleave, success: 'YOUR LEAVE SUCCESSFULLY ADDED!!' });
   } catch (e) {
-    //   errorResponse(req, res, e.message, 400, e);
     res.render('add-leave');
   }
 };
 
 const viewLeave = async (req, res) => {
-  const role = 'PM';
+  const role = req.user.role;
+  const userId = req.user.id;
   if (role === 'DEV') {
     try {
       let page = Number(req.query.page) || 0;
       let size = Number(req.query.size) || 12;
       const getleave = await Leave.findAndCountAll({
-        where: { employeeId: '123', isArchived: false },
+        where: { employeeId: userId, isArchived: false },
         limit: size,
         offset: page * size
       })
@@ -86,8 +94,12 @@ const viewLeave = async (req, res) => {
     try {
       let page = Number(req.query.page) || 0;
       let size = Number(req.query.size) || 12;
+      let projectIds = await ProjectEmployee.findAll({ where: { employeeId: userId } });
+      projectIds = projectIds.map(element => element.projectId);
+      let empIds = await ProjectEmployee.findAll({ where: { projectId: projectIds } });
+      empIds = empIds.map(element => element.employeeId);
       const getleave = await Leave.findAndCountAll({
-        where: { employeeId: '123', isArchived: false },
+        where: { employeeId: empIds, isArchived: false },
         limit: size,
         offset: page * size
       })
@@ -123,12 +135,10 @@ const viewLeave = async (req, res) => {
 };
 
 const viewOneLeave = async (req, res) => {
-  const role = 'PM';
+  const role = req.user.role;
   if (role === 'DEV') {
     try {
-      console.log(req.params.id)
       const getleave = await Leave.findAll({ where: { id: req.params.id, isArchived: false } });
-      console.log(getleave)
       res.render('view-leavedata', { leavesdata: getleave });
     } catch (e) {
       errorResponse(req, res, e.message, 400, e);
@@ -159,6 +169,7 @@ const viewOneLeave = async (req, res) => {
 
 const updateLeave = async (req, res) => {
   try {
+    const devId = req.user.id;
     let mailOptions = {};
     const getdata = await Leave.findByPk(req.params.id);
     const {
@@ -173,33 +184,45 @@ const updateLeave = async (req, res) => {
       isArchived,
     };
     const getleave = await Leave.update(leavedata, { where: { id: req.params.id } });
-    if (leavedata.isArchived != 'on') {
-      mailOptions = {
-        from: "noreply_mail<noreply@someemail.com>", // system address
-        // to: ['apexapatel27321@gmail.com','chavan.vinayak017@gmail.com'], // list of pm
-        to: "apexasavaliya27321@gmail.com",
-        subject: 'Leave Request Updated',
-        text: `Employee ${leavedata.employeeId}, updated his/her leave from ${leavedata.startDate},
+    let projectIds = await ProjectEmployee.findAll({ where: { employeeId: devId } });
+    // console.log(projectIds);
+    projectIds = projectIds.map(element => element.projectId);
+    // console.log(projectIds);
+    let empIds = await ProjectEmployee.findAll({ where: { projectId: projectIds } });
+    //  console.log(empIds);
+    empIds = empIds.map(element => element.employeeId);
+    //  console.log(empIds);
+    let roleData = await Employee.findAll({ where: { id: empIds, role: 'PM' } })
+    //  console.log(roleData);
+    roleData = roleData.map(element => element.email);
+    //  console.log(roleData);
+    roleData.forEach(element => {
+      if (leavedata.isArchived != 'on') {
+        mailOptions = {
+          from: "noreply_mail<noreply@someemail.com>", // system address
+          to: element,
+          subject: 'Leave Request Updated',
+          text: `Employee ${req.user.email}, updated his/her leave from ${leavedata.startDate},
       to ${leavedata.endDate} due to ${reason}`,
-      };
-    }
-    else {
-      mailOptions = {
-        from: "noreply_mail<noreply@someemail.com>", // system address
-        // to: ['apexapatel27321@gmail.com','chavan.vinayak017@gmail.com'], // list of pm
-        to: "apexasavaliya27321@gmail.com",
-        subject: 'Leave Request Updated',
-        text: `Employee ${leavedata.employeeId} does not want to leave now!!!`,
-      };
-    }
-    transporter.sendMail(mailOptions, (err, info) => {
-      if (err) {
-        errorResponse(req, res, e.message, 400, err);
-      } else {
-        successResponse(req, res, getleave, 200);
+        };
       }
+      else {
+        mailOptions = {
+          from: "noreply_mail<noreply@someemail.com>", // system address
+          to: element,
+          subject: 'Leave Request Updated',
+          text: `Employee ${req.user.email} does not want to leave now!!!`,
+        };
+      }
+      transporter.sendMail(mailOptions, (err, info) => {
+        if (err) {
+          errorResponse(req, res, e.message, 400, err);
+        } else {
+          successResponse(req, res, getleave, 200);
+        }
+      });
     });
-    const getallleave = await Leave.findAll({ where: { isArchived: false } });
+    const getallleave = await Leave.findAll({ where: { employeeId: devId, isArchived: false } });
     res.render('view-leave', { leavesdata: getallleave, success: 'YOUR LEAVE DETAILS UPDATED!!!' });
   }
   catch (e) {
@@ -214,6 +237,8 @@ const acceptRejectLeave = async (req, res) => {
   const leaveid = req.body;
   const getdata = await Leave.findAll({ where: { id: leaveid.lid } });
   let mailOptions = {};
+  let devEmail = await Employee.findAll({ where: { id :getdata[0].employeeId} });
+  devEmail = devEmail.map(e => e.email);
   if (leaveid.action === 'accept') {
     const leavedata = {
       employeeId: getdata[0].employeeId,
@@ -225,7 +250,7 @@ const acceptRejectLeave = async (req, res) => {
     const getleave = await Leave.update(leavedata, { where: { id: leaveid.lid } });
     mailOptions = {
       from: "noreply_mail<noreply@someemail.com>", // system address
-      to: 'apexapatel27321@gmail.com', // developer's address
+      to: devEmail[0], // developer's address
       subject: 'Leave Request',
       text: 'YOUR LEAVE IS APPROVED!!!',
     };
@@ -240,7 +265,7 @@ const acceptRejectLeave = async (req, res) => {
     const getleave = await Leave.update(leavedata, { where: { id: leaveid.lid } });
     mailOptions = {
       from: "noreply_mail<noreply@someemail.com>", // system address
-      to: 'apexapatel27321@gmail.com', // developer's address
+      to: devEmail[0], // developer's address
       subject: 'Leave Request',
       text: 'YOUR LEAVE IS REJECTED!!!',
     };

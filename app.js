@@ -13,7 +13,7 @@ import projectRoutes from './src/routes/project.routes';
 import attendanceRoutes from './src/routes/attendance.route';
 import { notFound } from './src/helpers/middleware.notFound';
 
-import routes from './src/routes/leave.route';
+import leaveRoutes from './src/routes/leave.route';
 
 
 dotenv.config();
@@ -35,7 +35,6 @@ app.use(express.urlencoded({ extended: true }));
 app.use('/public', express.static(path.resolve(__dirname, './src/public')));
 app.set('view engine', 'ejs');
 app.set('views', path.resolve(__dirname, './src/views'));
-app.use(routes);
 app.use(cors());
 app.use(flash());
 app.use(cookieParser());
@@ -54,7 +53,7 @@ app.use('/', employeeRoutes);
 // requiring routes
 app.use('/', clientRoutes);
 app.use('/', projectRoutes);
-
 app.use('/', attendanceRoutes);
+app.use('/', leaveRoutes);
 app.use(notFound);
 module.exports = app;

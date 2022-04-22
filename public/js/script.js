@@ -111,13 +111,6 @@ if (localStorage.getItem('name')) {
     $('.employee-name-aside, .header-name-admin').text(name);
 }
 
-$('#asideLeave, #headerLeave').on('cick', (event) => {
-    event.preventDefault();
-    const path = window.location.pathname.split('/')[2];
-    window.location = `/employee/${localStorage.getItem('id')
-}/leave`;
-});
-
 $('#change-password').on('cick', (event) => {
     event.preventDefault();
     window.location = `/employee/${localStorage.getItem('id')}/change-password`
