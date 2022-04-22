@@ -1,4 +1,5 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 // const compressImage = (blobURL, quality, maxWidth) => {
 //   const mime_type = "image/jpeg";
 //   const img = new Image();
@@ -28,10 +29,42 @@
 //   $('.avatar-preview').parent().append(result_image_obj);
 //   return result_image_obj;
 // }
+=======
+const compressImage = (source_img_base64, quality, maxWidth) => {
+  const mime_type = "image/jpeg";
+  const source_img_obj = new Image();
+  source_img_obj.src = source_img_base64;
+  source_img_obj.height = 1000;
+  source_img_obj.width = 1000;
+  maxWidth = maxWidth || 1000;
+  const natW = source_img_obj.naturalWidth;
+  const natH = source_img_obj.naturalHeight;
+  const ratio = natH / natW;
+  if (natW > maxWidth) {
+    natW = maxWidth;
+    natH = ratio * maxWidth;
+  }
+
+  let cvs = document.createElement('canvas');
+  cvs.width = natW;
+  cvs.height = natH;
+
+  const ctx = cvs.getContext("2d").drawImage(source_img_obj, 0, 0, natW, natH);
+  const newImageData = cvs.toDataURL(mime_type, (quality || 60) / 100);
+  const result_image_obj = new Image();
+  result_image_obj.src = newImageData;
+  return result_image_obj;
+}
+>>>>>>> edit: mail file moved to helpers from helper
 
 const getTimeBetweenDates = (startDate, endDate) => {
   const sDate = new Date(startDate);
   const eDate = new Date(endDate);
+<<<<<<< HEAD
+=======
+  console.log(sDate);
+  console.log(eDate);
+>>>>>>> edit: mail file moved to helpers from helper
   let year = eDate.getFullYear() - sDate.getFullYear();
   let month = eDate.getMonth() - sDate.getMonth();
   if (month < 0) {
@@ -41,9 +74,12 @@ const getTimeBetweenDates = (startDate, endDate) => {
   return `${year} years, ${month + 1} months`;
 };
 
+<<<<<<< HEAD
 =======
 // change view between add employee form and display employee 
 >>>>>>> fix: conflicts resolved(leave)
+=======
+>>>>>>> edit: mail file moved to helpers from helper
 $('#addEmployeeBtn').click((event) => {
   event.preventDefault();
   $('#addEmployeeFormContainer').removeClass('d-none');
@@ -67,8 +103,38 @@ $('#addEmployeeBtn').click((event) => {
     error: function (error) {
       console.log(error);
     }
-  })
+  });
+  fetchStateNames($('#employee-add-state'));
 });
+
+const populateCityNames = (flag) => {
+  $.getJSON('../josnData/stateCity.json', (data) => {
+    let cityOptions = '';
+    
+    if (flag) {
+      data[$('#employee-add-state').val()].forEach((city) => {
+        cityOptions += `<option value='${city}'>${city}</option>`;
+      });
+      $('#employee-add-city').html(cityOptions);
+    } else {
+      data[$('#employee-edit-state').val()].forEach((city) => {
+        cityOptions += `<option value='${city}'>${city}</option>`;
+      });
+      $('#employee-edit-city').html(cityOptions);
+    }
+  });
+};
+
+const fetchStateNames = (elem) => {
+  $.getJSON('../josnData/stateCity.json', (data) => {
+    let stateOptions = '';
+    Object.keys(data).forEach((key) => {
+      stateOptions += `<option value='${key}'>${key}</option>`;
+    });
+    elem.append(stateOptions);
+    // populateCityNames($('#state').val(), 0);
+  });
+};
 
 const deleteButton = (id, name) => {
   //console.log(id);
@@ -138,9 +204,12 @@ const editButton = (id) => {
     type: 'GET',
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> fix: conflicts resolved(leave)
 =======
+=======
+>>>>>>> edit: mail file moved to helpers from helper
     url: '/technologies',
     success: function ({ data }) {
       const form = $('#form-edit-employee');
@@ -159,9 +228,12 @@ const editButton = (id) => {
   });
   $.ajax({
     type: 'GET',
+<<<<<<< HEAD
 >>>>>>> edit: mail file moved to helpers from helper
 =======
 >>>>>>> fix: conflicts resolved(leave)
+=======
+>>>>>>> edit: mail file moved to helpers from helper
     url: `/employees/${id}`,
     success: ({ data }) => {
 
@@ -179,8 +251,9 @@ const editButton = (id) => {
       form.find('#email').val(data.email).prop('disabled', true);
       form.find("input[type='radio'][name='gender']:checked").val(data.gender || null);
       form.find('#dob').val(data.DOB.split('T')[0]);
-      form.find('#role').val(data.role);
+      form.find(`#role option[value=${data.role}]`).attr('selected', 'selected');
       form.find('#joiningDate').val(data.joiningDate.split('T')[0]);
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -198,6 +271,10 @@ const editButton = (id) => {
       form.find('#totalExp').val(data.totalExp || null);
 
 >>>>>>> fix: conflicts resolved(leave)
+=======
+      form.find('#careerStartDate').val(data.careerStartDate.split('T')[0] || null);
+      console.log(data.careerStartDate);
+>>>>>>> edit: mail file moved to helpers from helper
       form.find('#collage').val(data.EmployeeAcademic.collage || '');
       form.find('#highestQualification').val(data.EmployeeAcademic.highestQualification || '');
       form.find('#university').val(data.EmployeeAcademic.university || null);
@@ -212,15 +289,21 @@ const editButton = (id) => {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
       $.getJSON('../josnData/stateCity.json', (states) => {
         let stateOptions = '';
         Object.keys(states).forEach((key) => {
           stateOptions += (key.toLowerCase() === data.EmployeeContact.state.toLowerCase()) ? `<option value='${key}' selected>${key}</option>` : `<option value='${key}'>${key}</option>`;
 =======
+=======
+>>>>>>> edit: mail file moved to helpers from helper
       $.getJSON('../josnData/stateCity.json', (states) => {
         let stateOptions = '';
         Object.keys(states).forEach((key) => {
           stateOptions += (key.toLowerCase() === data.EmployeeContact.state) ? `<option value='${key}' selected>${key}</option>` : `<option value='${key}'>${key}</option>`;
+<<<<<<< HEAD
+>>>>>>> edit: mail file moved to helpers from helper
+=======
 >>>>>>> edit: mail file moved to helpers from helper
         });
         $('#employee-edit-state').append(stateOptions);
@@ -233,9 +316,15 @@ const editButton = (id) => {
       $.getJSON('../josnData/stateCity.json', (cityData) => {
         let cityOptions = '';
 <<<<<<< HEAD
+<<<<<<< HEAD
         // console.log(state);
         cityData[state].forEach((city) => {
           cityOptions += (city.toLowerCase() === data.EmployeeContact.city.toLowerCase()) ? `<option value='${city}' selected>${city}</option>` : `<option value='${city}'>${city}</option>`;
+=======
+        console.log(state);
+        cityData[state].forEach((city) => {
+          cityOptions += (city.toLowerCase() === data.EmployeeContact.city) ? `<option value='${city}' selected>${city}</option>` : `<option value='${city}'>${city}</option>`;
+>>>>>>> edit: mail file moved to helpers from helper
 =======
         console.log(state);
         cityData[state].forEach((city) => {
@@ -245,6 +334,7 @@ const editButton = (id) => {
         $('#employee-edit-city').append(cityOptions);
       });
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 =======
       form.find('#pincode').val(data.EmployeeContact.pincode || null);
@@ -256,11 +346,13 @@ const editButton = (id) => {
       form.find('#pincode').val(data.EmployeeContact.pincode || null);
       form.find('#city').val(data.EmployeeContact.city || null);
 >>>>>>> fix: conflicts resolved(leave)
+=======
+>>>>>>> edit: mail file moved to helpers from helper
       form.find('#country').val(data.EmployeeContact.country || null);
-      form.find('#preEmployer').val(data.EmployeePreWork.previousEmployer || null);
-      form.find('#preEmployerAddress').val(data.EmployeePreWork.employerAddress || null);
-      form.find('#workingTimeInYear').val(Number(data.EmployeePreWork.workingTime.split(' ')[0]) || null);
-      form.find('#workingTimeInMonth').val(Number(data.EmployeePreWork.workingTime.split(' ')[2]) || null);
+      form.find('#preEmployer').val(data.EmployeePreWork.previousEmployer || 'NA');
+      form.find('#preEmployerAddress').val(data.EmployeePreWork.employerAddress || 'NA');
+      form.find('#workingTimeInYear').val(Number(data.EmployeePreWork.workingTime?.split(' ')[0]) || 0);
+      form.find('#workingTimeInMonth').val(Number(data.EmployeePreWork.workingTime?.split(' ')[2]) || 0);
     },
     error: (error) => {
       // display toast for error
@@ -316,7 +408,11 @@ const displayEmployee = () => {
     type: 'GET',
     url: `/employees?${query}`,
     success: (result) => {
+<<<<<<< HEAD
       // console.log(result);
+=======
+      console.log(result);
+>>>>>>> edit: mail file moved to helpers from helper
       $('#previousEmployeeRecord').removeClass('disabled');
       $('#nextEmployeeRecord').removeClass('disabled');
       if (!result.data.pre) {
@@ -328,9 +424,14 @@ const displayEmployee = () => {
       result.data.employee.forEach((element, index) => {
         // console.log(element);
 <<<<<<< HEAD
+<<<<<<< HEAD
         const avatar = element.avatar.split('/').length > 2 ? element.avatar : "assets/img/profiles/img-6.jpg";
 =======
 >>>>>>> fix: conflicts resolved(leave)
+=======
+        console.log(element.avatar);
+        const avatar = element.avatar.split('/').length > 2 ? element.avatar : "assets/img/profiles/img-6.jpg";
+>>>>>>> edit: mail file moved to helpers from helper
         const tech = element.EmployeeAcademic?.knownTech || 'tech';
         $('#displayEmployeeDetails').append(
           `<div class="col-md-6 col-lg-6 col-xl-4" id="employee-card-${element.id}">
@@ -340,7 +441,7 @@ const displayEmployee = () => {
                   <div class="profile-info-widget">
                     <a class="booking-doc-img">
                       <img
-                        src="assets/img/profiles/img-6.jpg"
+                        src=${avatar}
                         alt="User Image"
                       />
                     </a>
@@ -426,6 +527,7 @@ const enlargeEmployee = (event, id, index) => {
     success: (result) => {
       // console.log(result);
       const { data } = result;
+      const totalExp = getTimeBetweenDates(data.careerStartDate, new Date());
       lastcard.after(
         `<div class="row ctm-border-radius shadow-sm grow border-dark bg-dark" id="employee-details"> 
               <div class="col-12"> 
@@ -461,13 +563,13 @@ const enlargeEmployee = (event, id, index) => {
                       <span class="text-primary">Gender :</span> ${data.gender}
                     </p>
                     <p class="card-text mb-3">
-                      <span class="text-primary">DOB :</span> ${data.DOB}
+                      <span class="text-primary">DOB :</span> ${data.DOB.split('T')[0]}
                     </p>
                     <p class="card-text mb-3">
-                      <span class="text-primary">Joining Date :</span> ${data.joiningDate}
+                      <span class="text-primary">Joining Date :</span> ${data.joiningDate.split('T')[0]}
                     </p>
                     <p class="card-text mb-3">
-                      <span class="text-primary">Total Exp :</span> ${data.totalExp}
+                      <span class="text-primary">Total Exp :</span> ${totalExp}
                     </p>
                   </div>
                 </div>
