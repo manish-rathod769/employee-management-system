@@ -264,9 +264,13 @@ const acceptRejectLeave = async (req, res) => {
       status: 'approved',
     };
 <<<<<<< HEAD
+<<<<<<< HEAD
     
 =======
 
+>>>>>>> edit: daily Attendance isOnLeave:true(leave)
+=======
+    
 >>>>>>> edit: daily Attendance isOnLeave:true(leave)
     var sDate = getdata[0].startDate;
     var eDate = getdata[0].endDate;
