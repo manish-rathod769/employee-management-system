@@ -152,7 +152,7 @@ const fetchClientData = (index) => {
                       </div>
                     </div>
                   </div>
-                  <p onclick='clientDetails("${client.id}")' class='float-right text-danger cursor-pointer'>view</p>
+                  <p onclick='clientDetails("${client.id}")' class='float-right btn btn-theme ctm-border-radius text-white cursor-pointer mt-2'><span class='lnr lnr-eye'></span></p>
                 </div>
               </div>
             </div>
