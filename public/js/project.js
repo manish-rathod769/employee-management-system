@@ -155,7 +155,10 @@ let fetchprojectData = (index) => {
                         </div>
                       </div>
                     </div>
-                    <p onclick='projectDetails("${project.projectId}")' class='float-right text-danger cursor-pointer'>view</p>
+                    <div class="d-flex justify-content-between mt-2">
+                      <p onclick='projectDetails("${project.projectId}")' class='btn btn-theme ctm-border-radius text-white cursor-pointer'><i class="fa fa-pencil"></i></p>
+                      <a href="/viewProject/${project.projectId}" class='btn btn-theme ctm-border-radius text-white cursor-pointer'><span class="lnr lnr-eye"></span></a>
+                    </div>
                   </div>
                 </div>
               </div>

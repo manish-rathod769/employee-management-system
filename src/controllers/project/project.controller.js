@@ -1,5 +1,5 @@
 import { Op } from 'sequelize';
-import { Employee, Project, ProjectClient, ProjectEmployee } from '../../models';
+import { Employee, Project, ProjectClient, ProjectEmployee, Client } from '../../models';
 import { successResponse, errorResponse } from '../../helpers/index';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -138,11 +138,12 @@ const projectEmployee = async (req, res) => {
     const data = await ProjectEmployee.findAll({ 
       include: [{
         model: Employee,
-        attributes: ['role'],
+        distinct: true,
+        attributes: ['firstName', 'lastName', 'email', 'avatar', 'gender', 'role', 'id'],
       }],
       where: { projectId }, attributes: ['employeeId']
     });
-    successResponse(req, res, data, 200);
+    return successResponse(req, res, data, 200);
   } catch(error) {
     errorResponse(req, res, error.message, 500, error);
   }
@@ -151,8 +152,14 @@ const projectEmployee = async (req, res) => {
 const projectClient = async (req, res) => {
   try {
     const { projectId } = req.params;
-    const data = await ProjectClient.findAll({ where: { projectId }, attributes: ['clientId']});
-    successResponse(req, res, data, 200);
+    const data = await ProjectClient.findAll({
+      include: [{
+        model: Client,
+        attributes: ['name', 'email', 'slackId', 'city', 'state', 'country', 'organization'],
+        distinct: true,
+      }],
+      where: { projectId }, attributes: ['clientId']});
+    return successResponse(req, res, data, 200);
   } catch(error) {
     errorResponse(req, res, error.message, 500, error);
   }
@@ -173,4 +180,19 @@ const renderEmployeeProjectView = async(req, res) => {
   }
 }
 
-module.exports = { singleProject, addProject, updateProject, viewProject, projectEmployee, projectClient, renderEmployeeProjectView };
+const renderViewProject = async(req, res) => {
+  try{
+    const { projectId } = req.params;
+    const matchedPro = await Project.findOne({ where: { projectId } });
+    if(!JSON.parse(JSON.stringify(matchedPro))){
+      res.status(401);
+      return res.render('message', { error: 'Data does not exist !!!', message: '', route: '', text: 'Back' });  
+    }
+    return res.render('viewProject', { projectId });
+  } catch(error) {
+    res.status(401);
+    return res.render('message', { error: 'Something went Wrong !!!', message: '', route: '', text: 'Back' });
+  }
+}
+
+module.exports = { singleProject, addProject, updateProject, viewProject, projectEmployee, projectClient, renderEmployeeProjectView, renderViewProject };
