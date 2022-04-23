@@ -26,6 +26,9 @@ export const addAttendance = async (req, res) => {
 
     // check whether employee is on leave
     // if true then attendance.isOnLeave = true; totalHour = 0;
+    if (attendance.isOnLeave) {
+      return helpers.errorResponse(req, res, 'employee is on leave');
+    }
 
     // else if not on leave
     const timeLog = attendance.log;

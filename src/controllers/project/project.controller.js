@@ -110,20 +110,40 @@ const updateProject = async (req, res) => {
   try {
     const ProjectId =  req.params.id;
     const { client, pm, dev } = req.body;
-    client.forEach( async (client) => {
-      await ProjectClient.create({ projectId: ProjectId, clientId: client });
-    });
 
-    pm.forEach( async (pm) => {
-      console.log(pm);
-      console.log(typeof pm);
-      await ProjectEmployee.create({ projectId: ProjectId, employeeId: pm });
-    });
-    dev.forEach( async (dev) => {
-      console.log(dev);
-      console.log(typeof dev);
-      await ProjectEmployee.create({ projectId: ProjectId, employeeId: dev });
-    });
+    if(client) {
+      await ProjectClient.destroy({
+        where: { projectId: ProjectId },
+        force: true,
+      });
+  
+      client.forEach( async (client) => {
+        await ProjectClient.create({ projectId: ProjectId, clientId: client });
+      });
+    }
+
+    if(pm || dev){
+      await ProjectEmployee.destroy({
+        where: { projectId: ProjectId },
+        force: true,
+      });
+
+      if(pm){
+        pm.forEach( async (pm) => {
+          console.log(pm);
+          console.log(typeof pm);
+          await ProjectEmployee.create({ projectId: ProjectId, employeeId: pm });
+        });
+      }
+      if(dev){ 
+        dev.forEach( async (dev) => {
+          console.log(dev);
+          console.log(typeof dev);
+          await ProjectEmployee.create({ projectId: ProjectId, employeeId: dev });
+        });
+      }
+    }
+    
     const { name, type, status, probable_end_date, isArchived } = req.body;
     const updatedProject = await Project.update({ name, type, status, probable_end_date, isArchived }, { returning: true, where: { projectId: ProjectId } });
     successResponse(req, res, updatedProject[1], 200);
