@@ -50,6 +50,18 @@
                         </ul>
                     </div>
                 </div>
+                <div class="card shadow-sm grow ctm-border-radius">
+                  <div class="card-body d-flex justify-content-between">
+                    <a class="btn btn-theme button-1 text-white ctm-border-radius add-person ctm-btn-padding"
+                      onclick="viewLeaveFun()">
+                      <i class="fa fa-angles-left"></i>&nbsp;View Leaves
+                    </a>
+                    <a class="btn btn-theme button-1 text-white ctm-border-radius add-person ctm-btn-padding"
+                      onclick="history.back()">
+                      Back&nbsp;<i class="fa fa-angles-right"></i>
+                    </a>
+                  </div>
+                </div>
 
                 <% function formatDate(dateObject) { let d=new Date(dateObject); let day=d.getDate();
                     let month=d.getMonth() + 1; let year=d.getFullYear(); if (day < 10) { day="0" + day;
@@ -121,7 +133,7 @@
   <script src="/public/plugins/bootstrap-tagsinput/bootstrap-tagsinput.min.js"></script>
 
   <script src="/public/js/script.js"></script>
-
+  <script src="/public/js/navigation.js"></script>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.3/jquery.validate.min.js"
@@ -211,6 +223,13 @@ function formatDate(dateObject) {
 
 
     });
+    function viewLeaveFun() {
+      $.ajax({
+        url: '/leave/view',
+        method: 'get'
+      })
+      window.location.href = `/leave/view`;
+    }
   </script>
 
 

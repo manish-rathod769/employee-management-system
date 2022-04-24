@@ -211,7 +211,7 @@ const updateLeave = async (req, res) => {
       }
       transporter.sendMail(mailOptions, (err, info) => {
         if (err) {
-          errorResponse(req, res, e.message, 400, err);
+          errorResponse(req, res, err.message, 400, err);
         } else {
           successResponse(req, res, getleave, 200);
         }
@@ -290,7 +290,7 @@ const acceptRejectLeave = async (req, res) => {
   }
   transporter.sendMail(mailOptions, (err, info) => {
     if (err) {
-      errorResponse(req, res, e.message, 400, err);
+      errorResponse(req, res, err.message, 400, err);
     } else {
       console.log(leaveid.lid)
       successResponse(req, res, leaveid.lid, 200);

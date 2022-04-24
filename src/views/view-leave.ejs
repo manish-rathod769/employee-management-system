@@ -70,7 +70,6 @@
                                                 </ul>
                                             </div>
                                         </div>
-
                                         <div class="card shadow-sm grow ctm-border-radius">
                                             <div class="card-body align-right">
                                                 <div class="input-group">
@@ -90,7 +89,20 @@
                                                 </div>
                                             </div>
                                         </div>
-
+                                        
+                                        <div class="card shadow-sm grow ctm-border-radius">
+                                            <div class="card-body d-flex justify-content-between">
+                                              <a class="btn btn-theme button-1 text-white ctm-border-radius add-person ctm-btn-padding"
+                                                onclick="addLeaveFun()">
+                                                <i class="fa fa-angles-left"></i>&nbsp;Add Leave
+                                              </a>
+                                              <a class="btn btn-theme button-1 text-white ctm-border-radius add-person ctm-btn-padding"
+                                                onclick="history.back()">
+                                                Back&nbsp;<i class="fa fa-angles-right"></i>
+                                              </a>
+                                            </div>
+                                          </div>
+                                        
                                         <% function formatDate(dateObject) { let d=new Date(dateObject); let
                                             day=d.getDate(); let month=d.getMonth() + 1; let year=d.getFullYear(); if
                                             (day < 10) { day="0" + day; } if (month < 10) { month="0" + month; } let
@@ -269,6 +281,10 @@
             //                 console.log(res);
             //             });
         }
+
+        function addLeaveFun() {
+      window.location.href = `/leave/add-view`;
+    }
     </script>
 
 </body>
