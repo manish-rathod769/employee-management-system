@@ -8,7 +8,7 @@ module.exports = {
       primaryKey: true,
     },
     employeeId: {
-      type: Sequelize.STRING,
+      type: Sequelize.UUID,
     },
     startDate: {
       type: Sequelize.DATE,

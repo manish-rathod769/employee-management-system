@@ -119,7 +119,9 @@ module.exports = (sequelize, DataTypes) => {
       foreignKey: 'employeeId',
       uniqueKey: 'empTech'
     });
-    
+    Employee.hasMany(models.Leave, {
+      foreignKey: 'employeeId',
+    });
   };
   return Employee;
 };
