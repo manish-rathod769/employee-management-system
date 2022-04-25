@@ -31,8 +31,6 @@
 const getTimeBetweenDates = (startDate, endDate) => {
   const sDate = new Date(startDate);
   const eDate = new Date(endDate);
-  console.log(sDate);
-  console.log(eDate);
   let year = eDate.getFullYear() - sDate.getFullYear();
   let month = eDate.getMonth() - sDate.getMonth();
   if (month < 0) {
@@ -132,26 +130,35 @@ const deleteButton = (id, name) => {
   });
 };
 
-const editButton = (id) => {
+const populateKnownTech = (techArray) => {
   $.ajax({
     type: 'GET',
     url: '/technologies',
     success: function ({ data }) {
       const form = $('#form-edit-employee');
-      form.find('#knownTech').html('<option selected disabled>Known Technology</option>');
+      form.find('#knownTech').html('<option disabled>Known Technology</option>');
       data.forEach(elem => {
         const val = elem.techName;
         // append to select group
-        form.find('#knownTech').append(
-          `<option value="${val}">${val}</option>`
-        );
+        if (techArray.includes(val)) {
+          form.find('#knownTech').append(
+            `<option selected value="${val}">${val}</option>`
+          );
+        } else {
+          form.find('#knownTech').append(
+            `<option value="${val}">${val}</option>`
+          );
+        }
       });
       // append data to #knownTech 
     },
     error: function (error) {
-      console.log(error);
+      // console.log(error);
     }
   });
+}
+
+const editButton = (id) => {
   $.ajax({
     type: 'GET',
     url: `/employees/${id}`,
@@ -160,8 +167,8 @@ const editButton = (id) => {
       // remove employee display and show edit div
       $('#editEmployeeFormContainer').removeClass('d-none');
       $('#employeeDisplayContainer').addClass('d-none');
-      console.log(id);
-      console.log(data);
+      // console.log(id);
+      // console.log(data);
       // change edit div and add edit and cancel button;
       const form = $('#form-edit-employee');
       form.data('id', id);
@@ -174,12 +181,11 @@ const editButton = (id) => {
       form.find(`#role option[value=${data.role}]`).attr('selected', 'selected');
       form.find('#joiningDate').val(data.joiningDate.split('T')[0]);
       form.find('#careerStartDate').val(data.careerStartDate.split('T')[0] || null);
-      console.log(data.careerStartDate);
+      // console.log(data.careerStartDate);
       form.find('#collage').val(data.EmployeeAcademic.collage || '');
       form.find('#highestQualification').val(data.EmployeeAcademic.highestQualification || '');
       form.find('#university').val(data.EmployeeAcademic.university || null);
-      form.find('#knownTech').val(data.EmployeeAcademic.knownTech);
-
+      populateKnownTech(data.EmployeeAcademic.knownTech);
       form.find('#secondaryEmail').val(data.EmployeeContact.secondaryEmail || null);
       form.find('#contactNo').val(data.EmployeeContact.contactNo || '');
       form.find('#houseNo').val(data.EmployeeContact.houseNo || '');
@@ -201,7 +207,7 @@ const editButton = (id) => {
       const state = data.EmployeeContact.state.charAt(0).toUpperCase() + data.EmployeeContact.state.slice(1);
       $.getJSON('../josnData/stateCity.json', (cityData) => {
         let cityOptions = '';
-        console.log(state);
+        // console.log(state);
         cityData[state].forEach((city) => {
           cityOptions += (city.toLowerCase() === data.EmployeeContact.city.toLowerCase()) ? `<option value='${city}' selected>${city}</option>` : `<option value='${city}'>${city}</option>`;
         });
@@ -356,7 +362,7 @@ $('#search').click(() => {
 
 const enlargeEmployee = (event, id, index) => {
   event.preventDefault();
-  console.log('hello', index);
+  // console.log('hello', index);
   // event.preventDefault();
   // const id = $('#employeeName').data('id');
   let lastcard = $(`#employee-card-${id}`);
@@ -368,12 +374,12 @@ const enlargeEmployee = (event, id, index) => {
   // } else if (index%3 === 1) {
   //   lastcard = lastcard.next().next();
   // }
-  console.log(id);
+  // console.log(id);
   $.ajax({
     type: 'GET',
     url: `/employees/${id}`,
     success: (result) => {
-      console.log(result);
+      // console.log(result);
       const { data } = result;
       const totalExp = getTimeBetweenDates(data.careerStartDate, new Date());
       lastcard.after(
