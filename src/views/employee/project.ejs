@@ -239,6 +239,7 @@
           method: "GET",
           success: (resData) => {
             // console.log(resData);
+            const { role } = resData.data.pop();
             const { totalCount } = resData.data.pop();
 
             $("#previous").attr("data-index", Number(index) - 1);
