@@ -44,13 +44,13 @@
 
                                 <div class="card shadow-sm grow ctm-border-radius">
                                     <div class="card-body d-flex justify-content-between">
-                                      <h4 class="card-title float-left mb-0 mt-2">Leave Details</h4><br></br>
-                                      <a class="btn btn-theme button-1 text-white ctm-border-radius add-person ctm-btn-padding"
-                                        onclick="history.back()">
-                                        Back&nbsp;<i class="fa fa-angles-right"></i>
-                                      </a>
+                                        <h4 class="card-title float-left mb-0 mt-2">Leave Details</h4><br></br>
+                                        <a class="btn btn-theme button-1 text-white ctm-border-radius add-person ctm-btn-padding"
+                                            onclick="history.back()">
+                                            Back&nbsp;<i class="fa fa-angles-right"></i>
+                                        </a>
                                     </div>
-                                  </div>
+                                </div>
                                 <div class="card shadow-sm grow ctm-border-radius">
                                     <div class="card-body align-right">
                                         <div class="input-group">
@@ -180,6 +180,10 @@
     <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
 
     <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/additional-methods.min.js"></script>
+    <script>
+        $('.aside-module-name').text('Leaves');
+        $('#leaveLink').removeClass('text-dark').addClass('active').addClass('text-white');
+    </script>
     <script>
         function myFunction() {
             let size = document.getElementById("size").value;
