@@ -119,6 +119,7 @@ module.exports = (sequelize, DataTypes) => {
       foreignKey: 'employeeId',
       uniqueKey: 'empTech'
     });
+    
   };
   return Employee;
 };
