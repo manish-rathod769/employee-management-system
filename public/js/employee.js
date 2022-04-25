@@ -311,7 +311,7 @@ const displayEmployee = () => {
                       </div>
                     </div>
                   </div>
-                  ${element.role === 'ADMIN' ? 
+                  ${result.data.role === 'ADMIN' ? 
                   `<div class="team-action-icon float-right">
                         <button type="button" 
                           class="btn btn-theme ctm-border-radius text-white" 

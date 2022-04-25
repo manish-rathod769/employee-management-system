@@ -148,6 +148,7 @@ export const getEmployee = async (req, res) => {
         },
       });
     } else if (req.user.role === 'HR' || req.user.role === 'ADMIN') {
+      result.role = req.user.role;
       if (search) {
         // console.log('here');
         result.employee = await Employee.scope('admin').findAll(
@@ -195,6 +196,7 @@ export const getEmployee = async (req, res) => {
         );
       }
     } else if (req.user.role === 'PM') {
+      result.role = req.user.role;
       let projects = await ProjectEmployee.findAll(
         {
           where: {
@@ -599,6 +601,7 @@ export const renderEmployeeView = async (req, res) => {
   res.status(200);
   res.render('employees', {
     totalEmployee,
+    role: req.user.role,
   });
 };
 export const renderAddEmployeeView = (req, res) => {
@@ -630,5 +633,8 @@ export const changePasswordView = (req, res) => {
 // render setting page
 export const settingView = (req, res) => {
   res.status(200);
-  res.render('settings');
+  res.render('settings',
+  {
+    role: req.user.role,
+  });
 };

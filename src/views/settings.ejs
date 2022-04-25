@@ -82,15 +82,16 @@
                             <option selected disabled>Technology</option>
                           </select>
                           <div class="team-action-icon mx-2">
-                            <button
+                            <!-- <button
                               id="deleteTech"
                               class="btn btn-theme ctm-border-radius text-white btn-sm"
                             >
                               <i class="fa fa-trash" aria-hidden="true"></i>
-                            </button>
+                            </button> -->
                           </div>
                         </div>
                       </div>
+                      <% if (role === 'ADMIN') { %>
                       <form
                         action="/technologies"
                         method="POST"
@@ -114,6 +115,7 @@
                           </div>
                         </div>
                       </form>
+                      <% } %>
                     </div>
                   </div>
                 </div>
@@ -136,6 +138,7 @@
                           </select>
                           
                         </div>
+                        <% if (role === 'ADMIN') { %>
                         <div class="team-action-icon m-3 float-right">
                             <button
                               data-toggle="modal"
@@ -154,6 +157,7 @@
                               <i class="fa fa-plus" aria-hidden="true"></i>
                             </button>
                         </div>
+                        <% } %>
                       </div>
                     </div>
                   </div>
