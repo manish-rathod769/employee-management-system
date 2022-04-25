@@ -63,7 +63,7 @@ module.exports = {
           role: 'PM',
           DOB: new Date('20 march, 1988'),
           joiningDate: new Date('12 march, 2015'),
-          careerStartDate: new Date('12 march, 2015'),
+          careerStartDate: new Date(),
           avatar: 'https://employee-avatar.s3.amazonaws.com/b8cdbc59-bfa1-404f-b6d2-f1a7136d485a',
           createdAt: new Date(),
           updatedAt: new Date(),

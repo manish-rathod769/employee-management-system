@@ -460,7 +460,7 @@ export const logOut = async (req, res) => {
   try {
     res.clearCookie('verifyToken');
     res.status(200);
-    return res.render('message', { error: '', message: 'Logged out successfullt !!!', route: '/login', text: 'Login' });
+    return res.render('message', { error: '', message: 'Logged out successfully !!!', route: '/login', text: 'Login' });
   } catch (error) {
     return helpers.successResponse(req, res, result, 200);
   }

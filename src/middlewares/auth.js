@@ -4,7 +4,6 @@ import { Employee } from '../models';
 const verifyCookie = async (req, res, next) => {
   try {
     const { verifyToken } = req.cookies;
-    // Check if verifoken exist or not
     if (!verifyToken) {
       res.status(401);
       return res.render('message', { error: 'Please login first !!!', message: '', route: '/login', text: 'Login' });
@@ -24,7 +23,7 @@ const verifyCookie = async (req, res, next) => {
     // Check if verifyToken matched or not
     if (verifyToken !== matchedEmp.verifyToken) {
       res.status(401);
-      return res.render('message', { error: 'Verify token does not matcch !!!', message: '', route: '/login', text: 'Login' });
+      return res.render('message', { error: 'Verify token does not match !!!', message: '', route: '/login', text: 'Login' });
     }
 
     // If token matched then send user's data to next route
@@ -32,7 +31,7 @@ const verifyCookie = async (req, res, next) => {
     next();
   } catch (error) {
     res.status(401);
-    return res.render('message', { error: 'Verify token does not matcch !!!', message: '', route: '/login', text: 'Login' });
+    return res.render('message', { error: error.message, message: '', route: '/login', text: 'Login' });
   }
 };
 
