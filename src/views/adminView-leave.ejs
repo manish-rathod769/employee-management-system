@@ -96,10 +96,17 @@
                                                                     <div class="pro-widget-content">
                                                                         <div class="profile-info-widget">
                                                                             <p><label
-                                                                                    class="form-label text-orange lead">Employee
+                                                                                class="form-label text-orange lead">Name
+                                                                                :</label>
+                                                                                <span class="text-primary">
+                                                                                    <%= leavedata.Employee.firstName %> <%= leavedata.Employee.lastName %>
+                                                                                </span>
+                                                                            </p>
+                                                                            <p><label
+                                                                                    class="form-label text-orange lead">Email
                                                                                     :</label>
                                                                                 <span class="text-primary">
-                                                                                    <%= leavedata.employeeId %>
+                                                                                    <%= leavedata.Employee.email %>
                                                                                 </span>
                                                                             </p>
                                                                             <p><label

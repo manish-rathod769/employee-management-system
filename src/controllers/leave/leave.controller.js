@@ -72,6 +72,7 @@ const viewLeave = async (req, res) => {
         res.render('view-leave', { leavesdata: arr, success: "" });
       }
     } catch (e) {
+      console.log(e)
       errorResponse(req, res, e.message, 400, e);
     }
   } else if (role === 'ADMIN') {
@@ -79,6 +80,10 @@ const viewLeave = async (req, res) => {
       let page = Number(req.query.page) || 0;
       let size = Number(req.query.size) || 12;
       const getleave = await Leave.findAndCountAll({
+        include: [{
+          model: Employee,
+          attributes: ['firstName', 'lastName', 'email'],
+        }],
         limit: size,
         offset: page * size
       })
@@ -101,6 +106,10 @@ const viewLeave = async (req, res) => {
       empIds = empIds.map(element => element.employeeId);
       const getleave = await Leave.findAndCountAll({
         where: { employeeId: empIds, isArchived: false },
+        include: [{
+          model: Employee,
+          attributes: ['firstName', 'lastName', 'email'],
+        }],
         limit: size,
         offset: page * size
       })
@@ -119,6 +128,10 @@ const viewLeave = async (req, res) => {
       let size = Number(req.query.size) || 12;
       const getleave = await Leave.findAndCountAll({
         where: { isArchived: false },
+        include: [{
+          model: Employee,
+          attributes: ['firstName', 'lastName', 'email'],
+        }],
         limit: size,
         offset: page * size
       })
@@ -230,7 +243,13 @@ const updateLeave = async (req, res) => {
 
 const acceptRejectLeave = async (req, res) => {
   const leaveid = req.body;
-  const getdata = await Leave.findAll({ where: { id: leaveid.lid } });
+  const getdata = await Leave.findAll({ 
+    where: { id: leaveid.lid } ,
+    include: [{
+      model: Employee,
+      attributes: ['firstName', 'lastName', 'email'],
+    }],
+  });
   let mailOptions = {};
   let devEmail = await Employee.findAll({ where: { id: getdata[0].employeeId } });
   devEmail = devEmail.map(e => e.email);
@@ -290,15 +309,12 @@ const acceptRejectLeave = async (req, res) => {
   }
   transporter.sendMail(mailOptions, (err, info) => {
     if (err) {
-      return err;
-    } // else {
-      // console.log(leaveid.lid)
-      // successResponse(req, res, leaveid.lid, 200);
-    // }
+      return errorResponse(req, res, err.message, 500);
+    } else {
+      console.log(leaveid.lid)
+      successResponse(req, res, leaveid.lid, 200);
+    }
   });
-  const viewleave = await Leave.findAll({ where: { employeeId: '123', isArchived: false } });
-  res.render('update-leave', { leavesdata: viewleave });
-
 };
 
 module.exports = {
@@ -309,4 +325,3 @@ module.exports = {
   acceptRejectLeave,
   leaveForm,
 };
-

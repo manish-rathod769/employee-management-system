@@ -91,10 +91,19 @@
                                 <div class="card-body">
                                   <div class="pro-widget-content">
                                     <div class="profile-info-widget">
-                                      <p><label class="form-label text-orange lead">Employee :</label>
+                                      <p><label
+                                        class="form-label text-orange lead">Name
+                                        :</label>
                                         <span class="text-primary">
-                                          <%= leavedata.employeeId %>
+                                            <%= leavedata.Employee.firstName %> <%= leavedata.Employee.lastName %>
                                         </span>
+                                      </p>
+                                      <p><label
+                                              class="form-label text-orange lead">Email
+                                              :</label>
+                                          <span class="text-primary">
+                                              <%= leavedata.Employee.email %>
+                                          </span>
                                       </p>
                                       <p><label class="form-label text-orange lead">Start Date :</label>
                                         <span class="text-primary">
