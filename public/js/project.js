@@ -141,6 +141,7 @@ let fetchprojectData = (index) => {
         $('#current').text(index);
 
         if(resData.data.length){
+          // console.log(resData.data);
           resData.data.forEach( project => {
             $('#projects-data').append(`
               <div class='col-md-6 col-lg-6 col-xl-4'>
