@@ -120,8 +120,8 @@ let fetchprojectData = (index) => {
     success: (resData) => {
       $('#projects-data').html('');
       if(resData.success){  
-        const { totalCount } = resData.data.pop();
         const { role } = resData.data.pop();
+        const { totalCount } = resData.data.pop();
         $('#action').text('projects');
         $('#all-project').css('display','none');
 
@@ -141,7 +141,6 @@ let fetchprojectData = (index) => {
         $('#current').text(index);
 
         if(resData.data.length){
-          console.log(resData.data);
           resData.data.forEach( project => {
             $('#projects-data').append(`
               <div class='col-md-6 col-lg-6 col-xl-4'>
