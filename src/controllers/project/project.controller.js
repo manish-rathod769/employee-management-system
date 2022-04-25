@@ -64,28 +64,15 @@ const viewProject = async (req, res) => {
         attributes: ['projectId'],
       });
       projectsId = projectsId.map( ele => ele.projectId);
-      let projectsData;
-      if(req.user.role === 'DEV') {
-        projectsData = await Project.findAll({
-          where: { 
-            [Op.and]: [{ projectId: { [Op.in]: projectsId } }, { isArchived: false }, { name: { [Op.iLike]: `%${searchWord}%` } }],
-          },
-          distinct: true,
-          order: [[`${sortBy}`, `${sortOrder}`]],
-          offset: (page - 1) * count,
-          limit: count,
-        });
-      } else {
-        projectsData = await Project.findAll({
-          where: { 
-            [Op.and]: [{ projectId: { [Op.in]: projectsId } }, { name: { [Op.iLike]: `%${searchWord}%` } }],
-          },
-          distinct: true,
-          order: [[`${sortBy}`, `${sortOrder}`]],
-          offset: (page - 1) * count,
-          limit: count,
-        });
-      }
+      let projectsData = await Project.findAll({
+        where: { 
+          [Op.and]: [{ projectId: { [Op.in]: projectsId } }, { isArchived: false }, { name: { [Op.iLike]: `%${searchWord}%` } }],
+        },
+        distinct: true,
+        order: [[`${sortBy}`, `${sortOrder}`]],
+        offset: (page - 1) * count,
+        limit: count,
+      });
       
       const totalCount = await Project.findAll({
         where: { 
@@ -206,7 +193,7 @@ const renderViewProject = async(req, res) => {
   try{
     const { projectId } = req.params;
     const matchedPro = await Project.findAll({ where: { projectId } });
-    if(!matchedPro){
+      if(!matchedPro){
       res.status(401);
       return res.render('message', { error: 'Data does not exist !!!', message: '', route: '', text: 'Back' });  
     }

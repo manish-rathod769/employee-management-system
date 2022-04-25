@@ -76,7 +76,7 @@ export const getAllClient = async (req, res) => {
       // Client's Data
       const clientsData = await Client.findAll({
         where: { 
-          [Op.and]: [{ id: clientsId }, { [Op.or]: [{ name: { [Op.iLike]: `%${searchWord}%` } }, { email: { [Op.iLike]: `%${searchWord}%` } }, { slackId: { [Op.iLike]: `%${searchWord}%` } }, { city: { [Op.iLike]: `%${searchWord}%` } }, { state: { [Op.iLike]: `%${searchWord}%` } }, { country: { [Op.iLike]: `%${searchWord}%` } }, { organization: { [Op.iLike]: `%${searchWord}%` } }] }],
+          [Op.and]: [{ id: clientsId }, { isArchived: false }, { [Op.or]: [{ name: { [Op.iLike]: `%${searchWord}%` } }, { email: { [Op.iLike]: `%${searchWord}%` } }, { slackId: { [Op.iLike]: `%${searchWord}%` } }, { city: { [Op.iLike]: `%${searchWord}%` } }, { state: { [Op.iLike]: `%${searchWord}%` } }, { country: { [Op.iLike]: `%${searchWord}%` } }, { organization: { [Op.iLike]: `%${searchWord}%` } }] }],
         },
         attributes: ['id', 'name', 'email', 'slackId', 'organization'],
         distinct: true,
@@ -87,8 +87,8 @@ export const getAllClient = async (req, res) => {
 
       // Pagination Details
       const totalCount = await Client.findAll({
-        where: { 
-          [Op.and]: [{ id: clientsId }, { [Op.or]: [{ name: { [Op.iLike]: `%${searchWord}%` } }, { email: { [Op.iLike]: `%${searchWord}%` } }, { slackId: { [Op.iLike]: `%${searchWord}%` } }, { city: { [Op.iLike]: `%${searchWord}%` } }, { state: { [Op.iLike]: `%${searchWord}%` } }, { country: { [Op.iLike]: `%${searchWord}%` } }, { organization: { [Op.iLike]: `%${searchWord}%` } }] }],
+        where: {  
+          [Op.and]: [{ id: clientsId }, { isArchived: false }, { [Op.or]: [{ name: { [Op.iLike]: `%${searchWord}%` } }, { email: { [Op.iLike]: `%${searchWord}%` } }, { slackId: { [Op.iLike]: `%${searchWord}%` } }, { city: { [Op.iLike]: `%${searchWord}%` } }, { state: { [Op.iLike]: `%${searchWord}%` } }, { country: { [Op.iLike]: `%${searchWord}%` } }, { organization: { [Op.iLike]: `%${searchWord}%` } }] }],
         },
         attributes: ['id', 'name', 'email', 'slackId', 'organization'],
         distinct: true,
