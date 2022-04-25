@@ -101,7 +101,7 @@ export const getAttendance = async (req, res) => {
     // console.log(month, year);
     const attendance = await DailyAttendance.findAll(
       {
-        attributes: ['date', 'finalLog', 'log'],
+        attributes: ['date', 'finalLog', 'log', 'isOnLeave'],
         where: {
           employeeId: req.params.employeeId,
           month,

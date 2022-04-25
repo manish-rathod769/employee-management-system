@@ -617,7 +617,6 @@ export const renderEmployee = (req, res) => {
 // render login page
 export const loginView = (req, res) => {
   res.status(200);
-  console.log(req.locals);
   return res.render('employee/login', {error: ''});
 };
 export const forgotPasswordView = (req, res) => {

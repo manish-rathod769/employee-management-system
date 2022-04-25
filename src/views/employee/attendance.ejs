@@ -285,24 +285,25 @@
             if (result.data !== "NA") {
               result.data.forEach((key) => {
                 const date = key.date;
-                const { startTime, endTime, totalHour } = key.finalLog;
+                if (!key.isOnLeave) {
+                  const { startTime, endTime, totalHour } = key.finalLog;
 
-                $(`#start-${date}`).text(
-                  `${new Date(startTime).toLocaleTimeString()}`
-                );
-                $(`#end-${date}`).text(
-                  `${new Date(endTime).toLocaleTimeString()}`
-                );
-                $(`#totalHour-${date}`).text(`${totalHour}`);
+                  $(`#start-${date}`).text(
+                    `${new Date(startTime).toLocaleTimeString()}`
+                  );
+                  $(`#end-${date}`).text(
+                    `${new Date(endTime).toLocaleTimeString()}`
+                  );
+                  $(`#totalHour-${date}`).text(`${totalHour}`);
 
-                // json stringify value in function work as parsed 
-                $(`#log-${date} button`).attr('onclick', `getDailyLog(${JSON.stringify(key.log) || false})`);
+                  // json stringify value in function work as parsed 
+                  $(`#log-${date} button`).attr('onclick', `getDailyLog(${JSON.stringify(key.log) || false})`);
 
-                if (key.date === today.getDate()) {
-                    getDailyLog(key.log);
+                  if (key.date === today.getDate()) {
+                      getDailyLog(key.log);
+                  }
                 }
               });
-              
             }
           },
           error: (error) => {
