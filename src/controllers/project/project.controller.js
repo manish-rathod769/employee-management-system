@@ -53,6 +53,7 @@ const viewProject = async (req, res) => {
       })
       
       allProjects.push({ totalCount: totalCount.length });
+      allProjects.push({ role: req.user.role });
       return successResponse(req, res, allProjects, 200);
     }
     // DEV Role
@@ -94,6 +95,7 @@ const viewProject = async (req, res) => {
       });
 
       projectsData.push({ totalCount: totalCount.length });
+      projectsData.push({ role: req.user.role });
       return successResponse(req, res, projectsData, 200);
     }
     // PM Role
@@ -203,8 +205,8 @@ const renderEmployeeProjectView = async(req, res) => {
 const renderViewProject = async(req, res) => {
   try{
     const { projectId } = req.params;
-    const matchedPro = await Project.findOne({ where: { projectId } });
-    if(!JSON.parse(JSON.stringify(matchedPro))){
+    const matchedPro = await Project.findAll({ where: { projectId } });
+    if(!matchedPro){
       res.status(401);
       return res.render('message', { error: 'Data does not exist !!!', message: '', route: '', text: 'Back' });  
     }

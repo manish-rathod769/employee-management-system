@@ -48,9 +48,11 @@
                 <h4 class="card-title float-left mb-0 mt-2"><span id="projects-count"></span> Projects</h4>
                 <ul class="nav nav-tabs float-right border-0 tab-list-emp">
                   <li class="nav-item pl-3">
+                  <% if(role === 'ADMIN'){ %>
                     <a class="btn btn-theme button-1 text-white ctm-border-radius p-2 add-person ctm-btn-padding"
                       id="add-project">
                       <i class="fa fa-plus"></i> Add Project</a>
+                  <% } %>
                     <a class="btn btn-theme button-1 text-white ctm-border-radius p-2 add-person ctm-btn-padding"
                       id="all-project">
                       <i class="fa fa-users"></i> All Projects</a>
