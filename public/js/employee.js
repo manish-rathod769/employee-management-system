@@ -311,7 +311,8 @@ const displayEmployee = () => {
                       </div>
                     </div>
                   </div>
-                    <div class="team-action-icon float-right">
+                  ${element.role === 'ADMIN' ? 
+                  `<div class="team-action-icon float-right">
                         <button type="button" 
                           class="btn btn-theme ctm-border-radius text-white" 
                           title="Edit"
@@ -323,12 +324,12 @@ const displayEmployee = () => {
                           class="btn btn-theme ctm-border-radius text-white" 
                           title="Delete"
                           onclick="deleteButton('${element.id}', '${element.firstName} ${element.lastName}')"
-                          id="employeeDeleteButton" 
-                          data-toggle="modal" 
+                          id="employeeDeleteButton"
+                          data-toggle="modal"
                           data-target="#delete">
                           <i class="fa fa-trash"></i>
                         </button>
-                      </div>
+                      </div>` : ''}
                 </div>
               </div>
             </div>
