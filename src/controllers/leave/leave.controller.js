@@ -40,10 +40,10 @@ const addLeave = async (req, res) => {
       };
       transporter.sendMail(mailOptions, (err, info) => {
         if (err) {
-          errorResponse(req, res, err.message, 400, err);
-        } else {
-          successResponse(req, res, getleave, 200);
-        }
+          return err;
+        } // else {
+        //   return successResponse(req, res, getleave, 200);
+        // }
       });
     });
     const getleave = await Leave.findAll({ where: { employeeId: devId, isArchived: false } });
@@ -211,10 +211,10 @@ const updateLeave = async (req, res) => {
       }
       transporter.sendMail(mailOptions, (err, info) => {
         if (err) {
-          errorResponse(req, res, err.message, 400, err);
-        } else {
-          successResponse(req, res, getleave, 200);
-        }
+          return err;
+        } // else {
+        //   successResponse(req, res, getleave, 200);
+        // }
       });
     });
     const getallleave = await Leave.findAll({ where: { employeeId: devId, isArchived: false } });
@@ -290,11 +290,11 @@ const acceptRejectLeave = async (req, res) => {
   }
   transporter.sendMail(mailOptions, (err, info) => {
     if (err) {
-      errorResponse(req, res, err.message, 400, err);
-    } else {
-      console.log(leaveid.lid)
-      successResponse(req, res, leaveid.lid, 200);
-    }
+      return err;
+    } // else {
+      // console.log(leaveid.lid)
+      // successResponse(req, res, leaveid.lid, 200);
+    // }
   });
   const viewleave = await Leave.findAll({ where: { employeeId: '123', isArchived: false } });
   res.render('update-leave', { leavesdata: viewleave });

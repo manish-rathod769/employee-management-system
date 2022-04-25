@@ -3,15 +3,15 @@ import express from 'express';
 import * as leaveValidator from '../controllers/leave/leave.validator';
 
 import * as leaveControlller from '../controllers/leave/leave.controller';
-import verifyCookie from '../middlewares/auth';
+import { verifyCookie } from '../middlewares/auth';
 import * as roleCheck from '../middlewares/role';
 
-const router = new express.Router();
+const router = express.Router();
 
 // developer
 
 router.get('/leave/add-view',verifyCookie, roleCheck.roleDEV(true) ,leaveControlller.leaveForm);
-router.post('/leave/add',verifyCookie, roleCheck.roleDEV(false) ,leaveValidator.leaveRegisterValidation, leaveControlller.addLeave);
+router.post('/leave/add',verifyCookie, roleCheck.roleDEV(false) , leaveValidator.leaveRegisterValidation, leaveControlller.addLeave);
 router.get('/leave/view',verifyCookie, roleCheck.role_All(false) ,leaveControlller.viewLeave);
 router.get('/leave/view/:id',verifyCookie, roleCheck.role_All(false) ,leaveControlller.viewOneLeave);
 router.post('/leave/update/:id',verifyCookie, roleCheck.roleDEV(false) ,leaveValidator.leaveUpdateValidation, leaveControlller.updateLeave);

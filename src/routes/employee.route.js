@@ -1,7 +1,7 @@
 import express from 'express';
 import * as employeeController from '../controllers/employee/employee.controller';
 import * as employeeValidator from '../controllers/employee/employee.validator';
-import { getPoc, renderPocView, addPoc } from '../controllers/setting/poc.controller';
+import { getPoc, renderPocView, addPoc, updatePoc } from '../controllers/setting/poc.controller';
 import { upload, uploadUpdateAvatar } from '../helpers/index';
 import { verifyCookie, checkAJAX } from '../middlewares/auth';
 import * as roleCheck from '../middlewares/role';
@@ -43,5 +43,5 @@ router.get('/logout', verifyCookie, employeeController.logOut);
 router.get('/employee/:employeeId/poc', verifyCookie, roleCheck.roleDEV(true), renderPocView);
 router.get('/poc', checkAJAX, verifyCookie, roleCheck.role_All(false), getPoc); // for perticular Employee POC dynaminc(possibility)
 router.post('/poc', verifyCookie, roleCheck.roleAdmin(false), addPoc);
-router.put('/poc', verifyCookie, roleCheck.roleAdmin(false), );
+router.put('/poc', verifyCookie, roleCheck.roleAdmin(false), updatePoc);
 module.exports = router;
