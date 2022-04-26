@@ -1,5 +1,4 @@
 import { v4 as uuidv4 } from 'uuid';
-import { Op } from 'sequelize';
 import { errorResponse, successResponse } from '../../helpers';
 import { Leave, ProjectEmployee, Employee, DailyAttendance } from '../../models';
 import transporter from '../../helpers/mail';
@@ -12,7 +11,7 @@ const addLeave = async (req, res) => {
   try {
     const devId = req.user.id;
     const {
-      employeeId, startDate, endDate, reason,
+      startDate, endDate, reason,
     } = req.body;
     const leavedata = {
       id: uuidv4(),
@@ -22,7 +21,7 @@ const addLeave = async (req, res) => {
       reason,
       status: 'pending',
     };
-    const leaveobj = await Leave.create(leavedata);
+    await Leave.create(leavedata);
     let projectIds = await ProjectEmployee.findAll({ where: { employeeId: devId } });
     projectIds = projectIds.map(element => element.projectId);
     let empIds = await ProjectEmployee.findAll({ where: { projectId: projectIds } });
@@ -32,7 +31,7 @@ const addLeave = async (req, res) => {
     console.log(roleData);
     roleData.forEach(element => {
       const mailOptions = {
-        from: "noreply_mail<noreply@someemail.com>", // system address
+        from: process.env.MAIL_ID, // system address
         to: element,
         subject: 'Leave Request',
         text: `Employee ${req.user.email}, wants to take leave from ${leavedata.startDate},
@@ -208,7 +207,7 @@ const updateLeave = async (req, res) => {
     roleData.forEach(element => {
       if (leavedata.isArchived != 'on') {
         mailOptions = {
-          from: "noreply_mail<noreply@someemail.com>", // system address
+          from: process.env.MAIL_ID, // system address
           to: element,
           subject: 'Leave Request Updated',
           text: `Employee ${req.user.email}, updated his/her leave from ${leavedata.startDate},
@@ -286,7 +285,7 @@ const acceptRejectLeave = async (req, res) => {
     });
     const getleave = await Leave.update(leavedata, { where: { id: leaveid.lid } });
     mailOptions = {
-      from: "noreply_mail<noreply@someemail.com>", // system address
+      from: process.env.MAIL_ID, // system address
       to: devEmail[0], // developer's address
       subject: 'Leave Request',
       text: 'YOUR LEAVE IS APPROVED!!!',
@@ -301,7 +300,7 @@ const acceptRejectLeave = async (req, res) => {
     };
     const getleave = await Leave.update(leavedata, { where: { id: leaveid.lid } });
     mailOptions = {
-      from: "noreply_mail<noreply@someemail.com>", // system address
+      from: process.env.MAIL_ID, // system address
       to: devEmail[0], // developer's address
       subject: 'Leave Request',
       text: 'YOUR LEAVE IS REJECTED!!!',
