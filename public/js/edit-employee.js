@@ -246,7 +246,7 @@ $('#form-edit-employee').validate({
         $('.toast').toast('show');
         $('#editEmployeeFormContainer').addClass('d-none');
         $('#employeeDisplayContainer').removeClass('d-none');
-        setTimeout(() => window.location.reload(), 3000);
+        setTimeout(() => displayEmployee(), 100);
         // show successfull message in toast
       },
       error: (error) => {

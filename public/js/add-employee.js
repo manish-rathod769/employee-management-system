@@ -262,7 +262,7 @@ $(document).ready(() => {
           $('.toast').toast('show');
           $('#addEmployeeFormContainer').addClass('d-none');
           $('#employeeDisplayContainer').removeClass('d-none');
-          setTimeout(() => window.location.reload(), 3000);
+          setTimeout(() => displayEmployee(), 100);
         },
         error: (error) => {
           $('.toast-header').removeClass('bg-success').addClass('bg-danger').addClass('text-dark');

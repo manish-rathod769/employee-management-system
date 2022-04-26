@@ -184,6 +184,8 @@ export const getEmployee = async (req, res) => {
             {
               model: Technology,
               attributes: ['techName'],
+              // required: false,
+              duplicating: false,
             },
           ],
           attributes: ['id', 'firstName', 'lastName', 'role', 'email', 'avatar'],
@@ -194,9 +196,10 @@ export const getEmployee = async (req, res) => {
           ],
           where: {
             [Op.or]: [
-              { firstName: { [Op.iLike]: `%${search || ''}%` } },
-              { lastName: { [Op.iLike]: `%${search || ''}%` } },
-              { email: { [Op.iLike]: `%${search || ''}%` } },
+              { firstName: { [Op.iLike]: `%${search}%` } },
+              { lastName: { [Op.iLike]: `%${search}%` } },
+              { email: { [Op.iLike]: `%${search}%` } },
+              { '$Technologies.techName$': { [Op.iLike]: `%${search}%` } },
               Sequelize.literal(`"Employee"."role"::TEXT ILIKE '%${search || ''}%'`),
             ],
           },

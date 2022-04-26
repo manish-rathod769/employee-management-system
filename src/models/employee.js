@@ -82,14 +82,16 @@ module.exports = (sequelize, DataTypes) => {
           attributes: { exclude: ['password', 'verifyToken'] },
         },
         pm: {
-          where: { 
+          where: {
             [Op.and]: [
-              { isArchive: false }, 
-              { role: {
-                  [Op.or]: ["PM", "DEV"], 
-                }
+              { isArchive: false },
+              {
+                role: {
+                  [Op.or]: ['PM', 'DEV'],
+                },
               },
-            ]},
+            ]
+          },
           attributes: { exclude: ['password', 'verifyToken']},
         },
         login: {
