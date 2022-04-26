@@ -13,10 +13,10 @@ const validation = joi.object({
   careerStartDate: joi.date().required(),
 
   contactNo: joi.string().trim(true).required(),
-  secondaryEmail: joi.string().email().trim(),
+  secondaryEmail: joi.string().email().trim(true).allow(''),
   houseNo: joi.string().trim(true).required(),
   addressLine1: joi.string().trim(true).required(),
-  addressLine2: joi.string().trim(true),
+  addressLine2: joi.string().trim(true).allow(''),
   landmark: joi.string().trim(true).required(),
   city: joi.string().trim(true).required(),
   state: joi.string().trim(true).required(),
@@ -78,7 +78,7 @@ export const employeeValidate = async (req, res, next) => {
       deleteFile(req.file.path);
     }
     res.status(406);
-    errorResponse(req, res, 'employee data validation error', 406, error.message);
+    errorResponse(req, res, `employee data validation error. ${error.message}`, 406, error.message);
   } else if (!isValidTech(req.body.knownTech)) {
     if (req.file) {
       deleteFile(req.file.path);

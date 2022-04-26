@@ -1,5 +1,4 @@
 $('#cancelEdit').click((event) => {
-  event.preventDefault();
   $(':input', '#form-edit-employee').not(':button, :submit, :reset, :hidden')
     .val('');
   $('#editEmployeeFormContainer').addClass('d-none');
@@ -9,7 +8,7 @@ $('#cancelEdit').click((event) => {
 const imagePreviewUpdate = () => {
   const editForm = $('#form-edit-employee');
   const file = editForm.find('#imageUploadUpdate')[0].files[0];
-  console.log(file);
+  // console.log(file);
   if (file) {
     const reader = new FileReader();
     reader.onload = (evenet) => {
@@ -214,44 +213,21 @@ $('#form-edit-employee').validate({
     const formData = new FormData($('#form-edit-employee')[0]);
     formData.append('email', editForm.find('#email').val());
     formData.append('edited', true);
-    const file = editForm.find('#imageUploadUpdate')[0];
-    console.log(file);
+    formData.append('previousEmployer', editForm.find('#preEmployer').val());
+    formData.append('employerAddress', editForm.find('#preEmployerAddress').val());
+    formData.append('workingTime',
+      `${editForm.find('#workingTimeInYear').val()} years, ${editForm.find('#workingTimeInMonth').val()} months`);
+
+    // const file = editForm.find('#imageUploadUpdate')[0];
+    // console.log(file);
     // formData.append('avatar', file, file.name);
     // console.log(formData);
     // eslint-disable-next-line no-restricted-syntax
-    for (const pair of formData.entries()) {
-      console.log(`${pair[0]}`);
-      console.dir(pair[1]);
-    }
-    const payload = {
-      lastName: editForm.find('#lastName').val(),
-      firstName: editForm.find('#firstName').val(),
-      middleName: editForm.find('#middleName').val(),
-      email: editForm.find('#email').val(),
-      gender: editForm.find("input[type='radio'][name='gender']:checked").val(),
-      DOB: editForm.find('#dob').val(),
-      role: editForm.find('#role').val(),
-      joiningDate: editForm.find('#joiningDate').val(),
-      careerStartDate: editForm.find('#careerStartDate').val(),
+    // for (const pair of formData.entries()) {
+    //   console.log(`${pair[0]}`);
+    //   console.dir(pair[1]);
+    // }
 
-      collage: editForm.find('#collage').val(),
-      highestQualification: editForm.find('#highestQualification').val(),
-      university: editForm.find('#university').val(),
-      knownTech: editForm.find('#knownTech').val(),
-      secondaryEmail: editForm.find('#secondaryEmail').val(),
-      contactNo: editForm.find('#contactNo').val(),
-      houseNo: editForm.find('#houseNo').val(),
-      addressLine1: editForm.find('#addressLine1').val(),
-      addressLine2: editForm.find('#addressLine2').val(),
-      landmark: editForm.find('#landmark').val(),
-      state: editForm.find('#state').val(),
-      pincode: editForm.find('#pincode').val(),
-      city: editForm.find('#city').val(),
-      country: editForm.find('#country').val(),
-      previousEmployer: editForm.find('#preEmployer').val(),
-      employerAddress: editForm.find('#preEmployerAddress').val(),
-      workingTime: `${editForm.find('#workingTimeInYear').val()} years, ${editForm.find('#workingTimeInMonth').val()} months`,
-    };
     // console.log(payload);
     $.ajax({
       type: 'PUT',
