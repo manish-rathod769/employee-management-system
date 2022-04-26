@@ -335,11 +335,7 @@ $('#project-add-form').on('submit', (event) => {
 }); 
 let fetchClient = (clients) => {
   $.ajax({
-<<<<<<< HEAD
     url: `/getClients?all=${true}`,
-=======
-    url: '/getClients',
->>>>>>> edit: mail file moved to helpers from helper
     method: 'GET',
     success: (resData) => {
       let clientOption = '';
