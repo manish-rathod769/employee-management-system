@@ -107,7 +107,7 @@ const deleteButton = (id, name) => {
   });
 };
 
-const populateKnownTech = (techArray) => {
+const populateKnownTech = (techArray = []) => {
   $.ajax({
     type: 'GET',
     url: '/technologies',
@@ -299,8 +299,8 @@ const displayEmployee = () => {
                       </div>
                     </div>
                   </div>
-                  ${result.data.role === 'ADMIN' ? 
-                  `<div class="team-action-icon float-right">
+                  ${result.data.role === 'ADMIN'
+                ? `<div class="team-action-icon float-right">
                         <button type="button" 
                           class="btn btn-theme ctm-border-radius text-white" 
                           title="Edit"
@@ -317,7 +317,8 @@ const displayEmployee = () => {
                           data-target="#delete">
                           <i class="fa fa-trash"></i>
                         </button>
-                      </div>` : ''}
+                      </div>`
+                : ''}
                 </div>
               </div>
             </div>
