@@ -53,8 +53,8 @@ export const isValidTech = async (arr) => {
   return arr.every(elem => techList.includes(elem));
 };
 
-export const encryptPassword =  (password) => {
-  const encryptedPassword =  createHash('md5').update(password).digest('hex');
+export const encryptPassword = (password) => {
+  const encryptedPassword = createHash('md5').update(password).digest('hex');
   return encryptedPassword;
 };
 
