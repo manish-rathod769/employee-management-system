@@ -72,7 +72,6 @@ const viewLeave = async (req, res) => {
         res.render('view-leave', { leavesdata: arr, success: "" });
       }
     } catch (e) {
-      console.log(e)
       errorResponse(req, res, e.message, 400, e);
     }
   } else if (role === 'ADMIN') {
