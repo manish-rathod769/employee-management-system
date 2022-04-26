@@ -451,13 +451,12 @@ export const loginEmployee = async (req, res) => {
       return helpers.errorResponse(req, res, `${req.body.email} doesn't have ${req.body.role} rights`, 401);
       // return res.redirect(301, '/login');
     }
-
     // Generate Cookie, Store in DB and store in cookie
     const verifyToken = sign({ id: employee.id, email: employee.email, role: employee.role }, process.env.verifyToken, { expiresIn: '1d' });
+   
     employee.verifyToken = verifyToken;
-    await employee.save();
+    const dataemp = await employee.save();
     res.cookie('verifyToken', verifyToken);
-
     const result = {
       avatar: employee.avatar,
       name: employee.firstName,
