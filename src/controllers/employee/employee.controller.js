@@ -4,40 +4,33 @@ import { Op, Sequelize } from 'sequelize';
 import * as helpers from '../../helpers';
 import { sendRegistrationMail, sendForgotPasswordMail } from '../../helpers/email.helper';
 import {
-  Employee, EmployeeContact, EmployeeAcademic, EmployeePreWork, Technology, ProjectEmployee, EmployeeTech,
+  Employee,
+  EmployeeContact,
+  EmployeeAcademic,
+  EmployeePreWork,
+  Technology,
+  ProjectEmployee,
+  EmployeeTech,
 } from '../../models';
 
 export const addEmployee = async (req, res) => {
   try {
-    const {
-      firstName,
-      lastName,
-      middleName,
-      email,
-      gender,
-      dob,
-      role,
-      joiningDate,
-      careerStartDate,
-    } = req.body;
-
-    // console.log();
     // check for if employee exists
     const employee = await Employee.findOne(
       {
-        where: { email },
+        where: { email: req.body.email },
       },
     );
     if (employee) {
-      return helpers.errorResponse(req, res, `user with email ${email} already exists`, 409);
+      return helpers.errorResponse(req, res, `user with email ${req.body.email} already exists`, 409);
     }
 
-    // password is auto generated for all employees using dob as ddmmyyyy
+    // password is auto generated for all employees
     const password = helpers.generatePassword();
-    const encryptedPassword = await helpers.encryptPassword(password);
+    const encryptedPassword = helpers.encryptPassword(password);
 
     // make array of known tech id from technology table
-    let techList = await Technology.findAll(
+    const techList = await Technology.findAll(
       {
         where: {
           techName: {
@@ -51,19 +44,20 @@ export const addEmployee = async (req, res) => {
 
     const payload = {
       id: req.file.filename || uuidv4(),
-      firstName,
-      lastName,
-      middleName,
-      email,
+      firstName: req.body.firstName,
+      lastName: req.body.lastName,
+      middleName: req.body.middleName,
+      email: req.body.email,
       password: encryptedPassword,
-      gender,
-      DOB: new Date(dob),
-      role,
-      joiningDate: new Date(joiningDate),
-      careerStartDate,
+      gender: req.body.gender,
+      DOB: new Date(req.body.dob),
+      role: req.body.role,
+      joiningDate: new Date(req.body.joiningDate),
+      careerStartDate: new Date(req.body.careerStartDate),
       knownTech: techIdList,
       avatar: `https://employee-avatar.s3.amazonaws.com/${req.file.filename}`,
     };
+
     const contactDetailsPayload = {
       employeeId: payload.id,
       contactNo: req.body.contactNo,
@@ -77,6 +71,7 @@ export const addEmployee = async (req, res) => {
       pincode: req.body.pincode,
       country: req.body.country,
     };
+
     const preWorkPayload = {
       employeeId: payload.id,
       previousEmployer: req.body.previousEmployer,
@@ -92,26 +87,47 @@ export const addEmployee = async (req, res) => {
       knownTech: req.body.knownTech,
     };
 
-    const newEmployee = {};
-    newEmployee.personal = await Employee.create(payload);
-    newEmployee.contact = await EmployeeContact.create(contactDetailsPayload);
-    newEmployee.academic = await EmployeeAcademic.create(academicPayload);
-    newEmployee.preWork = await EmployeePreWork.create(preWorkPayload);
+    Promise.all([
+      Employee.create(payload),
+      EmployeeContact.create(contactDetailsPayload),
+      EmployeeAcademic.create(academicPayload),
+      EmployeePreWork.create(preWorkPayload),
+    ])
+      .then(async (result) => {
 
-    await techList.forEach(elem => {
-      newEmployee.personal.addTechnology(elem);
-    });
-    
-    // console.log('-----------------------------------');
-    // console.log(JSON.stringify(newEmployee,null, 2));
-    await helpers.cloudUpload(req.file);
-    // send mail
-    sendRegistrationMail(payload, password);
-    helpers.successResponse(req, res, newEmployee);
+        const newEmployee = {
+          personal: result[0],
+          contact: result[1],
+          academic: result[2],
+          preWork: result[3],
+        };
+
+        // employee tech cross table
+        try {
+          await newEmployee.personal.addTechnology(techList);
+        } catch (error) {
+          return helpers.errorResponse(req, res, 'Technology mapping Error!', 500, error.message);
+        }
+
+        // upload image to bucket
+        try {
+          await helpers.cloudUpload(req.file);
+        } catch (error) {
+          return helpers.errorResponse(req, res, 'Technology mapping Error!', 500, error.message);
+        }
+
+        // send registration mail
+        sendRegistrationMail(payload, password);
+        console.log(JSON.stringify(newEmployee, null, 2));
+        return helpers.successResponse(req, res, newEmployee);
+      })
+      .catch((error) => {
+        helpers.deleteFile(req.file.path);
+        return helpers.errorResponse(req, res, 'Employee data entry Error!', 500, error.message);
+      });
   } catch (error) {
-    console.log(error);
     helpers.deleteFile(req.file.path);
-    return helpers.errorResponse(req, res, 'something went wrong', 400, { err: error });
+    return helpers.errorResponse(req, res, 'something went wrong', 500, { err: error });
   }
 };
 
@@ -125,6 +141,8 @@ export const getEmployee = async (req, res) => {
     const startIndex = (page - 1) * limit;
 
     const result = {};
+
+    // pagination
     const totalEmployee = await Employee.count();
 
     if (totalEmployee > (page * limit)) {
@@ -133,6 +151,7 @@ export const getEmployee = async (req, res) => {
     if (startIndex > 0) {
       result.pre = true;
     }
+
     if (req.query.role === 'PM') {
       result.employee = await Employee.scope('admin').findAll({
         attributes: ['email', 'id'],
@@ -153,14 +172,16 @@ export const getEmployee = async (req, res) => {
         // console.log('here');
         result.employee = await Employee.scope('admin').findAll(
           {
+            // data redundancy
             include: [
               {
                 model: EmployeeAcademic,
                 attributes: ['knownTech'],
               },
-              // {
-              //   model: Technology,
-              // }
+              {
+                model: Technology,
+                attributes: ['techName'],
+              },
             ],
             attributes: ['id', 'firstName', 'lastName', 'role', 'email', 'avatar'],
             offset: startIndex,
@@ -182,9 +203,9 @@ export const getEmployee = async (req, res) => {
         result.employee = await Employee.scope('admin').findAll(
           {
             include: [{ model: EmployeeAcademic, attributes: ['knownTech'] },
-              // {
-              //   model: Technology,
-              // }
+              {
+                model: Technology,
+              },
             ],
             attributes: ['id', 'firstName', 'lastName', 'role', 'email', 'avatar'],
             offset: startIndex,
@@ -252,12 +273,12 @@ export const getEmployee = async (req, res) => {
             include: [
               {
                 model: ProjectEmployee,
-                where: { 
+                where: {
                   projectId: {
-                    [Op.in]: projects
-                  }
+                    [Op.in]: projects,
+                  },
                 },
-              }, 
+              },
               { model: EmployeeAcademic, attributes: ['knownTech'] },
               // {
               //   model: Technology,
@@ -274,10 +295,12 @@ export const getEmployee = async (req, res) => {
         );
       }
     }
+
     // console.log(totalEmployee);
-    // console.log(result);
+    // console.log(JSON.stringify(result.employee, null, 2));
     res.status(200);
     helpers.successResponse(req, res, result, 200);
+
   } catch (error) {
     // console.log(JSON.stringify(error));
     helpers.errorResponse(req, res, 'something went wrong', 500, error.message);
@@ -290,9 +313,9 @@ export const getEmployeeOne = async (req, res) => {
       {
         where: { id: req.params.employeeId },
         include: [EmployeeContact, EmployeeAcademic, EmployeePreWork,
-            // {
-            //   model: Technology,
-            // }
+          // {
+          //   model: Technology,
+          // }
         ],
       },
     );

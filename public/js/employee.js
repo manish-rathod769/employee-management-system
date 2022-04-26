@@ -1,38 +1,9 @@
-// const compressImage = (blobURL, quality, maxWidth) => {
-//   const mime_type = "image/jpeg";
-//   const img = new Image();
-//   img.src = blobURL;
-//   img.onload = function(event) {
-//     window.URL.revokeObjectURL(blobURL);
-//   }
-//   // source_img_obj.src = source_img_base64;
-//   // source_img_obj.height = 1000;
-//   // source_img_obj.width = 1000;
-//   maxWidth = maxWidth || 1000;
-//   const natW = img.naturalWidth;
-//   const natH = img.naturalHeight;
-//   const ratio = natH / natW;
-//   if (natW > maxWidth) {
-//     natW = maxWidth;
-//     natH = ratio * maxWidth;
-//   }
-//   let canvas = document.createElement('canvas');
-//   canvas.width = natW;
-//   canvas.height = natH;
-//   const ctx = canvas.getContext("2d").drawImage(img, 0, 0, natW, natH);
-//   const newImageData = canvas.toDataURL(mime_type, (60 / 100));
-//   const result_image_obj = new Image();
-//   result_image_obj.src = newImageData;
-//   console.log(ctx);
-//   $('.avatar-preview').parent().append(result_image_obj);
-//   return result_image_obj;
-// }
-
 const getTimeBetweenDates = (startDate, endDate) => {
   const sDate = new Date(startDate);
   const eDate = new Date(endDate);
   let year = eDate.getFullYear() - sDate.getFullYear();
   let month = eDate.getMonth() - sDate.getMonth();
+
   if (month < 0) {
     year -= 1;
     month += 11;
@@ -49,28 +20,32 @@ $('#addEmployeeBtn').click((event) => {
   $.ajax({
     type: 'GET',
     url: '/technologies',
-    success: function ({ data }) {
+
+    success: ({ data }) => {
       $('#knownTech').html('<option selected disabled>Known Technology</option>');
-      data.forEach(elem => {
+      data.forEach((elem) => {
         const val = elem.techName;
         // append to select group
         $('#knownTech').append(
-          `<option value="${val}">${val}</option>`
+          `<option value="${val}">${val}</option>`,
         );
       });
-      // append data to #knownTech 
+      // append data to #knownTech
     },
-    error: function (error) {
+
+    error: (error) => {
       console.log(error);
-    }
+    },
   });
+
   fetchStateNames($('#employee-add-state'));
 });
 
+// eslint-disable-next-line no-unused-vars
 const populateCityNames = (flag) => {
   $.getJSON('../josnData/stateCity.json', (data) => {
     let cityOptions = '';
-    
+
     if (flag) {
       data[$('#employee-add-state').val()].forEach((city) => {
         cityOptions += `<option value='${city}'>${city}</option>`;
@@ -97,17 +72,17 @@ const fetchStateNames = (elem) => {
 };
 
 const deleteButton = (id, name) => {
-  //console.log(id);
   $('#EmployeeDeleteConcentModal').find('.modal-body').html(`<p> Employee <b>${name}</b> will get deleted.are you sure? </p>`);
-  $('#employeeConfirmDelete').click((event) => {
 
+  $('#employeeConfirmDelete').click(() => {
     $.ajax({
       type: 'DELETE',
       url: '/employees/',
       data: {
-        id: id,
+        id,
       },
-      success: (data) => {
+
+      success: () => {
         $('.toast-header').removeClass('bg-danger').addClass('bg-success').addClass('text-dark');
         $('.toast-title').text('Employee Delete');
         $('.toast-body').text('employee deleted successfully!');
@@ -117,6 +92,7 @@ const deleteButton = (id, name) => {
         $('.toast').toast('show');
         displayEmployee();
       },
+
       error: (error) => {
         $('.toast-header').removeClass('bg-success').addClass('bg-danger').addClass('text-dark');
         $('.toast-title').text('Employee Delete');
@@ -125,7 +101,8 @@ const deleteButton = (id, name) => {
           delay: 5000,
         });
         $('.toast').toast('show');
-      }
+      },
+
     });
   });
 };
@@ -134,10 +111,11 @@ const populateKnownTech = (techArray) => {
   $.ajax({
     type: 'GET',
     url: '/technologies',
-    success: function ({ data }) {
+
+    success: ({ data }) => {
       const form = $('#form-edit-employee');
       form.find('#knownTech').html('<option disabled>Known Technology</option>');
-      data.forEach(elem => {
+      data.forEach((elem) => {
         const val = elem.techName;
         // append to select group
         if (techArray.includes(val)) {
@@ -152,23 +130,22 @@ const populateKnownTech = (techArray) => {
       });
       // append data to #knownTech 
     },
-    error: function (error) {
+
+    error: (error) => {
       // console.log(error);
-    }
+    },
   });
-}
+};
 
 const editButton = (id) => {
   $.ajax({
     type: 'GET',
     url: `/employees/${id}`,
     success: ({ data }) => {
-
       // remove employee display and show edit div
       $('#editEmployeeFormContainer').removeClass('d-none');
       $('#employeeDisplayContainer').addClass('d-none');
-      // console.log(id);
-      // console.log(data);
+
       // change edit div and add edit and cancel button;
       const form = $('#form-edit-employee');
       form.data('id', id);
@@ -181,11 +158,14 @@ const editButton = (id) => {
       form.find(`#role option[value=${data.role}]`).attr('selected', 'selected');
       form.find('#joiningDate').val(data.joiningDate.split('T')[0]);
       form.find('#careerStartDate').val(data.careerStartDate.split('T')[0] || null);
+      $('.avatar-preview').find('div').css('background-image', `url(${data.avatar || '../img/logo2.png'})`);
       // console.log(data.careerStartDate);
+
       form.find('#collage').val(data.EmployeeAcademic.collage || '');
       form.find('#highestQualification').val(data.EmployeeAcademic.highestQualification || '');
       form.find('#university').val(data.EmployeeAcademic.university || null);
       populateKnownTech(data.EmployeeAcademic.knownTech);
+
       form.find('#secondaryEmail').val(data.EmployeeContact.secondaryEmail || null);
       form.find('#contactNo').val(data.EmployeeContact.contactNo || '');
       form.find('#houseNo').val(data.EmployeeContact.houseNo || '');
@@ -193,6 +173,7 @@ const editButton = (id) => {
       form.find('#addressLine2').val(data.EmployeeContact.addressLine2 || null);
       form.find('#landmark').val(data.EmployeeContact.landmark || null);
       form.find('#state').val(data.EmployeeContact.state || null);
+
       $.getJSON('../josnData/stateCity.json', (states) => {
         let stateOptions = '';
         Object.keys(states).forEach((key) => {
@@ -205,6 +186,7 @@ const editButton = (id) => {
       form.find('#city').val(data.EmployeeContact.city || null);
       // temp camelcase function  remove afterwords
       const state = data.EmployeeContact.state.charAt(0).toUpperCase() + data.EmployeeContact.state.slice(1);
+
       $.getJSON('../josnData/stateCity.json', (cityData) => {
         let cityOptions = '';
         // console.log(state);
@@ -213,12 +195,12 @@ const editButton = (id) => {
         });
         $('#employee-edit-city').append(cityOptions);
       });
-
       form.find('#country').val(data.EmployeeContact.country || null);
+
       form.find('#preEmployer').val(data.EmployeePreWork.previousEmployer || 'NA');
       form.find('#preEmployerAddress').val(data.EmployeePreWork.employerAddress || 'NA');
-      form.find('#workingTimeInYear').val(Number(data.EmployeePreWork.workingTime?.split(' ')[0]) || 0);
-      form.find('#workingTimeInMonth').val(Number(data.EmployeePreWork.workingTime?.split(' ')[2]) || 0);
+      form.find('#workingTimeInYear').val(Number(data.EmployeePreWork.workingTime.split(' ')[0]) || 0);
+      form.find('#workingTimeInMonth').val(Number(data.EmployeePreWork.workingTime.split(' ')[2]) || 0);
     },
     error: (error) => {
       // display toast for error
@@ -286,7 +268,7 @@ const displayEmployee = () => {
       result.data.employee.forEach((element, index) => {
         // console.log(element);
         const avatar = element.avatar.split('/').length > 2 ? element.avatar : "assets/img/profiles/img-6.jpg";
-        const tech = element.EmployeeAcademic?.knownTech || 'tech';
+        const tech = element.EmployeeAcademic.knownTech || 'tech';
         $('#displayEmployeeDetails').append(
           `<div class="col-md-6 col-lg-6 col-xl-4" id="employee-card-${element.id}">
             <div class="card widget-profile">
