@@ -24,9 +24,9 @@ const singleProject = async (req, res) => {
   const { id } = req.params;
   const matchedProject = await Project.findOne({ where: { projectId: id } });
   if (!matchedProject) {
-    errorResponse(req, res, 'Not Project Found', 404);
+    return errorResponse(req, res, 'Not Project Found', 404);
   }
-  successResponse(req, res, matchedProject, 200);
+  return successResponse(req, res, matchedProject, 200);
 };
 
 const viewProject = async (req, res) => {
@@ -66,7 +66,10 @@ const viewProject = async (req, res) => {
       projectsId = projectsId.map( ele => ele.projectId);
       let projectsData = await Project.findAll({
         where: { 
-          [Op.and]: [{ projectId: { [Op.in]: projectsId } }, { isArchived: false }, { name: { [Op.iLike]: `%${searchWord}%` } }],
+          [Op.and]: [{ projectId: { [Op.in]: projectsId } }, 
+                     { isArchived: false }, 
+                     { name: { [Op.iLike]: `%${searchWord}%` } 
+                    }],
         },
         distinct: true,
         order: [[`${sortBy}`, `${sortOrder}`]],
@@ -76,7 +79,11 @@ const viewProject = async (req, res) => {
       
       const totalCount = await Project.findAll({
         where: { 
-          [Op.and]: [{ projectId: { [Op.in]: projectsId } }, { isArchived: false }, { name: { [Op.iLike]: `%${searchWord}%` } }],
+          [Op.and]: [{ projectId: 
+            { [Op.in]: projectsId } }, 
+            { isArchived: false }, 
+            { name: { [Op.iLike]: `%${searchWord}%` } 
+          }],
         },
         distinct: true,
       });
@@ -134,10 +141,13 @@ const updateProject = async (req, res) => {
     }
     
     const { name, type, status, probable_end_date, isArchived } = req.body;
-    const updatedProject = await Project.update({ name, type, status, probable_end_date, isArchived }, { returning: true, where: { projectId: ProjectId } });
-    successResponse(req, res, updatedProject[1], 200);
+    const updatedProject = await Project.update(
+      { name, type, status, probable_end_date, isArchived }, 
+      { returning: true, where: { projectId: ProjectId } }
+    );
+    return successResponse(req, res, updatedProject[1], 200);
   } catch (error) {
-    errorResponse(req, res, error.message, 500, error);
+    return errorResponse(req, res, error.message, 500, error);
   }
 };
 
@@ -154,7 +164,7 @@ const projectEmployee = async (req, res) => {
     });
     return successResponse(req, res, data, 200);
   } catch(error) {
-    errorResponse(req, res, error.message, 500, error);
+    return errorResponse(req, res, error.message, 500, error);
   }
 }
 
@@ -170,7 +180,7 @@ const projectClient = async (req, res) => {
       where: { projectId }, attributes: ['clientId']});
     return successResponse(req, res, data, 200);
   } catch(error) {
-    errorResponse(req, res, error.message, 500, error);
+    return errorResponse(req, res, error.message, 500, error);
   }
 }
 
@@ -180,12 +190,16 @@ const renderEmployeeProjectView = async(req, res) => {
     const matchedEmp = await Employee.findOne({ where: { id: employeeId } });
     if(!JSON.parse(JSON.stringify(matchedEmp))){
       res.status(401);
-      return res.render('message', { error: 'Data doen not exist !!!', message: '', route: '', text: 'Back' });  
+      return res.render('message', 
+        { error: 'Data doen not exist !!!', message: '', route: '', text: 'Back' }
+      );  
     }
     return res.render('employee/project');
   } catch(error) {
     res.status(401);
-    return res.render('message', { error: 'Something went Wrong !!!', message: '', route: '', text: 'Back' });
+    return res.render('message', 
+      { error: 'Something went Wrong !!!', message: '', route: '', text: 'Back' }
+    );
   }
 }
 
@@ -195,12 +209,16 @@ const renderViewProject = async(req, res) => {
     const matchedPro = await Project.findAll({ where: { projectId } });
       if(!matchedPro){
       res.status(401);
-      return res.render('message', { error: 'Data does not exist !!!', message: '', route: '', text: 'Back' });  
+      return res.render('message', 
+        { error: 'Data does not exist !!!', message: '', route: '', text: 'Back' }
+      );  
     }
     return res.render('viewProject', { projectId });
   } catch(error) {
     res.status(401);
-    return res.render('message', { error: 'Something went Wrong !!!', message: '', route: '', text: 'Back' });
+    return res.render('message', 
+      { error: 'Something went Wrong !!!', message: '', route: '', text: 'Back' }
+    );
   }
 }
 

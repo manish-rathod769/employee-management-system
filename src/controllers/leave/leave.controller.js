@@ -1,8 +1,18 @@
 import { v4 as uuidv4 } from 'uuid';
+import { Op } from 'sequelize';
 import { errorResponse, successResponse } from '../../helpers';
 import { Leave, ProjectEmployee, Employee, DailyAttendance } from '../../models';
 import transporter from '../../helpers/mail';
 import * as constantVar from '../../constant/constantVar';
+
+function getDates(startDate1, endDate2) {
+  var oneDay = 24 * 3600 * 1000;
+  for (var d = [], ms = startDate1 * 1, last = endDate2 * 1; ms < last; ms += oneDay) {
+    d.push(new Date(ms));
+  }
+  d.push(new Date(ms + 1));
+  return d;
+}
 
 const leaveForm = async (req, res) => {
   res.render('add-leave', { success: '' });
@@ -264,24 +274,22 @@ const acceptRejectLeave = async (req, res) => {
     };
     var sDate = getdata[0].startDate;
     var eDate = getdata[0].endDate;
-    function getDates(d1, d2) {
-      var oneDay = 24 * 3600 * 1000;
-      for (var d = [], ms = d1 * 1, last = d2 * 1; ms < last; ms += oneDay) {
-        d.push(new Date(ms));
-      }
-      d.push(new Date(ms + 1));
-      return d;
-    }
-    const dates = getDates(sDate, eDate);
-    dates.forEach(async (date) => {
-      await DailyAttendance.create({
-        id: uuidv4(),
-        employeeId: getdata[0].employeeId,
-        log: [{ 'start': '', 'end': '' }],
-        date: date.getDate(),
-        month: date.getMonth(),
-        year: date.getFullYear(),
-        isOnLeave: true,
+    const datesDiff = getDates(sDate, eDate);
+    console.log(datesDiff);
+    datesDiff.forEach(async (date) => {
+      await DailyAttendance.findOrCreate({
+        where: {
+          [Op.and]: [{ employeeId: getdata[0].employeeId, }, { date: date.getDate() }, { month: date.getMonth() }, { year: date.getFullYear() }],
+        },
+        defaults: {
+          id: uuidv4(),
+          employeeId: getdata[0].employeeId,
+          log: [],
+          date: date.getDate(),
+          month: date.getMonth(),
+          year: date.getFullYear(),
+          isOnLeave: true,
+        },
       });
     });
     await Leave.update(leavedata, { where: { id: leaveid.lid } });
