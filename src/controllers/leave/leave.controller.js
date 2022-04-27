@@ -2,6 +2,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { errorResponse, successResponse } from '../../helpers';
 import { Leave, ProjectEmployee, Employee, DailyAttendance } from '../../models';
 import transporter from '../../helpers/mail';
+import * as constantVar from '../../constant/constantVar';
 
 const leaveForm = async (req, res) => {
   res.render('add-leave', { success: '' });
@@ -26,12 +27,12 @@ const addLeave = async (req, res) => {
     projectIds = projectIds.map(element => element.projectId);
     let empIds = await ProjectEmployee.findAll({ where: { projectId: projectIds } });
     empIds = empIds.map(element => element.employeeId);
-    let roleData = await Employee.findAll({ where: { id: empIds, role: 'PM' } })
+    let roleData = await Employee.findAll({ where: { id: empIds, role: constantVar.PM } })
     roleData = roleData.map(element => element.email);
     console.log(roleData);
     roleData.forEach(element => {
       const mailOptions = {
-        from: process.env.MAIL_ID, // system address
+        from: constantVar.MAIL_ID, // system address
         to: element,
         subject: 'Leave Request',
         text: `Employee ${req.user.email}, wants to take leave from ${leavedata.startDate},
@@ -55,7 +56,7 @@ const addLeave = async (req, res) => {
 const viewLeave = async (req, res) => {
   const role = req.user.role;
   const userId = req.user.id;
-  if (role === 'DEV') {
+  if (role === constantVar.DEV) {
     try {
       let page = Number(req.query.page) || 0;
       let size = Number(req.query.size) || 12;
@@ -64,16 +65,16 @@ const viewLeave = async (req, res) => {
         limit: size,
         offset: page * size
       })
-      const arr = getleave.rows;
-      if (arr.length == 0) {
-        res.render('view-leave', { leavesdata: arr, success: "" });
+      const arrayLeave = getleave.rows;
+      if (arrayLeave.length == 0) {
+        res.render('view-leave', { leavesdata: arrayLeave, success: "" });
       } else {
-        res.render('view-leave', { leavesdata: arr, success: "" });
+        res.render('view-leave', { leavesdata: arrayLeave, success: "" });
       }
     } catch (e) {
       errorResponse(req, res, e.message, 400, e);
     }
-  } else if (role === 'ADMIN') {
+  } else if (role === constantVar.ADMIN) {
     try {
       let page = Number(req.query.page) || 0;
       let size = Number(req.query.size) || 12;
@@ -85,16 +86,16 @@ const viewLeave = async (req, res) => {
         limit: size,
         offset: page * size
       })
-      const arr = getleave.rows;
-      if (arr.length == 0) {
-        res.render('adminView-leave', { leavesdata: arr });
+      const arrayLeave = getleave.rows;
+      if (arrayLeave.length == 0) {
+        res.render('adminView-leave', { leavesdata: arrayLeave });
       } else {
-        res.render('adminView-leave', { leavesdata: arr });
+        res.render('adminView-leave', { leavesdata: arrayLeave });
       }
     } catch (e) {
       errorResponse(req, res, e.message, 400, e);
     }
-  } else if (role === 'PM') {
+  } else if (role === constantVar.PM) {
     try {
       let page = Number(req.query.page) || 0;
       let size = Number(req.query.size) || 12;
@@ -111,16 +112,16 @@ const viewLeave = async (req, res) => {
         limit: size,
         offset: page * size
       })
-      const arr = getleave.rows;
-      if (arr.length == 0) {
-        res.render('update-leave', { leavesdata: arr });
+      const arrayLeave = getleave.rows;
+      if (arrayLeave.length == 0) {
+        res.render('update-leave', { leavesdata: arrayLeave });
       } else {
-        res.render('update-leave', { leavesdata: arr });
+        res.render('update-leave', { leavesdata: arrayLeave });
       }
     } catch (e) {
       errorResponse(req, res, e.message, 400, e);
     }
-  } else if (role === 'HR') {
+  } else if (role === constantVar.HR) {
     try {
       let page = Number(req.query.page) || 0;
       let size = Number(req.query.size) || 12;
@@ -133,11 +134,11 @@ const viewLeave = async (req, res) => {
         limit: size,
         offset: page * size
       })
-      const arr = getleave.rows;
-      if (arr.length == 0) {
-        res.render('hrView-leave', { leavesdata: arr });
+      const arrayLeave = getleave.rows;
+      if (arrayLeave.length == 0) {
+        res.render('hrView-leave', { leavesdata: arrayLeave });
       } else {
-        res.render('hrView-leave', { leavesdata: arr });
+        res.render('hrView-leave', { leavesdata: arrayLeave });
       }
     } catch (e) {
       errorResponse(req, res, e.message, 400, e);
@@ -148,7 +149,7 @@ const viewLeave = async (req, res) => {
 
 const viewOneLeave = async (req, res) => {
   const role = req.user.role;
-  if (role === 'DEV') {
+  if (role === constantVar.DEV) {
     try {
       console.log(req.params.id)
       const getleave = await Leave.findAll({ where: { id: req.params.id, isArchived: false } });
@@ -157,21 +158,21 @@ const viewOneLeave = async (req, res) => {
     } catch (e) {
       errorResponse(req, res, e.message, 400, e);
     }
-  } else if (role === 'ADMIN') {
+  } else if (role === constantVar.ADMIN) {
     try {
       const getleave = await Leave.findAll({ where: { id: req.params.id } });
       res.render('adminView-leave', { leavesdata: getleave });
     } catch (e) {
       errorResponse(req, res, e.message, 400, e);
     }
-  } else if (role === 'PM') {
+  } else if (role === constantVar.PM) {
     try {
       const getleave = await Leave.findAll({ where: { id: req.params.id, isArchived: false } });
       res.render('update-leave', { leavesdata: getleave });
     } catch (e) {
       errorResponse(req, res, e.message, 400, e);
     }
-  } else if (role === 'HR') {
+  } else if (role === constantVar.HR) {
     try {
       const getleave = await Leave.findAll({ where: { id: req.params.id, isArchived: false } });
       res.render('hrView-leave', { leavesdata: getleave });
@@ -187,7 +188,7 @@ const updateLeave = async (req, res) => {
     let mailOptions = {};
     const getdata = await Leave.findByPk(req.params.id);
     const {
-      employeeId, startDate, endDate, reason, status, isArchived,
+      startDate, endDate, reason, status, isArchived,
     } = req.body;
     const leavedata = {
       employeeId: getdata.employeeId,
@@ -197,17 +198,17 @@ const updateLeave = async (req, res) => {
       status,
       isArchived,
     };
-    const getleave = await Leave.update(leavedata, { where: { id: req.params.id } });
+    await Leave.update(leavedata, { where: { id: req.params.id } });
     let projectIds = await ProjectEmployee.findAll({ where: { employeeId: devId } });
     projectIds = projectIds.map(element => element.projectId);
     let empIds = await ProjectEmployee.findAll({ where: { projectId: projectIds } });
     empIds = empIds.map(element => element.employeeId);
-    let roleData = await Employee.findAll({ where: { id: empIds, role: 'PM' } })
+    let roleData = await Employee.findAll({ where: { id: empIds, role: constantVar.PM } })
     roleData = roleData.map(element => element.email);
     roleData.forEach(element => {
       if (leavedata.isArchived != 'on') {
         mailOptions = {
-          from: process.env.MAIL_ID, // system address
+          from: constantVar.MAIL_ID, // system address
           to: element,
           subject: 'Leave Request Updated',
           text: `Employee ${req.user.email}, updated his/her leave from ${leavedata.startDate},
@@ -216,7 +217,7 @@ const updateLeave = async (req, res) => {
       }
       else {
         mailOptions = {
-          from: "noreply_mail<noreply@someemail.com>", // system address
+          from: constantVar.MAIL_ID, // system address
           to: element,
           subject: 'Leave Request Updated',
           text: `Employee ${req.user.email} does not want to leave now!!!`,
@@ -243,8 +244,8 @@ const updateLeave = async (req, res) => {
 
 const acceptRejectLeave = async (req, res) => {
   const leaveid = req.body;
-  const getdata = await Leave.findAll({ 
-    where: { id: leaveid.lid } ,
+  const getdata = await Leave.findAll({
+    where: { id: leaveid.lid },
     include: [{
       model: Employee,
       attributes: ['firstName', 'lastName', 'email'],
@@ -273,7 +274,7 @@ const acceptRejectLeave = async (req, res) => {
     }
     const dates = getDates(sDate, eDate);
     dates.forEach(async (date) => {
-      const attendance = await DailyAttendance.create({
+      await DailyAttendance.create({
         id: uuidv4(),
         employeeId: getdata[0].employeeId,
         log: [{ 'start': '', 'end': '' }],
@@ -283,9 +284,9 @@ const acceptRejectLeave = async (req, res) => {
         isOnLeave: true,
       });
     });
-    const getleave = await Leave.update(leavedata, { where: { id: leaveid.lid } });
+    await Leave.update(leavedata, { where: { id: leaveid.lid } });
     mailOptions = {
-      from: process.env.MAIL_ID, // system address
+      from: constantVar.MAIL_ID, // system address
       to: devEmail[0], // developer's address
       subject: 'Leave Request',
       text: 'YOUR LEAVE IS APPROVED!!!',
@@ -300,7 +301,7 @@ const acceptRejectLeave = async (req, res) => {
     };
     const getleave = await Leave.update(leavedata, { where: { id: leaveid.lid } });
     mailOptions = {
-      from: process.env.MAIL_ID, // system address
+      from: constantVar.MAIL_ID, // system address
       to: devEmail[0], // developer's address
       subject: 'Leave Request',
       text: 'YOUR LEAVE IS REJECTED!!!',
