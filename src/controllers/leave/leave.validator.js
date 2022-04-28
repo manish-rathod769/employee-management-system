@@ -1,6 +1,7 @@
 import joi from 'joi';
 import { errorResponse } from '../../helpers/index';
 
+// validation on add leave page for employee(DEV)
 const leaveRegisterValid = joi.object({
   startDate: joi.date().required(),
   endDate: joi.date().required(),
@@ -21,6 +22,7 @@ exports.leaveRegisterValidation = async (req, res, next) => {
   }
 };
 
+// validation on update leave page for employee(DEV)
 const leaveUpdateValid = joi.object({
   startDate: joi.date().required(),
   endDate: joi.date().required(),

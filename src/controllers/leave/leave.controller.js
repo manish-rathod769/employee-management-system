@@ -5,19 +5,22 @@ import { Leave, ProjectEmployee, Employee, DailyAttendance } from '../../models'
 import transporter from '../../helpers/mail';
 import * as constantVar from '../../constant/constantVar';
 
+// difference between two dates
 function getDates(startDate1, endDate2) {
   var oneDay = 24 * 3600 * 1000;
-  for (var d = [], ms = startDate1 * 1, last = endDate2 * 1; ms < last; ms += oneDay) {
-    d.push(new Date(ms));
+  for (var arrayDates = [], ms = startDate1 * 1, last = endDate2 * 1; ms < last; ms += oneDay) {
+    arrayDates.push(new Date(ms));
   }
-  d.push(new Date(ms + 1));
-  return d;
+  arrayDates.push(new Date(ms + 1));
+  return arrayDates;
 }
 
+// redering add leave page 
 const leaveForm = async (req, res) => {
   res.render('add-leave', { success: '' });
 };
 
+// business logic of add leave for employee(DEV)
 const addLeave = async (req, res) => {
   try {
     const devId = req.user.id;
@@ -33,13 +36,48 @@ const addLeave = async (req, res) => {
       status: 'pending',
     };
     await Leave.create(leavedata);
-    let projectIds = await ProjectEmployee.findAll({ where: { employeeId: devId } });
-    projectIds = projectIds.map(element => element.projectId);
-    let empIds = await ProjectEmployee.findAll({ where: { projectId: projectIds } });
-    empIds = empIds.map(element => element.employeeId);
-    let roleData = await Employee.findAll({ where: { id: empIds, role: constantVar.PM } })
-    roleData = roleData.map(element => element.email);
-    console.log(roleData);
+
+    //to find respective PM of DEVELOPER
+    let projectIdsFun = () => {
+      return new Promise((resolve, reject) => {
+        resolve(ProjectEmployee.findAll({ where: { employeeId: devId } }))
+      }).then((result) => {
+        let projectIds = result.map(element => element.projectId);
+        return projectIds;
+      })
+    }
+    let empIdsFun = (projectIds) => {
+      return new Promise((resolve, reject) => {
+        resolve(ProjectEmployee.findAll({ where: { projectId: projectIds } }))
+      }).then((result) => {
+        let empIds = result.map(element => element.employeeId);
+        return empIds;
+      })
+    }
+    let roleDataFun = (empIds) => {
+      return new Promise((resolve, reject) => {
+        resolve(Employee.findAll({ where: { id: empIds, role: constantVar.PM } }))
+      }).then((result) => {
+        let roleData = result.map(element => element.email);
+        return roleData;
+      })
+    }
+    const listPM = async () => {
+      let projectIdData = await projectIdsFun();
+      let empIdData = await empIdsFun(projectIdData);
+      let roleDataPM = await roleDataFun(empIdData);
+      return roleDataPM;
+    }
+    const roleData = await listPM();
+
+    // let projectIds = await ProjectEmployee.findAll({ where: { employeeId: devId } });
+    // projectIds = projectIds.map(element => element.projectId);
+    // let empIds = await ProjectEmployee.findAll({ where: { projectId: projectIds } });
+    // empIds = empIds.map(element => element.employeeId);
+    // let roleData = await Employee.findAll({ where: { id: empIds, role: constantVar.PM } })
+    // roleData = roleData.map(element => element.email);
+
+    // to send leave request mail to all PM 
     roleData.forEach(element => {
       const mailOptions = {
         from: constantVar.MAIL_ID, // system address
@@ -48,14 +86,16 @@ const addLeave = async (req, res) => {
         text: `Employee ${req.user.email}, wants to take leave from ${leavedata.startDate},
         to ${leavedata.endDate} due to ${reason}`,
       };
-      transporter.sendMail(mailOptions, (err, info) => {
+      transporter.sendMail(mailOptions, (err) => {
         if (err) {
-          return err;
-        } // else {
-        //   return successResponse(req, res, getleave, 200);
-        // }
+          return errorResponse(req, res, err.message, 500);
+        } else {
+          return successResponse(req, res, getleave, 200);
+        }
       });
     });
+
+    // to show own leaves of employee(DEV)
     const getleave = await Leave.findAll({ where: { employeeId: devId, isArchived: false } });
     res.render('view-leave', { leavesdata: getleave, success: 'YOUR LEAVE SUCCESSFULLY ADDED!!' });
   } catch (e) {
@@ -63,13 +103,20 @@ const addLeave = async (req, res) => {
   }
 };
 
+//view all leave pages
 const viewLeave = async (req, res) => {
+
+  // role and userid from stored cookies
   const role = req.user.role;
   const userId = req.user.id;
+
+  // if employee is developer
   if (role === constantVar.DEV) {
     try {
-      let page = Number(req.query.page) || 0;
-      let size = Number(req.query.size) || 12;
+
+      // pagination
+      const page = Number(req.query.page) || 0;
+      const size = Number(req.query.size) || 12;
       const getleave = await Leave.findAndCountAll({
         where: { employeeId: userId, isArchived: false },
         limit: size,
@@ -82,12 +129,17 @@ const viewLeave = async (req, res) => {
         res.render('view-leave', { leavesdata: arrayLeave, success: "" });
       }
     } catch (e) {
-      errorResponse(req, res, e.message, 400, e);
+      return errorResponse(req, res, e.message, 400, e);
     }
-  } else if (role === constantVar.ADMIN) {
+  }
+
+  // if employee is Admin
+  else if (role === constantVar.ADMIN) {
     try {
-      let page = Number(req.query.page) || 0;
-      let size = Number(req.query.size) || 12;
+
+      // pagination
+      const page = Number(req.query.page) || 0;
+      const size = Number(req.query.size) || 12;
       const getleave = await Leave.findAndCountAll({
         include: [{
           model: Employee,
@@ -103,16 +155,47 @@ const viewLeave = async (req, res) => {
         res.render('adminView-leave', { leavesdata: arrayLeave });
       }
     } catch (e) {
-      errorResponse(req, res, e.message, 400, e);
+      return errorResponse(req, res, e.message, 400, e);
     }
-  } else if (role === constantVar.PM) {
+  }
+
+  // if employee is PM
+  else if (role === constantVar.PM) {
     try {
-      let page = Number(req.query.page) || 0;
-      let size = Number(req.query.size) || 12;
-      let projectIds = await ProjectEmployee.findAll({ where: { employeeId: userId } });
-      projectIds = projectIds.map(element => element.projectId);
-      let empIds = await ProjectEmployee.findAll({ where: { projectId: projectIds } });
-      empIds = empIds.map(element => element.employeeId);
+
+      // pagination
+      const page = Number(req.query.page) || 0;
+      const size = Number(req.query.size) || 12;
+
+      // to find developers who are working under PM
+      let projectIdsFun = () => {
+        return new Promise((resolve, reject) => {
+          resolve(ProjectEmployee.findAll({ where: { employeeId: userId } }))
+        }).then((result) => {
+          let projectIds = result.map(element => element.projectId);
+          return projectIds;
+        })
+      }
+      let empIdsFun = (projectIds) => {
+        return new Promise((resolve, reject) => {
+          resolve(ProjectEmployee.findAll({ where: { projectId: projectIds } }))
+        }).then((result) => {
+          let empIds = result.map(element => element.employeeId);
+          return empIds;
+        })
+      }
+      const listEmp = async () => {
+        let projectIdData = await projectIdsFun();
+        let empIdData = await empIdsFun(projectIdData);
+        return empIdData;
+      }
+      const empIds = await listEmp();
+
+      // let projectIds = await ProjectEmployee.findAll({ where: { employeeId: userId } });
+      // projectIds = projectIds.map(element => element.projectId);
+      // let empIds = await ProjectEmployee.findAll({ where: { projectId: projectIds } });
+      // empIds = empIds.map(element => element.employeeId);
+
       const getleave = await Leave.findAndCountAll({
         where: { employeeId: empIds, isArchived: false },
         include: [{
@@ -122,6 +205,7 @@ const viewLeave = async (req, res) => {
         limit: size,
         offset: page * size
       })
+
       const arrayLeave = getleave.rows;
       if (arrayLeave.length == 0) {
         res.render('update-leave', { leavesdata: arrayLeave });
@@ -129,12 +213,17 @@ const viewLeave = async (req, res) => {
         res.render('update-leave', { leavesdata: arrayLeave });
       }
     } catch (e) {
-      errorResponse(req, res, e.message, 400, e);
+      return errorResponse(req, res, e.message, 400, e);
     }
-  } else if (role === constantVar.HR) {
+  }
+
+  // if employee is HR
+  else if (role === constantVar.HR) {
     try {
-      let page = Number(req.query.page) || 0;
-      let size = Number(req.query.size) || 12;
+
+      // pagination
+      const page = Number(req.query.page) || 0;
+      const size = Number(req.query.size) || 12;
       const getleave = await Leave.findAndCountAll({
         where: { isArchived: false },
         include: [{
@@ -151,51 +240,65 @@ const viewLeave = async (req, res) => {
         res.render('hrView-leave', { leavesdata: arrayLeave });
       }
     } catch (e) {
-      errorResponse(req, res, e.message, 400, e);
+      return errorResponse(req, res, e.message, 400, e);
     }
   }
 
 };
 
+// view own leave by id  
 const viewOneLeave = async (req, res) => {
+
+  // role from stored cookies
   const role = req.user.role;
+
+  // if employee is developer
   if (role === constantVar.DEV) {
     try {
-      console.log(req.params.id)
       const getleave = await Leave.findAll({ where: { id: req.params.id, isArchived: false } });
-      console.log(getleave)
       res.render('view-leavedata', { leavesdata: getleave });
     } catch (e) {
-      errorResponse(req, res, e.message, 400, e);
+      return errorResponse(req, res, e.message, 400, e);
     }
-  } else if (role === constantVar.ADMIN) {
+  }
+  // if employee is Admin
+  else if (role === constantVar.ADMIN) {
     try {
       const getleave = await Leave.findAll({ where: { id: req.params.id } });
       res.render('adminView-leave', { leavesdata: getleave });
     } catch (e) {
-      errorResponse(req, res, e.message, 400, e);
+      return errorResponse(req, res, e.message, 400, e);
     }
-  } else if (role === constantVar.PM) {
+  }
+  // if employee is PM
+  else if (role === constantVar.PM) {
     try {
       const getleave = await Leave.findAll({ where: { id: req.params.id, isArchived: false } });
       res.render('update-leave', { leavesdata: getleave });
     } catch (e) {
-      errorResponse(req, res, e.message, 400, e);
+      return errorResponse(req, res, e.message, 400, e);
     }
-  } else if (role === constantVar.HR) {
+  }
+  // if employee is HR
+  else if (role === constantVar.HR) {
     try {
       const getleave = await Leave.findAll({ where: { id: req.params.id, isArchived: false } });
       res.render('hrView-leave', { leavesdata: getleave });
     } catch (e) {
-      errorResponse(req, res, e.message, 400, e);
+      return errorResponse(req, res, e.message, 400, e);
     }
   }
 };
 
+// update leave data for employee(DEV) 
 const updateLeave = async (req, res) => {
   try {
+
+    // devid from stored cookies
     const devId = req.user.id;
     let mailOptions = {};
+
+    // to find one leave data 
     const getdata = await Leave.findByPk(req.params.id);
     const {
       startDate, endDate, reason, status, isArchived,
@@ -208,52 +311,96 @@ const updateLeave = async (req, res) => {
       status,
       isArchived,
     };
+
+    // update leave details
     await Leave.update(leavedata, { where: { id: req.params.id } });
-    let projectIds = await ProjectEmployee.findAll({ where: { employeeId: devId } });
-    projectIds = projectIds.map(element => element.projectId);
-    let empIds = await ProjectEmployee.findAll({ where: { projectId: projectIds } });
-    empIds = empIds.map(element => element.employeeId);
-    let roleData = await Employee.findAll({ where: { id: empIds, role: constantVar.PM } })
-    roleData = roleData.map(element => element.email);
+
+    // let projectIds = await ProjectEmployee.findAll({ where: { employeeId: devId } });
+    // projectIds = projectIds.map(element => element.projectId);
+    // let empIds = await ProjectEmployee.findAll({ where: { projectId: projectIds } });
+    // empIds = empIds.map(element => element.employeeId);
+    // let roleData = await Employee.findAll({ where: { id: empIds, role: constantVar.PM } })
+    // roleData = roleData.map(element => element.email);
+
+    //to find respective PM of DEVELOPER
+    let projectIdsFun = () => {
+      return new Promise((resolve, reject) => {
+        resolve(ProjectEmployee.findAll({ where: { employeeId: devId } }))
+      }).then((result) => {
+        let projectIds = result.map(element => element.projectId);
+        return projectIds;
+      })
+    }
+    let empIdsFun = (projectIds) => {
+      return new Promise((resolve, reject) => {
+        resolve(ProjectEmployee.findAll({ where: { projectId: projectIds } }))
+      }).then((result) => {
+        let empIds = result.map(element => element.employeeId);
+        return empIds;
+      })
+    }
+    let roleDataFun = (empIds) => {
+      return new Promise((resolve, reject) => {
+        resolve(Employee.findAll({ where: { id: empIds, role: constantVar.PM } }))
+      }).then((result) => {
+        let roleData = result.map(element => element.email);
+        return roleData;
+      })
+    }
+    const listPM = async () => {
+      let projectIdData = await projectIdsFun();
+      let empIdData = await empIdsFun(projectIdData);
+      let roleDataPM = await roleDataFun(empIdData);
+      return roleDataPM;
+    }
+    const roleData = await listPM();
     roleData.forEach(element => {
+
+      // to check if leave detail is not deleted by DEV
       if (leavedata.isArchived != 'on') {
         mailOptions = {
           from: constantVar.MAIL_ID, // system address
-          to: element,
+          to: element, // PM address
           subject: 'Leave Request Updated',
           text: `Employee ${req.user.email}, updated his/her leave from ${leavedata.startDate},
       to ${leavedata.endDate} due to ${reason}`,
         };
       }
+
+      // if leave detail soft deleted by DEV
       else {
         mailOptions = {
           from: constantVar.MAIL_ID, // system address
-          to: element,
+          to: element, // PM address
           subject: 'Leave Request Updated',
           text: `Employee ${req.user.email} does not want to leave now!!!`,
         };
       }
-      transporter.sendMail(mailOptions, (err, info) => {
+
+      // to send mail to PM of updated details of leave
+      transporter.sendMail(mailOptions, (err) => {
         if (err) {
-          return err;
-        } // else {
-        //   successResponse(req, res, getleave, 200);
-        // }
+          return errorResponse(req, res, err.message, 500);
+        } else {
+          successResponse(req, res, getleave, 200);
+        }
       });
     });
+
+    // to fetch all detail of leave
     const getallleave = await Leave.findAll({ where: { employeeId: devId, isArchived: false } });
     res.render('view-leave', { leavesdata: getallleave, success: 'YOUR LEAVE DETAILS UPDATED!!!' });
   }
   catch (e) {
-    errorResponse(req, res, e.message, 400, e);
+    return errorResponse(req, res, e.message, 400, e);
   }
 };
 
-
-// pm---------------------------------------------------------------------------------------------------------------------------------------------------
-
+// leave approve or reject by employee(PM)
 const acceptRejectLeave = async (req, res) => {
   const leaveid = req.body;
+
+  // to find leavedata of clicked button
   const getdata = await Leave.findAll({
     where: { id: leaveid.lid },
     include: [{
@@ -261,9 +408,17 @@ const acceptRejectLeave = async (req, res) => {
       attributes: ['firstName', 'lastName', 'email'],
     }],
   });
+
   let mailOptions = {};
-  let devEmail = await Employee.findAll({ where: { id: getdata[0].employeeId } });
+
+  // to find mail id of developer to send approve or reject mail
+  let devEmail = await Employee.findAll({
+    where:
+      { id: getdata[0].employeeId }
+  });
   devEmail = devEmail.map(e => e.email);
+
+  // if leave accepted by PM
   if (leaveid.action === 'accept') {
     const leavedata = {
       employeeId: getdata[0].employeeId,
@@ -272,14 +427,21 @@ const acceptRejectLeave = async (req, res) => {
       reason: getdata[0].reason,
       status: 'approved',
     };
+
+    // start date and end date to find inbetween dates
     var sDate = getdata[0].startDate;
     var eDate = getdata[0].endDate;
     const datesDiff = getDates(sDate, eDate);
-    console.log(datesDiff);
+
+    // set isOnLeave: true on all leave days(dates)
     datesDiff.forEach(async (date) => {
       await DailyAttendance.findOrCreate({
         where: {
-          [Op.and]: [{ employeeId: getdata[0].employeeId, }, { date: date.getDate() }, { month: date.getMonth() }, { year: date.getFullYear() }],
+          [Op.and]: [
+            { employeeId: getdata[0].employeeId },
+            { date: date.getDate() },
+            { month: date.getMonth() },
+            { year: date.getFullYear() }],
         },
         defaults: {
           id: uuidv4(),
@@ -292,6 +454,8 @@ const acceptRejectLeave = async (req, res) => {
         },
       });
     });
+
+    // status update with approved
     await Leave.update(leavedata, { where: { id: leaveid.lid } });
     mailOptions = {
       from: constantVar.MAIL_ID, // system address
@@ -299,7 +463,9 @@ const acceptRejectLeave = async (req, res) => {
       subject: 'Leave Request',
       text: 'YOUR LEAVE IS APPROVED!!!',
     };
-  } else if (leaveid.action === 'reject') {
+  }
+  // if leave rejected by PM 
+  else if (leaveid.action === 'reject') {
     const leavedata = {
       employeeId: getdata[0].employeeId,
       startDate: getdata[0].startDate,
@@ -307,6 +473,8 @@ const acceptRejectLeave = async (req, res) => {
       reason: getdata[0].reason,
       status: 'rejected',
     };
+
+    // status update with rejected
     const getleave = await Leave.update(leavedata, { where: { id: leaveid.lid } });
     mailOptions = {
       from: constantVar.MAIL_ID, // system address
@@ -315,12 +483,13 @@ const acceptRejectLeave = async (req, res) => {
       text: 'YOUR LEAVE IS REJECTED!!!',
     };
   }
+
+  // send mail to employee(DEV) of approved or rejected leave
   transporter.sendMail(mailOptions, (err, info) => {
     if (err) {
       return errorResponse(req, res, err.message, 500);
     } else {
-      console.log(leaveid.lid)
-      successResponse(req, res, leaveid.lid, 200);
+      return successResponse(req, res, leaveid.lid, 200);
     }
   });
 };
