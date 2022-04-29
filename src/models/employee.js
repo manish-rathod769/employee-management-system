@@ -76,18 +76,18 @@ module.exports = (sequelize, DataTypes) => {
     },
     {
       defaultScope: {
-        where: { isArchive: false },
+        where: { isArchived: false },
         attributes: { exclude: ['password', 'verifyToken', 'role'] },
       },
       scopes: {
         admin: {
-          where: { isArchive: false },
+          where: { isArchived: false },
           attributes: { exclude: ['password', 'verifyToken'] },
         },
         pm: {
           where: {
             [Op.and]: [
-              { isArchive: false },
+              { isArchived: false },
               {
                 role: {
                   [Op.or]: ['PM', 'DEV'],

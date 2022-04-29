@@ -1,4 +1,8 @@
-export const PM = 'PM';
-export const HR = 'HR';
-export const ADMIN = 'ADMIN';
-export const DEV = 'DEV';
+const PM = 'PM';
+const HR = 'HR';
+const ADMIN = 'ADMIN';
+const DEV = 'DEV';
+
+module.exports = {
+  PM, HR, ADMIN, DEV,
+};

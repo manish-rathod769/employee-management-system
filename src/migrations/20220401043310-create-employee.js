@@ -1,6 +1,4 @@
-import {
-  ADMIN, DEV, HR, PM,
-} from '../constants';
+const role = require('../constants');
 
 module.exports = {
   up: (queryInterface, Sequelize) => queryInterface.createTable('Employees', {
@@ -29,7 +27,7 @@ module.exports = {
       type: Sequelize.ENUM('male', 'female'),
     },
     role: {
-      type: Sequelize.ENUM(ADMIN, PM, HR, DEV),
+      type: Sequelize.ENUM(role.ADMIN, role.PM, role.HR, role.DEV),
     },
     DOB: {
       type: Sequelize.DATE,

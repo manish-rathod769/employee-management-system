@@ -1,6 +1,6 @@
 module.exports = {
   up: queryInterface => queryInterface.bulkInsert(
-    'EmployeeTech',
+    'EmployeeTeches',
     [
       {
         techId: 1,
@@ -49,5 +49,5 @@ module.exports = {
     ], {},
   ),
 
-  down: queryInterface => queryInterface.bulkDelete('EmployeeTech', null, {}),
+  down: queryInterface => queryInterface.bulkDelete('EmployeeTeches', null, {}),
 };
