@@ -15,7 +15,7 @@ const displayError = (err) => {
     $('#message-body').html('');
     $('#message-body').addClass('d-none');
   }, 5000);
-}
+};
 
 const displaySuccessMessage = (message) => {
   $('#message-body').removeClass('d-none');
@@ -29,9 +29,8 @@ const displaySuccessMessage = (message) => {
   setTimeout(() => {
     $('#message-body').html('');
     $('#message-body').addClass('d-none');
-    viewClientWithPagination();
   }, 5000);
-}
+};
 
 const hideShowField = (fieldsToBeHide, fieldsToBeShown) => {
   fieldsToBeHide.forEach((field) => {
