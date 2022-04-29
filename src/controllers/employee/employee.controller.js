@@ -138,22 +138,14 @@ export const addEmployee = async (req, res) => {
 export const getEmployee = async (req, res) => {
   try {
     const page = Number(req.query.page);
-    const limit = Number(req.query.limit);
+    // many to many relation mess up limit param find workaround.
+    const limit = Number(req.query.limit) * 3 || 27;
     const order = /DESC/i.test(req.query.order) ? 'DESC' : 'ASC';
     const { search } = req.query;
 
     const result = {};
-
-    // pagination
-    const totalEmployee = await Employee.count();
     const startIndex = (page - 1) * limit;
-
-    if (totalEmployee > (page * limit)) {
-      result.next = true;
-    }
-    if (startIndex > 0) {
-      result.pre = true;
-    }
+    let totalEmployee = 0;
 
     if (req.query.role === PM) {
       result.employee = await Employee.scope('admin').findAll({
@@ -173,19 +165,14 @@ export const getEmployee = async (req, res) => {
       result.role = req.user.role;
 
       // find all employee with search
-      result.employee = await Employee.scope('admin').findAll(
+      const employee = await Employee.scope('admin').findAndCountAll(
         {
-          // data redundancy
           include: [
-            {
-              model: EmployeeAcademic,
-              attributes: ['knownTech'],
-            },
             {
               model: Technology,
               attributes: ['techName'],
               // required: false,
-              // duplicating: false,
+              duplicating: false,
             },
           ],
           attributes: ['id', 'firstName', 'lastName', 'role', 'email', 'avatar'],
@@ -199,12 +186,18 @@ export const getEmployee = async (req, res) => {
               { firstName: { [Op.iLike]: `%${search}%` } },
               { lastName: { [Op.iLike]: `%${search}%` } },
               { email: { [Op.iLike]: `%${search}%` } },
-              // { '$Technologies.techName$': { [Op.iLike]: `%${search}%` } },
+              { '$Technologies.techName$': { [Op.iLike]: `%${search}%` } },
               Sequelize.literal(`"Employee"."role"::TEXT ILIKE '%${search || ''}%'`),
             ],
           },
         },
       );
+      result.employee = employee.rows;
+
+      totalEmployee = employee.count;
+
+      // console.log(JSON.stringify(result.employee, null, 2));
+      // console.log(employee.count);
     } else if (req.user.role === PM) {
       result.role = req.user.role;
       let projects = await ProjectEmployee.findAll(
@@ -218,7 +211,7 @@ export const getEmployee = async (req, res) => {
       projects = projects.map(elem => elem.projectId);
 
       // search employee related to PM's project
-      result.employee = await Employee.scope('pm').findAll(
+      const employee = await Employee.scope('pm').findAndCountAll(
         {
           include: [
             {
@@ -230,15 +223,12 @@ export const getEmployee = async (req, res) => {
               },
             },
             {
-              model: EmployeeAcademic,
-              attributes: ['knownTech'],
-              requered: true,
-            },
-            {
               model: Technology,
               attributes: ['techName'],
+              duplicating: false,
             },
           ],
+
           attributes: ['id', 'firstName', 'lastName', 'role', 'email', 'avatar'],
           offset: startIndex,
           limit,
@@ -246,20 +236,36 @@ export const getEmployee = async (req, res) => {
           order: [
             ['firstName', order],
           ],
+
           where: {
             [Op.or]: [
-              { firstName: { [Op.iLike]: `%${search || ''}%` } },
-              { lastName: { [Op.iLike]: `%${search || ''}%` } },
-              { email: { [Op.iLike]: `%${search || ''}%` } },
+              { firstName: { [Op.iLike]: `%${search}%` } },
+              { lastName: { [Op.iLike]: `%${search}%` } },
+              { email: { [Op.iLike]: `%${search}%` } },
+              { '$Technologies.techName$': { [Op.iLike]: `%${search}%` } },
               Sequelize.literal(`"Employee"."role"::TEXT ILIKE '%${search || ''}%'`),
             ],
           },
         },
       );
+
+      result.employee = employee.rows;
+
+      // pagination
+      totalEmployee = employee.count;
     }
 
     // console.log(totalEmployee);
     // console.log(JSON.stringify(result.employee, null, 2));
+
+    // pagination
+    if (totalEmployee > (page * limit)) {
+      result.next = true;
+    }
+    if (startIndex > 0) {
+      result.pre = true;
+    }
+
     res.status(200);
     return helpers.successResponse(req, res, result, 200);
   } catch (error) {
@@ -502,7 +508,7 @@ export const changePassword = async (req, res) => {
         where: {
           id: req.params.employeeId,
         },
-        attributes: ['password', 'idDefaultPassword'],
+        attributes: ['password', 'idDefaultPassword', 'id'],
       },
     );
 
