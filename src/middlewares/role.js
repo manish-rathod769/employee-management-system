@@ -92,8 +92,7 @@ export const roleDEV = (flagRender) => {
   return DEVRoleMidd;
 };
 
-// eslint-disable-next-line camelcase
-export const role_Admin_PM_HR = (flagRender) => {
+export const roleAdminPmHr = (flagRender) => {
   const adminPmHrRoleMidd = (req, res, next) => {
     try {
       if (['ADMIN', 'PM', 'HR'].includes(req.user.role)) {
@@ -116,8 +115,7 @@ export const role_Admin_PM_HR = (flagRender) => {
   return adminPmHrRoleMidd;
 };
 
-// eslint-disable-next-line camelcase
-export const role_All = (flagRender) => {
+export const roleAll = (flagRender) => {
   const allRoleMidd = (req, res, next) => {
     try {
       if (['ADMIN', 'PM', 'HR', 'DEV'].includes(req.user.role)) {
