@@ -1,4 +1,3 @@
-'use strict';
 module.exports = {
   async up(queryInterface, Sequelize) {
     await queryInterface.createTable('EmployeeAcademics', {
@@ -6,7 +5,7 @@ module.exports = {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
       },
       employeeId: {
         type: Sequelize.UUID,
@@ -17,28 +16,28 @@ module.exports = {
         allowNull: false,
       },
       highestQualification: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
       },
       collage: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
       },
       university: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
       },
       knownTech: {
         type: Sequelize.ARRAY(Sequelize.STRING),
       },
       createdAt: {
         allowNull: false,
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
       },
       updatedAt: {
         allowNull: false,
-        type: Sequelize.DATE
-      }
+        type: Sequelize.DATE,
+      },
     });
   },
-  async down(queryInterface, Sequelize) {
+  async down(queryInterface) {
     await queryInterface.dropTable('EmployeeAcademics');
-  }
+  },
 };
