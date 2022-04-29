@@ -68,4 +68,3 @@ const checkAJAX = (req, res, next) => {
 };
 
 export { verifyCookie, checkAJAX };
-
