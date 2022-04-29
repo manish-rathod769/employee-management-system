@@ -31,6 +31,5 @@ module.exports = {
       defaultValue: false,
     },
   }),
-  // eslint-disable-next-line no-unused-vars
-  down: (queryInterface, Sequelize) => queryInterface.dropTable('Clients'),
+  down: queryInterface => queryInterface.dropTable('Clients'),
 };

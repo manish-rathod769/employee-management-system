@@ -30,9 +30,9 @@ module.exports = (sequelize, DataTypes) => {
     },
     {
       timestamps: false,
-    }
+    },
   );
-  Project.associate = function (models) {
+  Project.associate = (models) => {
     Project.hasMany(models.ProjectClient, {
       foreignKey: 'projectId',
     });

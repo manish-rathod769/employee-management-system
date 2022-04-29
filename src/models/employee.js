@@ -1,4 +1,7 @@
 import { Op } from 'sequelize';
+import {
+  ADMIN, DEV, HR, PM,
+} from '../constants';
 
 module.exports = (sequelize, DataTypes) => {
   const Employee = sequelize.define(
@@ -34,7 +37,7 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
       },
       role: {
-        type: DataTypes.ENUM('ADMIN', 'PM', 'HR', 'DEV'),
+        type: DataTypes.ENUM(ADMIN, PM, HR, DEV),
         allowNull: false,
       },
       DOB: {
@@ -50,7 +53,7 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: true,
         defaultValue: null,
       },
-      isArchive: {
+      isArchived: {
         type: DataTypes.BOOLEAN,
         defaultValue: false,
       },
@@ -64,7 +67,7 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
       },
       knownTech: {
-        type: DataTypes.ARRAY(DataTypes.STRING),
+        type: DataTypes.ARRAY(DataTypes.INTEGER),
       },
       careerStartDate: {
         type: DataTypes.DATE,
@@ -90,9 +93,9 @@ module.exports = (sequelize, DataTypes) => {
                   [Op.or]: ['PM', 'DEV'],
                 },
               },
-            ]
+            ],
           },
-          attributes: { exclude: ['password', 'verifyToken']},
+          attributes: { exclude: ['password', 'verifyToken'] },
         },
         login: {
           attributes: { include: ['password', 'verifyToken'] },
@@ -119,7 +122,7 @@ module.exports = (sequelize, DataTypes) => {
     Employee.belongsToMany(models.Technology, {
       through: 'EmployeeTech',
       foreignKey: 'employeeId',
-      uniqueKey: 'empTech'
+      uniqueKey: 'empTech',
     });
     Employee.hasMany(models.Leave, {
       foreignKey: 'employeeId',
