@@ -4,7 +4,7 @@ module.exports = {
       allowNull: false,
       autoIncrement: true,
       primaryKey: true,
-      type: Sequelize.INTEGER
+      type: Sequelize.INTEGER,
     },
     projectId: {
       type: Sequelize.UUID,
@@ -15,6 +15,5 @@ module.exports = {
       allowNull: false,
     },
   }),
-  // eslint-disable-next-line no-unused-vars
-  down: (queryInterface, Sequelize) => queryInterface.dropTable('ProjectEmployees'),
+  down: queryInterface => queryInterface.dropTable('ProjectEmployees'),
 };

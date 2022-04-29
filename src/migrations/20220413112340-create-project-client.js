@@ -4,7 +4,7 @@ module.exports = {
       allowNull: false,
       autoIncrement: true,
       primaryKey: true,
-      type: Sequelize.INTEGER
+      type: Sequelize.INTEGER,
     },
     projectId: {
       type: Sequelize.UUID,
@@ -15,5 +15,5 @@ module.exports = {
       allowNull: false,
     },
   }),
-  down: (queryInterface, Sequelize) => queryInterface.dropTable('ProjectClients'),
+  down: queryInterface => queryInterface.dropTable('ProjectClients'),
 };

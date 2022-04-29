@@ -267,8 +267,9 @@ const displayEmployee = () => {
       }
       result.data.employee.forEach((element, index) => {
         // console.log(element);
-        const avatar = element.avatar.split('/').length > 2 ? element.avatar : "assets/img/profiles/img-6.jpg";
-        const tech = element.EmployeeAcademic.knownTech || 'tech';
+        const avatar = element.avatar.split('/').length > 2 ? element.avatar : 'assets/img/profiles/img-6.jpg';
+        console.log(element.Technologies.map(elem => elem.techName));
+        const tech = element.Technologies.map(elem => elem.techName);
         $('#displayEmployeeDetails').append(
           `<div class="col-md-6 col-lg-6 col-xl-4" id="employee-card-${element.id}">
             <div class="card widget-profile">
