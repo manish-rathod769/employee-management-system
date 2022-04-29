@@ -2,6 +2,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { Op } from 'sequelize';
 import { successResponse, errorResponse } from '../../helpers/index';
 import { Client, ProjectEmployee, ProjectClient } from '../../models';
+import * as roles from '../../constants/index';
 
 export const addNewClient = async (req, res) => {
   try {
@@ -43,7 +44,7 @@ export const getAllClient = async (req, res) => {
   const searchWord = req.query.searchWord || '';
 
   // Clients Data for ADMIN or HR
-  if (['ADMIN', 'HR'].includes(req.user.role)) {
+  if ([roles.ADMIN, roles.HR].includes(req.user.role)) {
     try {
       // Fetch all clients data for dropdown
       if (req.query.all) {
