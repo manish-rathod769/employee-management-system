@@ -30,7 +30,7 @@ export const addNewClient = async (req, res) => {
     const newClient = await Client.create(clientDetails);
     return successResponse(req, res, newClient, 200);
   } catch (error) {
-    return errorResponse(req, res, error.message, 409, error);
+    return errorResponse(req, res, 'Error while adding clients data !!!', 409, error.message);
   }
 };
 
@@ -48,6 +48,7 @@ export const getAllClient = async (req, res) => {
     try {
       // Fetch all clients data for dropdown
       if (req.query.all) {
+        // Try and catch block
         const allClients = await Client.findAll({ where: { isArchived: false } });
         return successResponse(req, res, allClients, 500);
       }
@@ -75,7 +76,7 @@ export const getAllClient = async (req, res) => {
 
       return successResponse(req, res, clientsData, 200);
     } catch (error) {
-      return errorResponse(req, res, error.message, 500, error);
+      return errorResponse(req, res, 'Error while fetching clients data !!!', 500, error.message);
     }
   }
 
@@ -88,17 +89,10 @@ export const getAllClient = async (req, res) => {
     });
     projectsId = projectsId.map(elem => elem.projectId);
 
-    // Client's client id which are associated with project
-    let clientsId = await ProjectClient.findAll({
-      where: { projectId: projectsId },
-    });
-    clientsId = clientsId.map(elem => elem.clientId);
-
     // Client's Data with pagination details
     const findAndCountClient = await Client.findAndCountAll({
       where: {
         [Op.and]: [
-          { id: clientsId },
           { isArchived: false },
           {
             [Op.or]: [
@@ -113,6 +107,12 @@ export const getAllClient = async (req, res) => {
           },
         ],
       },
+      include: [{
+        model: ProjectClient,
+        where: {
+          projectId: projectsId,
+        },
+      }],
       attributes: ['id', 'name', 'email', 'slackId', 'organization'],
       distinct: true,
       order: [[`${sortBy}`, `${sortOrder}`]],
@@ -125,7 +125,7 @@ export const getAllClient = async (req, res) => {
 
     return successResponse(req, res, clientsData, 200);
   } catch (error) {
-    return errorResponse(req, res, error.message, 500, error);
+    return errorResponse(req, res, 'Error while fetching clients data !!!', 500, error.message);
   }
 };
 
@@ -142,7 +142,7 @@ export const editClient = async (req, res) => {
 
     return successResponse(req, res, updatedClient[1], 200);
   } catch (error) {
-    return errorResponse(req, res, error.message, 500, error);
+    return errorResponse(req, res, 'Error while updating clients data !!!', 500, error.message);
   }
 };
 
@@ -152,11 +152,11 @@ export const getOneClient = async (req, res) => {
     const matchedClient = await Client.findOne({ where: { id: clientId } });
 
     if (!matchedClient) {
-      return errorResponse(req, res, 'Client data does not exist !!!!', 412);
+      return errorResponse(req, res, 'Client data does not exist !!!', 412);
     }
 
     return successResponse(req, res, matchedClient, 200);
   } catch (error) {
-    return errorResponse(req, res, error.message, 500, error);
+    return errorResponse(req, res, 'Error while fetching client details !!!', 500, error.message);
   }
 };

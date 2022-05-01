@@ -44,7 +44,7 @@ const populateCityNames = (state, flag) => {
     data[state].forEach((city) => {
       cityOptions += `<option value='${city}'>${city}</option>`;
     });
-    if(flag) {
+    if (flag) {
       $('#client-edit-city').html(cityOptions);
     } else {
       $('#city').html(cityOptions);
