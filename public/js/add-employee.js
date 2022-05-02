@@ -261,7 +261,7 @@ $(document).ready(() => {
           });
           $('.toast').toast('show');
 
-          $(':input', '#form-add-employee').not(':button, :submit, :reset, :hidden')
+          $(':input', '#form-add-employee').not(':button, :submit, :reset, :hidden, :radio')
             .val('');
           $('.avatar-preview').find('div').css('background-image', 'url(../img/logo2.png)');
 

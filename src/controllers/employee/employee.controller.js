@@ -133,7 +133,6 @@ export const addEmployee = async (req, res) => {
       })
       .catch((error) => {
         helpers.deleteFile(req.file.path);
-        console.log(error);
         return helpers.errorResponse(req, res, 'Employee data entry Error!', 500, error.message);
       });
   } catch (error) {
@@ -227,6 +226,7 @@ export const getEmployee = async (req, res) => {
             include: [
               {
                 model: ProjectEmployee,
+                duplicating: false,
                 where: {
                   projectId: {
                     [Op.in]: projects,

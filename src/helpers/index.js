@@ -116,9 +116,9 @@ export const deleteFile = async (path) => {
 const compress = async (filePath) => {
   try {
     // console.log(filePath);
-    const image = await Jimp.read(filePath)
-      .resize(400, Jimp.AUTO)
-      .quality(60);
+    const image = await Jimp.read(filePath);
+    image.resize(400, Jimp.AUTO);
+    image.quality(60);
     await image.writeAsync(`${filePath}.jpg`);
     return image;
   } catch (error) {
