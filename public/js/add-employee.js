@@ -260,8 +260,17 @@ $(document).ready(() => {
             delay: 5000,
           });
           $('.toast').toast('show');
+
+          $(':input', '#form-add-employee').not(':button, :submit, :reset, :hidden')
+            .val('');
+          $('.avatar-preview').find('div').css('background-image', 'url(../img/logo2.png)');
+
+          // change view
           $('#addEmployeeFormContainer').addClass('d-none');
           $('#employeeDisplayContainer').removeClass('d-none');
+
+          // reset form fields
+
           setTimeout(() => displayEmployee(), 100);
         },
         error: (error) => {

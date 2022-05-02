@@ -72,21 +72,22 @@ export const employeeValidate = async (req, res, next) => {
   const { error } = validation.validate(payload);
 
   if (!req.file && !req.body.edited) {
-    errorResponse(req, res, 'please upload profile pic', 406);
-  } else if (error) {
+    return errorResponse(req, res, 'please upload profile pic', 406);
+  }
+  if (error) {
     if (req.file) {
       deleteFile(req.file.path);
     }
     res.status(406);
-    errorResponse(req, res, `employee data validation error. ${error.message}`, 406, error.message);
-  } else if (!isValidTech(req.body.knownTech)) {
+    return errorResponse(req, res, `employee data validation error. ${error.message}`, 406, error.message);
+  }
+  if (!isValidTech(req.body.knownTech)) {
     if (req.file) {
       deleteFile(req.file.path);
     }
-    errorResponse(req, res, 'selected technology does not exists in system', 406);
-  } else {
-    next();
+    return errorResponse(req, res, 'selected technology does not exists in system', 406);
   }
+  return next();
 };
 
 const loginValidation = joi.object({
@@ -96,7 +97,6 @@ const loginValidation = joi.object({
     .max(12),
 });
 
-// eslint-disable-next-line consistent-return
 export const loginValidate = async (req, res, next) => {
   const payload = {
     email: req.body.email,
@@ -105,10 +105,9 @@ export const loginValidate = async (req, res, next) => {
   };
   const { error } = loginValidation.validate(payload);
   if (error) {
-    req.flash('error', error.message);
-    return res.redirect(301, '/login');
+    return errorResponse(req, res, `Validation Error: ${error.message}`, 406);
   }
-  next();
+  return next();
 };
 
 const passwordValidation = joi.object({
@@ -127,7 +126,7 @@ export const passwordValidate = async (req, res, next) => {
   };
   const { error } = passwordValidation.validate(payload);
   if (error) {
-    errorResponse(req, res, 'password validation error', 406, error.message);
+    return errorResponse(req, res, 'password validation error', 406, error.message);
   }
-  next();
+  return next();
 };

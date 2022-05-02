@@ -18,6 +18,7 @@ import {
   EmployeeTech,
 } from '../../models';
 
+// eslint-disable-next-line consistent-return
 export const addEmployee = async (req, res) => {
   try {
     // check for if employee exists
@@ -35,16 +36,21 @@ export const addEmployee = async (req, res) => {
     const encryptedPassword = helpers.encryptPassword(password);
 
     // make array of known tech id from technology table
-    const techList = await Technology.findAll(
-      {
-        where: {
-          techName: {
-            [Op.like]: { [Op.any]: req.body.knownTech },
+    let techList;
+    try {
+      techList = await Technology.findAll(
+        {
+          where: {
+            techName: {
+              [Op.like]: { [Op.any]: req.body.knownTech },
+            },
           },
+          attributes: ['id'],
         },
-        attributes: ['id'],
-      },
-    );
+      );
+    } catch (error) {
+      return helpers.errorResponse(req, res, 'error fatching technology', 500, error.message);
+    }
     const techIdList = techList.map(elem => elem.id);
 
     const payload = {
@@ -117,7 +123,7 @@ export const addEmployee = async (req, res) => {
         try {
           await helpers.cloudUpload(req.file);
         } catch (error) {
-          return helpers.errorResponse(req, res, 'Technology mapping Error!', 500, error.message);
+          return helpers.errorResponse(req, res, 'Profile picture upload Error!', 500, error.message);
         }
 
         // send registration mail
@@ -127,6 +133,7 @@ export const addEmployee = async (req, res) => {
       })
       .catch((error) => {
         helpers.deleteFile(req.file.path);
+        console.log(error);
         return helpers.errorResponse(req, res, 'Employee data entry Error!', 500, error.message);
       });
   } catch (error) {
@@ -147,112 +154,119 @@ export const getEmployee = async (req, res) => {
     const startIndex = (page - 1) * limit;
     let totalEmployee = 0;
 
-    if (req.query.role === PM) {
+    // change role to all to get PM and DEV data
+    if (req.query.role && [PM, DEV].includes(req.query.role)) {
       result.employee = await Employee.scope('admin').findAll({
         attributes: ['email', 'id'],
         where: {
-          role: 'PM',
-        },
-      });
-    } else if (req.query.role === DEV) {
-      result.employee = await Employee.scope('admin').findAll({
-        attributes: ['email', 'id'],
-        where: {
-          role: 'DEV',
+          role: req.query.role,
         },
       });
     } else if (req.user.role === HR || req.user.role === ADMIN) {
       result.role = req.user.role;
 
       // find all employee with search
-      const employee = await Employee.scope('admin').findAndCountAll(
-        {
-          include: [
-            {
-              model: Technology,
-              attributes: ['techName'],
-              // required: false,
-              duplicating: false,
-            },
-          ],
-          attributes: ['id', 'firstName', 'lastName', 'role', 'email', 'avatar'],
-          offset: startIndex,
-          limit,
-          order: [
-            ['firstName', order],
-          ],
-          where: {
-            [Op.or]: [
-              { firstName: { [Op.iLike]: `%${search}%` } },
-              { lastName: { [Op.iLike]: `%${search}%` } },
-              { email: { [Op.iLike]: `%${search}%` } },
-              { '$Technologies.techName$': { [Op.iLike]: `%${search}%` } },
-              Sequelize.literal(`"Employee"."role"::TEXT ILIKE '%${search || ''}%'`),
+      try {
+        const employee = await Employee.scope('admin').findAndCountAll(
+          {
+            include: [
+              {
+                model: Technology,
+                attributes: ['techName'],
+                // required: false,
+                duplicating: false,
+              },
             ],
+            attributes: ['id', 'firstName', 'lastName', 'role', 'email', 'avatar'],
+            offset: startIndex,
+            limit,
+            order: [
+              ['firstName', order],
+            ],
+            where: {
+              [Op.or]: [
+                { firstName: { [Op.iLike]: `%${search}%` } },
+                { lastName: { [Op.iLike]: `%${search}%` } },
+                { email: { [Op.iLike]: `%${search}%` } },
+                { '$Technologies.techName$': { [Op.iLike]: `%${search}%` } },
+                Sequelize.literal(`"Employee"."role"::TEXT ILIKE '%${search || ''}%'`),
+              ],
+            },
           },
-        },
-      );
-      result.employee = employee.rows;
+        );
+        result.employee = employee.rows;
 
-      totalEmployee = employee.count;
-
+        totalEmployee = employee.count;
+      } catch (error) {
+        return helpers.errorResponse(req, res, 'Error in retriving employee', 500, error.message);
+      }
       // console.log(JSON.stringify(result.employee, null, 2));
       // console.log(employee.count);
     } else if (req.user.role === PM) {
       result.role = req.user.role;
-      let projects = await ProjectEmployee.findAll(
-        {
-          where: {
-            employeeId: req.user.id,
+
+      let projects;
+      try {
+        projects = await ProjectEmployee.findAll(
+          {
+            where: {
+              employeeId: req.user.id,
+            },
+            attributes: ['projectId'],
           },
-          attributes: ['projectId'],
-        },
-      );
-      projects = projects.map(elem => elem.projectId);
+        );
+        projects = projects.map(elem => elem.projectId);
+      } catch (error) {
+        return helpers.errorResponse(req, res, 'something went wrong', 500, error.message);
+      }
 
       // search employee related to PM's project
-      const employee = await Employee.scope('pm').findAndCountAll(
-        {
-          include: [
-            {
-              model: ProjectEmployee,
-              where: {
-                projectId: {
-                  [Op.in]: projects,
+      try {
+        const employee = await Employee.scope('pm').findAndCountAll(
+          {
+            include: [
+              {
+                model: ProjectEmployee,
+                where: {
+                  projectId: {
+                    [Op.in]: projects,
+                  },
                 },
               },
-            },
-            {
-              model: Technology,
-              attributes: ['techName'],
-              duplicating: false,
-            },
-          ],
-
-          attributes: ['id', 'firstName', 'lastName', 'role', 'email', 'avatar'],
-          offset: startIndex,
-          limit,
-          distinct: true,
-          order: [
-            ['firstName', order],
-          ],
-
-          where: {
-            [Op.or]: [
-              { firstName: { [Op.iLike]: `%${search}%` } },
-              { lastName: { [Op.iLike]: `%${search}%` } },
-              { email: { [Op.iLike]: `%${search}%` } },
-              { '$Technologies.techName$': { [Op.iLike]: `%${search}%` } },
-              Sequelize.literal(`"Employee"."role"::TEXT ILIKE '%${search || ''}%'`),
+              {
+                model: Technology,
+                attributes: ['techName'],
+                duplicating: false,
+              },
             ],
+
+            attributes: ['id', 'firstName', 'lastName', 'role', 'email', 'avatar'],
+            offset: startIndex,
+            limit,
+            distinct: true,
+            order: [
+              ['firstName', order],
+            ],
+
+            where: {
+              [Op.or]: [
+                { firstName: { [Op.iLike]: `%${search}%` } },
+                { lastName: { [Op.iLike]: `%${search}%` } },
+                { email: { [Op.iLike]: `%${search}%` } },
+                { '$Technologies.techName$': { [Op.iLike]: `%${search}%` } },
+                Sequelize.literal(`"Employee"."role"::TEXT ILIKE '%${search || ''}%'`),
+              ],
+            },
           },
-        },
-      );
+        );
 
-      result.employee = employee.rows;
+        result.employee = employee.rows;
 
-      // pagination
-      totalEmployee = employee.count;
+        // pagination
+        totalEmployee = employee.count;
+      } catch (error) {
+        return helpers.errorResponse(req, res, 'Error in retriving employee!', 500, error.message);
+      }
     }
 
     // console.log(totalEmployee);
@@ -295,11 +309,18 @@ export const getEmployeeOne = async (req, res) => {
   }
 };
 
+// eslint-disable-next-line consistent-return
 export const updateEmployee = async (req, res) => {
   try {
     // find if employee with email and id exists
     const employee = await Employee.scope('admin').findOne(
       {
+        include: [
+          {
+            model: Technology,
+            attributes: ['id'],
+          },
+        ],
         where: {
           id: req.params.employeeId,
           email: req.body.email,
@@ -310,17 +331,25 @@ export const updateEmployee = async (req, res) => {
       return helpers.errorResponse(req, res, `user with email ${req.body.email} does not exist`, 409);
     }
 
-    const techList = await Technology.findAll(
-      {
-        where: {
-          techName: {
-            [Op.like]: { [Op.any]: req.body.knownTech },
+    let techList;
+    try {
+      techList = await Technology.findAll(
+        {
+          where: {
+            techName: {
+              [Op.like]: { [Op.any]: req.body.knownTech },
+            },
           },
+          attributes: ['id'],
         },
-        attributes: ['id'],
-      },
-    );
+      );
+    } catch (error) {
+      return helpers.errorResponse(req, res, 'error fatching technology', 500, error.message);
+    }
     const techIdList = techList.map(elem => elem.id);
+    const employeeTechList = employee.Technologies.map(elem => elem.id);
+    const deletedTechList = employeeTechList.filter(elem => !techIdList.includes(elem));
+
     // employee found update field
     const payload = {
       firstName: req.body.firstName,
@@ -389,12 +418,24 @@ export const updateEmployee = async (req, res) => {
           preWork: result[3],
         };
 
-        await EmployeeTech.destroy({
-          where: {
-            employeeId: employee.id,
-          },
-        });
-        await newEmployee.personal.addTechnology(techList);
+        // destroy when tech is deleted.
+        if (deletedTechList) {
+          try {
+            await EmployeeTech.destroy({
+              where: {
+                employeeId: employee.id,
+              },
+            });
+          } catch (error) {
+            return helpers.errorResponse(req, res, 'Employee update error!', 500, error.message);
+          }
+        }
+
+        try {
+          await newEmployee.personal.addTechnology(techList);
+        } catch (error) {
+          return helpers.errorResponse(req, res, 'Employee Technology update error!', 500, error.message);
+        }
 
         res.status(201);
         return helpers.successResponse(req, res, newEmployee, 201);
@@ -418,7 +459,7 @@ export const deleteEmployee = async (req, res) => {
     if (!employee) {
       return helpers.errorResponse(req, res, 'employee record not found', 404);
     }
-    employee.isArchive = true;
+    employee.isArchived = true;
     await employee.save();
 
     res.status(202);
@@ -440,21 +481,27 @@ export const loginEmployee = async (req, res) => {
       },
     );
     if (!employee) {
-      return helpers.errorResponse(req, res, 'The Email or Password is incorrect.', 404);
+      return helpers.errorResponse(req, res, 'Invalid credentials.', 404);
     }
 
     const encryptedPassword = helpers.encryptPassword(req.body.password);
     if (encryptedPassword !== employee.password) {
-      return helpers.errorResponse(req, res, 'The Email or Password is incorrect.', 404);
+      return helpers.errorResponse(req, res, 'Invalid credentials.', 404);
     }
 
     // check for role
     if (employee.role !== req.body.role) {
-      return helpers.errorResponse(req, res, 'The role is wrong', 401);
+      return helpers.errorResponse(req, res, 'Invalid credentials', 401);
     }
 
     // Generate Cookie, Store in DB and store in cookie
-    const verifyToken = sign({ id: employee.id, email: employee.email, role: employee.role }, process.env.verifyToken, { expiresIn: '1d' });
+    const verifyToken = sign(
+      { id: employee.id, email: employee.email, role: employee.role },
+      process.env.verifyToken,
+      { expiresIn: '1d' },
+    );
+
+    // store verify Token to DB
     employee.verifyToken = verifyToken;
     await employee.save();
     res.cookie('verifyToken', verifyToken);
@@ -489,6 +536,7 @@ export const logOut = async (req, res) => {
   try {
     res.clearCookie('verifyToken');
     res.status(200);
+
     return res.render('message', {
       error: '',
       message: 'Logged out successfully !!!',
@@ -566,50 +614,6 @@ export const forgotPassword = async (req, res) => {
   }
 };
 
-// get technology
-export const getTechnology = async (req, res) => {
-  try {
-    const tech = await Technology.findAll(
-      {
-        attributes: ['techName'],
-      },
-    );
-    res.status(200);
-    return helpers.successResponse(req, res, tech, 200);
-  } catch (error) {
-    return helpers.errorResponse(req, res, 'something went wrong', 500, error);
-  }
-};
-
-export const addTechnology = async (req, res) => {
-  try {
-    const tech = await Technology.findOne(
-      {
-        where: {
-          techName: {
-            [Op.iLike]: `${req.body.techName}`,
-          },
-        },
-      },
-    );
-    if (tech) {
-      return helpers.errorResponse(req, res, 'technology data already exists', 409);
-    }
-
-    const newTech = await Technology.create(
-      {
-        techName: req.body.techName,
-      },
-    );
-
-    res.status(201);
-    return helpers.successResponse(req, res, newTech, 201);
-  } catch (error) {
-    // console.log(error);
-    return helpers.errorResponse(req, res, 'something went wrong', 500, error.message);
-  }
-};
-
 // admin side view
 export const renderEmployeeView = async (req, res) => {
   const totalEmployee = await Employee.count();
@@ -650,13 +654,4 @@ export const forgotPasswordView = (req, res) => {
 export const changePasswordView = (req, res) => {
   res.status(200);
   return res.render('employee/changePassword');
-};
-
-// render setting page
-export const settingView = (req, res) => {
-  res.status(200);
-  return res.render('settings',
-    {
-      role: req.user.role,
-    });
 };
