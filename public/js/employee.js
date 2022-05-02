@@ -145,6 +145,7 @@ const editButton = (id) => {
       // remove employee display and show edit div
       $('#editEmployeeFormContainer').removeClass('d-none');
       $('#employeeDisplayContainer').addClass('d-none');
+      const tech = data.Technologies.map(elem => elem.techName);
 
       // change edit div and add edit and cancel button;
       const form = $('#form-edit-employee');
@@ -164,7 +165,7 @@ const editButton = (id) => {
       form.find('#collage').val(data.EmployeeAcademic.collage || '');
       form.find('#highestQualification').val(data.EmployeeAcademic.highestQualification || '');
       form.find('#university').val(data.EmployeeAcademic.university || null);
-      populateKnownTech(data.EmployeeAcademic.knownTech);
+      populateKnownTech(tech);
 
       form.find('#secondaryEmail').val(data.EmployeeContact.secondaryEmail || null);
       form.find('#contactNo').val(data.EmployeeContact.contactNo || '');
@@ -279,6 +280,7 @@ const displayEmployee = () => {
                     <a class="booking-doc-img">
                       <img
                         src=${avatar}
+                        onerror="this.src='assets/img/profiles/img-6.jpg';"
                         alt="User Image"
                       />
                     </a>
@@ -366,6 +368,7 @@ const enlargeEmployee = (event, id, index) => {
       // console.log(result);
       const { data } = result;
       const totalExp = getTimeBetweenDates(data.careerStartDate, new Date());
+      const tech = data.Technologies.map(elem => elem.techName);
       lastcard.after(
         `<div class="row ctm-border-radius shadow-sm grow border-dark bg-dark" id="employee-details"> 
               <div class="col-12"> 
@@ -472,7 +475,7 @@ const enlargeEmployee = (event, id, index) => {
                           <span class="text-primary">University : </span>${data.EmployeeAcademic.university}
                         </p>
                         <p class="card-text mb-3">
-                          <span class="text-primary">Known Tech : </span>${data.EmployeeAcademic.knownTech}
+                          <span class="text-primary">Known Tech : </span>${tech}
                         </p>
                       </div>
                     </div>

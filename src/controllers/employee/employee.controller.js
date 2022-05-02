@@ -133,7 +133,6 @@ export const addEmployee = async (req, res) => {
       })
       .catch((error) => {
         helpers.deleteFile(req.file.path);
-        console.log(error);
         return helpers.errorResponse(req, res, 'Employee data entry Error!', 500, error.message);
       });
   } catch (error) {

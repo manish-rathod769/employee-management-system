@@ -1,4 +1,4 @@
-$('#cancelEdit').click((event) => {
+$('#cancelEdit').click(() => {
   $(':input', '#form-edit-employee').not(':button, :submit, :reset, :hidden')
     .val('');
   $('#editEmployeeFormContainer').addClass('d-none');
