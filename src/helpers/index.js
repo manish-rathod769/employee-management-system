@@ -79,12 +79,12 @@ export const generatePassword = () => {
 };
 
 const dest = path.join(__dirname, '..', '..', 'public', 'storage');
-const id = uuidv4();
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     cb(null, dest);
   },
   filename: (req, file, cb) => {
+    const id = uuidv4();
     const uniqueSuffix = `${id}`;
     cb(null, uniqueSuffix);
   },
