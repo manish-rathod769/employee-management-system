@@ -8,7 +8,7 @@ import * as roleCheck from '../middlewares/role';
 
 const router = express.Router();
 
-router.get('/', verifyCookie, roleCheck.role_Admin_PM_HR(true), employeeController.renderEmployeeView);
+router.get('/', verifyCookie, roleCheck.roleAdminPmHr(true), employeeController.renderEmployeeView);
 
 // add-employee rote.
 router.post('/employees',
@@ -18,7 +18,7 @@ router.post('/employees',
   employeeValidator.employeeValidate,
   employeeController.addEmployee);
 
-router.get('/employees', checkAJAX, verifyCookie, roleCheck.role_Admin_PM_HR(false), employeeController.getEmployee);
+router.get('/employees', checkAJAX, verifyCookie, roleCheck.roleAdminPmHr(false), employeeController.getEmployee);
 router.get('/employees/:employeeId', checkAJAX, verifyCookie, employeeController.getEmployeeOne);
 
 // update employee route.
@@ -44,15 +44,15 @@ router.get('/profile', verifyCookie, roleCheck.roleAdminPmHr(true), employeeCont
 
 
 // general settings-route
-router.get('/technologies', checkAJAX, verifyCookie, roleCheck.role_Admin_PM_HR(false), settingController.getTechnology);
+router.get('/technologies', checkAJAX, verifyCookie, roleCheck.roleAdminPmHr(false), settingController.getTechnology);
 router.post('/technologies', verifyCookie, roleCheck.roleAdmin(false), settingController.addTechnology);
-router.get('/setting', verifyCookie, roleCheck.role_Admin_PM_HR(true), settingController.settingView);
+router.get('/setting', verifyCookie, roleCheck.roleAdminPmHr(true), settingController.settingView);
 router.get('/logout', verifyCookie, employeeController.logOut);
 
 router.get('/employee/:employeeId/poc', verifyCookie, roleCheck.roleDEV(true), settingController.renderPocView);
 
 // for perticular Employee POC retrive dinamically(possibility)
-router.get('/poc', checkAJAX, verifyCookie, roleCheck.role_All(false), settingController.getPoc);
+router.get('/poc', checkAJAX, verifyCookie, roleCheck.roleAll(false), settingController.getPoc);
 router.post('/poc', verifyCookie, roleCheck.roleAdmin(false), settingController.addPoc);
 router.put('/poc', verifyCookie, roleCheck.roleAdmin(false), settingController.updatePoc);
 

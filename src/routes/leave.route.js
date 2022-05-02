@@ -10,11 +10,11 @@ const router = express.Router();
 
 // developer
 
-router.get('/leave/add-view', verifyCookie, roleCheck.roleDEV(true) ,leaveControlller.leaveForm);
-router.post('/leave/add', verifyCookie, roleCheck.roleDEV(false) , leaveValidator.leaveRegisterValidation, leaveControlller.addLeave);
-router.get('/leave/view', verifyCookie, roleCheck.roleAll(false) ,leaveControlller.viewLeave);
-router.get('/leave/view/:id', verifyCookie, roleCheck.roleAll(false) ,leaveControlller.viewOneLeave);
-router.post('/leave/update/:id', verifyCookie, roleCheck.roleDEV(false) ,leaveValidator.leaveUpdateValidation, leaveControlller.updateLeave);
+router.get('/leave/add-view', verifyCookie, roleCheck.roleDEV(true), leaveControlller.leaveForm);
+router.post('/leave/add', verifyCookie, roleCheck.roleDEV(false), leaveValidator.leaveRegisterValidation, leaveControlller.addLeave);
+router.get('/leave/view', verifyCookie, roleCheck.roleAll(false), leaveControlller.viewLeave);
+router.get('/leave/view/:id', verifyCookie, roleCheck.roleAll(false), leaveControlller.viewOneLeave);
+router.post('/leave/update/:id', verifyCookie, roleCheck.roleDEV(false), leaveValidator.leaveUpdateValidation, leaveControlller.updateLeave);
 
 // pm
 router.put('/leave/accept-reject', verifyCookie, roleCheck.rolePM(false), leaveControlller.acceptRejectLeave);
