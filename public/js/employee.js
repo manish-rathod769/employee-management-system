@@ -120,15 +120,15 @@ const populateKnownTech = (techArray = []) => {
         // append to select group
         if (techArray.includes(val)) {
           form.find('#knownTech').append(
-            `<option selected value="${val}">${val}</option>`
+            `<option selected value="${val}">${val}</option>`,
           );
         } else {
           form.find('#knownTech').append(
-            `<option value="${val}">${val}</option>`
+            `<option value="${val}">${val}</option>`,
           );
         }
       });
-      // append data to #knownTech 
+      // append data to #knownTech
     },
 
     error: (error) => {
@@ -202,6 +202,7 @@ const editButton = (id) => {
       form.find('#workingTimeInYear').val(Number(data.EmployeePreWork.workingTime.split(' ')[0]) || 0);
       form.find('#workingTimeInMonth').val(Number(data.EmployeePreWork.workingTime.split(' ')[2]) || 0);
     },
+
     error: (error) => {
       // display toast for error
       $('.toast-header').removeClass('bg-success').addClass('bg-danger').addClass('text-dark');
@@ -211,7 +212,7 @@ const editButton = (id) => {
         delay: 4000,
       });
       $('.toast').toast('show');
-    }
+    },
   });
 };
 
@@ -228,19 +229,19 @@ $('#nextEmployeeRecord').click((event) => {
   const page = $('#employeeRecordPageCount').data('page') + 1;
   $('#employeeRecordPageCount').data('page', page);
   $('#employeeRecordPageCount').text(page);
-  //console.log(page)
+  // console.log(page)
   displayEmployee();
 });
 
 const cancelBtnEmployeeDetails = (id) => {
-  $("html, body").delay(200).animate({
-    scrollTop: $(`#employee-card-${id}`).offset().top
+  $('html, body').delay(200).animate({
+    scrollTop: $(`#employee-card-${id}`).offset().top,
   }, 1000);
   $('#employee-details').remove();
-}
+};
 
 const displayEmployee = () => {
-  $('#displayEmployeeDetails').html("");
+  $('#displayEmployeeDetails').html('');
   const page = $('#employeeRecordPageCount').data('page');
   const limit = $('#employeeRecordLimit').val() || 9;
   const order = $('#order').val();
@@ -300,7 +301,7 @@ const displayEmployee = () => {
                     </div>
                   </div>
                   ${result.data.role === 'ADMIN'
-                ? `<div class="team-action-icon float-right">
+    ? `<div class="team-action-icon float-right">
                         <button type="button" 
                           class="btn btn-theme ctm-border-radius text-white" 
                           title="Edit"
@@ -318,23 +319,23 @@ const displayEmployee = () => {
                           <i class="fa fa-trash"></i>
                         </button>
                       </div>`
-                : ''}
+    : ''}
                 </div>
               </div>
             </div>
-          </div>`
+          </div>`,
         );
       });
     },
+
     error: (err) => {
-      console.log(err);
       $('#displayEmployeeDetails').html(`
                     <div class="card text-center shadow-sm grow ctm-border-radius">
                     <div class="card-body align-center">
                     <h4> No Record Found Try again !!</h4>
                     </div>
                     </div>`);
-    }
+    },
   });
 };
 displayEmployee();
@@ -348,7 +349,7 @@ const enlargeEmployee = (event, id, index) => {
   // console.log('hello', index);
   // event.preventDefault();
   // const id = $('#employeeName').data('id');
-  let lastcard = $(`#employee-card-${id}`);
+  const lastcard = $(`#employee-card-${id}`);
   $('#employee-details').remove();
   // if(index%3 === 0){
   //   lastcard = lastcard;
@@ -378,6 +379,7 @@ const enlargeEmployee = (event, id, index) => {
                 </button>
               </div>
               </div>
+
               <div class="col-xl-4 col-lg-6 col-md-6 d-flex" data-employeeId=${data.id}>
                 <div class="card flex-fill ctm-border-radius shadow-sm grow">
                   <div class="card-header">
@@ -411,6 +413,7 @@ const enlargeEmployee = (event, id, index) => {
                   </div>
                 </div>
               </div>
+
               <div class="col-xl-4 col-lg-6 col-md-6 d-flex">
                 <div class="card flex-fill ctm-border-radius shadow-sm grow">
                   <div class="card-header">
@@ -450,6 +453,7 @@ const enlargeEmployee = (event, id, index) => {
                   </div>
                 </div>
               </div>
+
               <div class="col-xl-4 col-lg-12 col-md-12">
                 <div class="row">
                   <div class="col-xl-12 col-lg-6 col-md-6 d-flex">
@@ -473,6 +477,7 @@ const enlargeEmployee = (event, id, index) => {
                       </div>
                     </div>
                   </div>
+
                   <div class="col-xl-12 col-lg-6 col-md-6 d-flex">
                     <div class="card ctm-border-radius shadow-sm grow flex-fill">
                       <div class="card-header">
@@ -493,12 +498,14 @@ const enlargeEmployee = (event, id, index) => {
                   </div>
                 </div>
               </div>
-            </div>`
+
+            </div>`,
       );
-      $("html, body").delay(300).animate({
-        scrollTop: $('#employee-details').offset().top
+      $('html, body').delay(300).animate({
+        scrollTop: $('#employee-details').offset().top,
       }, 1000);
     },
+
     error: (error) => {
       $('.toast-header').removeClass('bg-success').addClass('bg-danger').addClass('text-dark');
       $('.toast-title').text('Employee Details');
@@ -507,6 +514,6 @@ const enlargeEmployee = (event, id, index) => {
         delay: 5000,
       });
       $('.toast').toast('show');
-    }
+    },
   });
 };

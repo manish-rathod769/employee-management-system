@@ -108,7 +108,6 @@ export const deleteFile = async (path) => {
     await fs.promises.unlink(path);
     return 'file not deleted';
   } catch (error) {
-    console.log(error);
     return 'file deleted successfully';
   }
 };
@@ -117,25 +116,31 @@ export const deleteFile = async (path) => {
 const compress = async (filePath) => {
   try {
     // console.log(filePath);
-    const image = await Jimp.read(filePath);
-    await image.resize(400, Jimp.AUTO);
-    await image.quality(60);
-    await image.writeAsync(filePath+'.jpg');
+    const image = await Jimp.read(filePath)
+      .resize(400, Jimp.AUTO)
+      .quality(60);
+    await image.writeAsync(`${filePath}.jpg`);
     return image;
-  } catch (err) {
-    // console.log(err);
-    return err;
+  } catch (error) {
+    return error;
   }
-}
+};
+
 export const cloudUpload = async (file) => {
   const s3 = new AWS.S3({
     accessKeyId: process.env.AWS_KEY_ID,
     secretAccessKey: process.env.AWS_SECRET_ACCESS,
   });
   const { filename, path: filePath } = file;
-  const img = await compress(filePath);
-  // console.log(img);
-  const image = await fs.promises.readFile(filePath+'.jpg');
+  await compress(filePath);
+
+  // read compressed file from storage.
+  let image;
+  try {
+    image = await fs.promises.readFile(`${filePath}.jpg`);
+  } catch (error) {
+    throw new Error('File read Error! \n', error);
+  }
 
   s3.upload(
     {
@@ -147,33 +152,31 @@ export const cloudUpload = async (file) => {
     (err, data) => {
       if (err) {
         // console.log(err);
-        deleteFile(filePath + '.jpg');
+        deleteFile(`${filePath}.jpg`);
         return err;
       }
       // console.log(data);
       deleteFile(file.path);
-      deleteFile(filePath+'.jpg');
+      deleteFile(`${filePath}.jpg`);
       return data;
     },
   );
 };
 
-export const retriveImage = (filename) => {
-  const s3 = new AWS.S3({
-    accessKeyId: process.env.AWS_KEY_ID,
-    secretAccessKey: process.env.AWS_SECRET_ACCESS,
-  });
+// export const retriveImage = (filename) => {
+//   const s3 = new AWS.S3({
+//     accessKeyId: process.env.AWS_KEY_ID,
+//     secretAccessKey: process.env.AWS_SECRET_ACCESS,
+//   });
 
-  const params = {
-    Bucket: process.env.AWS_S3_BUCKET,
-    Key: filename,
-  };
-  s3.getObject(params, (err, data) => {
-    if (err) {
-      return err;
-    } 
-    console.log(data);
-    const image = `data:image/jpeg;base64,${btoa(data.Body)}`;
-    
-  });
-};
+//   const params = {
+//     Bucket: process.env.AWS_S3_BUCKET,
+//     Key: filename,
+//   };
+//   s3.getObject(params, (err, data) => {
+//     if (err) {
+//       return err;
+//     }
+//     const image = `data:image/jpeg;base64,${btoa(data.Body)}`;
+//   });
+// };
