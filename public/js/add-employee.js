@@ -261,8 +261,9 @@ $(document).ready(() => {
           });
           $('.toast').toast('show');
 
-          $(':input', '#form-add-employee').not(':button, :submit, :reset, :hidden')
-            .val('');
+          // $(':input', '#form-add-employee').not(':button, :submit, :reset, :hidden')
+          //   .val('');
+          $('#form-add-employee')[0].reset();
           $('.avatar-preview').find('div').css('background-image', 'url(../img/logo2.png)');
 
           // change view

@@ -99,10 +99,10 @@ export const addEmployee = async (req, res) => {
     };
 
     Promise.all([
-      Employee.create(payload),
-      EmployeeContact.create(contactDetailsPayload),
-      EmployeeAcademic.create(academicPayload),
-      EmployeePreWork.create(preWorkPayload),
+      await Employee.create(payload),
+      await EmployeeContact.create(contactDetailsPayload),
+      await EmployeeAcademic.create(academicPayload),
+      await EmployeePreWork.create(preWorkPayload),
     ])
       .then(async (result) => {
         const newEmployee = {
@@ -227,6 +227,7 @@ export const getEmployee = async (req, res) => {
             include: [
               {
                 model: ProjectEmployee,
+                duplicating: false,
                 where: {
                   projectId: {
                     [Op.in]: projects,
