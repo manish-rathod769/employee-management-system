@@ -63,7 +63,6 @@ const fetchStateNames = () => {
   });
 };
 
-// eslint-disable-next-line no-unused-vars
 const clientDetails = (clientId) => {
   hideShowField(['#clients-add-div', '#add-client', '#pagination', '#clients-data-body'], ['#clients-view-div', '#all-client']);
   $('#action').text('View Client');
