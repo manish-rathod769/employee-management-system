@@ -6,15 +6,15 @@ import * as roleCheck from '../middlewares/role';
 
 const route = express.Router();
 
-route.get('/fetchproject', checkAJAX, verifyCookie, roleCheck.role_All(false), viewProject);
+route.get('/fetchproject', checkAJAX, verifyCookie, roleCheck.roleAll(false), viewProject);
 route.post('/project', projectValidation, verifyCookie, roleCheck.roleAdmin(false), addProject);
 route.put('/projects/:id', projectValidation, verifyCookie, roleCheck.roleAdmin(false), updateProject);
 route.get('/projects/:id', checkAJAX, verifyCookie, singleProject);
-route.get('/project/:projectId/employees', checkAJAX, verifyCookie, roleCheck.role_Admin_PM_HR(false), projectEmployee);
-route.get('/project/:projectId/clients', checkAJAX, verifyCookie, roleCheck.role_Admin_PM_HR(false), projectClient);
-route.get('/projects', verifyCookie, roleCheck.role_Admin_PM_HR(true), (req, res) => res.render('project', { role: req.user.role }));
+route.get('/project/:projectId/employees', checkAJAX, verifyCookie, roleCheck.roleAdminPmHr(false), projectEmployee);
+route.get('/project/:projectId/clients', checkAJAX, verifyCookie, roleCheck.roleAdminPmHr(false), projectClient);
+route.get('/projects', verifyCookie, roleCheck.roleAdminPmHr(true), (req, res) => res.render('project', { role: req.user.role }));
 
 route.get('/employee/:employeeId/projects', verifyCookie, roleCheck.roleDEV(true), renderEmployeeProjectView);
-route.get('/viewProject/:projectId', verifyCookie, roleCheck.role_Admin_PM_HR(true), renderViewProject);
+route.get('/viewProject/:projectId', verifyCookie, roleCheck.roleAdminPmHr(true), renderViewProject);
 
 module.exports = route;

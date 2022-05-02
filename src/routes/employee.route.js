@@ -40,7 +40,7 @@ router.get('/employee/:employeeId', verifyCookie, roleCheck.roleDEV(true), emplo
 router.get('/employee/:employeeId/change-password', verifyCookie, employeeController.changePasswordView);
 router.post('/employee/:employeeId/change-password', verifyCookie, employeeValidator.passwordValidate, employeeController.changePassword);
 // protected, check for employee login and empoyee side route
-router.get('/profile', verifyCookie, roleCheck.role_Admin_PM_HR(true), employeeController.renderEmployeeProfile);
+router.get('/profile', verifyCookie, roleCheck.roleAdminPmHr(true), employeeController.renderEmployeeProfile);
 
 
 // general settings-route

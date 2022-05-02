@@ -26,10 +26,9 @@ export const clientRegisterValidation = async (req, res, next) => {
 
   const { error } = clientRegisterObject.validate(payload);
   if (error) {
-    errorResponse(req, res, error.message, 206, error.details);
-  } else {
-    next();
+    return errorResponse(req, res, error.message, 206, error.details);
   }
+  return next();
 };
 
 export const clientDataUpdateOject = joi.object({
@@ -45,8 +44,7 @@ export const clientUpdateDataValidation = async (req, res, next) => {
   const { clientId } = req.params;
   const matchedClient = await Client.findOne({ where: { id: clientId } });
   if (!matchedClient) {
-    errorResponse(req, res, 'Client does not exist !!!', 500, { error: `Client does not exist with id ${clientId} !!!` });
-    return;
+    return errorResponse(req, res, 'Client does not exist !!!', 500, { error: `Client does not exist with id ${clientId} !!!` });
   }
 
   const payload = {
@@ -60,8 +58,7 @@ export const clientUpdateDataValidation = async (req, res, next) => {
 
   const { error } = clientDataUpdateOject.validate(payload);
   if (error) {
-    errorResponse(req, res, error.message, 206, error.details);
-  } else {
-    next();
+    return errorResponse(req, res, error.message, 206, error.details);
   }
+  return next();
 };
