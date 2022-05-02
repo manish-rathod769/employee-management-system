@@ -132,8 +132,11 @@ export const cloudUpload = async (file) => {
     secretAccessKey: process.env.AWS_SECRET_ACCESS,
   });
   const { filename, path: filePath } = file;
-  await compress(filePath);
-
+  try {
+    await compress(filePath);
+  } catch (error) {
+    throw new Error('File compression Error! \n', error);
+  }
   // read compressed file from storage.
   let image;
   try {
