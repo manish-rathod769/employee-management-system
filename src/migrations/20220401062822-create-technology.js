@@ -1,4 +1,3 @@
-'use strict';
 module.exports = {
   async up(queryInterface, Sequelize) {
     await queryInterface.createTable('Technologies', {
@@ -6,27 +5,27 @@ module.exports = {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
       },
       techName: {
         type: Sequelize.STRING,
         allowNull: false,
       },
-      isArchive: {
+      isArchived: {
         type: Sequelize.BOOLEAN,
         defaultValue: false,
       },
       createdAt: {
         allowNull: false,
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
       },
       updatedAt: {
         allowNull: false,
-        type: Sequelize.DATE
-      }
+        type: Sequelize.DATE,
+      },
     });
   },
-  async down(queryInterface, Sequelize) {
+  async down(queryInterface) {
     await queryInterface.dropTable('Technologies');
-  }
+  },
 };

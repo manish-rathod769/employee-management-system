@@ -4,7 +4,7 @@ import {
   Leave, ProjectEmployee, Employee, DailyAttendance,
 } from '../../models';
 import transporter from '../../helpers/mail';
-import * as constantVar from '../../constant/constantVar';
+import * as constantVar from '../../constants/index';
 
 // ------------ get dates between two dates
 function getDatesBetween(startDate1, endDate2) {

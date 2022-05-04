@@ -1,7 +1,3 @@
-/* eslint-disable no-unused-expressions */
-/* eslint-disable no-restricted-globals */
-/* eslint-disable no-unused-vars */
-
 const displayError = (err) => {
   $('#message-body').removeClass('d-none');
   $('#message-body').html(`
@@ -15,7 +11,7 @@ const displayError = (err) => {
     $('#message-body').html('');
     $('#message-body').addClass('d-none');
   }, 5000);
-}
+};
 
 const displaySuccessMessage = (message) => {
   $('#message-body').removeClass('d-none');
@@ -29,9 +25,8 @@ const displaySuccessMessage = (message) => {
   setTimeout(() => {
     $('#message-body').html('');
     $('#message-body').addClass('d-none');
-    viewClientWithPagination();
   }, 5000);
-}
+};
 
 const hideShowField = (fieldsToBeHide, fieldsToBeShown) => {
   fieldsToBeHide.forEach((field) => {
@@ -49,7 +44,11 @@ const populateCityNames = (state, flag) => {
     data[state].forEach((city) => {
       cityOptions += `<option value='${city}'>${city}</option>`;
     });
-    (flag) ? $('#client-edit-city').html(cityOptions) : $('#city').html(cityOptions);
+    if (flag) {
+      $('#client-edit-city').html(cityOptions);
+    } else {
+      $('#city').html(cityOptions);
+    }
   });
 };
 
@@ -133,7 +132,9 @@ const fetchClientData = (index) => {
 
         // Set pagination oprions
         $('#clients-count').text(totalCount);
+        // eslint-disable-next-line no-unused-expressions
         (beforeCount <= 0) ? $('#previous').addClass('disabled') : $('#previous').removeClass('disabled');
+        // eslint-disable-next-line no-unused-expressions
         (afterCount <= 0) ? $('#next').addClass('disabled') : $('#next').removeClass('disabled');
         $('#current').text(index);
         if (resData.data.length) {
