@@ -5,7 +5,6 @@ $('#asideProfile, #headerProfile, #asideHomeProfile, #logoLink').click((event) =
 
 $('#asideProjects, #headerProjects').click((event) => {
   event.preventDefault();
-  console.log('hello');
   window.location = `/employee/${localStorage.getItem('id')}/projects`;
 });
 

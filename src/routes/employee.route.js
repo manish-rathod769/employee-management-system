@@ -5,6 +5,7 @@ import * as settingController from '../controllers/setting/setting.controller';
 import { upload, uploadUpdateAvatar } from '../helpers/index';
 import { verifyCookie, checkAJAX } from '../middlewares/auth';
 import * as roleCheck from '../middlewares/role';
+import isLoggedIn from '../middlewares/isLoggedIn';
 
 const router = express.Router();
 
@@ -31,7 +32,7 @@ router.put('/employees/:employeeId',
 
 router.delete('/employees', verifyCookie, roleCheck.roleAdmin(false), employeeController.deleteEmployee);
 
-router.get('/login', employeeController.loginView);
+router.get('/login', isLoggedIn, employeeController.loginView);
 router.post('/login', employeeValidator.loginValidate, employeeController.loginEmployee);
 router.get('/forgot-password', employeeController.forgotPasswordView);
 router.post('/forgot-password', employeeController.forgotPassword);
