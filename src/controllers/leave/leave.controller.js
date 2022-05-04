@@ -125,15 +125,8 @@ const addLeave = async (req, res) => {
       const userEndDate = new Date(endDate);
 
       // to check in between dates of leave
-      if (
-        (dbStartDate.getTime() <= userStartDate.getTime()
-          && dbStartDate.getMonth() === userStartDate.getMonth()
-          && dbStartDate.getFullYear() === userStartDate.getFullYear()
-          && dbEndDate.getTime() >= userStartDate.getTime())
-        || (dbEndDate.getTime() >= userEndDate.getTime()
-          && dbEndDate.getMonth() === userEndDate.getMonth()
-          && dbEndDate.getFullYear() === userEndDate.getFullYear()
-          && dbStartDate.getTime() <= userEndDate.getTime())) {
+      if ((dbStartDate <= userStartDate && dbEndDate >= userStartDate)
+        || (dbStartDate <= userEndDate && dbEndDate >= userEndDate)) {
         flagCheck = true;
 
         const getleave = await Leave.findAll({
@@ -429,19 +422,11 @@ const updateLeave = async (req, res) => {
       const dbEndDate = element.endDate;
       const userStartDate = new Date(startDate);
       const userEndDate = new Date(endDate);
-      console.log(dbStartDate, dbEndDate, userStartDate, userEndDate);
 
       // to check in between dates of leave
       if (
-        (dbStartDate.getTime() <= userStartDate.getTime()
-          && dbStartDate.getMonth() === userStartDate.getMonth()
-          && dbStartDate.getFullYear() === userStartDate.getFullYear()
-          && dbEndDate.getTime() >= userStartDate.getTime())
-        || (dbEndDate.getTime() >= userEndDate.getTime()
-          && dbEndDate.getMonth() === userEndDate.getMonth()
-          && dbEndDate.getFullYear() === userEndDate.getFullYear()
-          && dbStartDate.getTime() <= userEndDate.getTime())) {
-        console.log('rrr');
+        (dbStartDate <= userStartDate && dbEndDate >= userStartDate)
+        || (dbStartDate <= userEndDate && dbEndDate >= userEndDate)) {
         flagCheck = true;
       }
     });
