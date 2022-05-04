@@ -24,7 +24,7 @@ export const roleAdmin = flagRender => (req, res, next) => {
 export const rolePM = flagRender => (req, res, next) => {
   try {
     if (req.user.role === roles.PM) {
-      next();
+      return next();
     }
     return errorResponse(req, res, 'You do not have permission to access this route !!!', 401);
   } catch (err) {
