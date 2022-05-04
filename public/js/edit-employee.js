@@ -239,7 +239,7 @@ $('#form-edit-employee').validate({
         // console.log(data);
         $('.toast-header').removeClass('bg-danger').addClass('bg-success').addClass('text-dark');
         $('.toast-title').text('Employee Update');
-        $('.toast-body').text("employee Updated successfully");
+        $('.toast-body').text('employee Updated successfully');
         $('.toast').toast({
           delay: 5000,
         });

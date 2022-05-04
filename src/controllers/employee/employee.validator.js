@@ -1,5 +1,8 @@
 import joi from 'joi';
 import { deleteFile, errorResponse, isValidTech } from '../../helpers';
+import {
+  ADMIN, DEV, HR, PM,
+} from '../../constants';
 
 const validation = joi.object({
   firstName: joi.string().trim(true).required(),
@@ -9,7 +12,7 @@ const validation = joi.object({
   gender: joi.string().trim(true).valid('male', 'female').required(),
   DOB: joi.date().less('now').required(),
   joiningDate: joi.date().required(),
-  role: joi.string().trim(true).valid('ADMIN', 'DEV', 'PM', 'HR').required(),
+  role: joi.string().trim(true).valid(ADMIN, DEV, PM, HR).required(),
   careerStartDate: joi.date().required(),
 
   contactNo: joi.string().trim(true).required(),
@@ -92,7 +95,7 @@ export const employeeValidate = async (req, res, next) => {
 
 const loginValidation = joi.object({
   email: joi.string().email().trim(true).required(),
-  role: joi.string().trim(true).valid('ADMIN', 'DEV', 'PM', 'HR').required(),
+  role: joi.string().trim(true).valid(ADMIN, DEV, PM, HR).required(),
   password: joi.string().trim(true).required().min(8)
     .max(12),
 });
