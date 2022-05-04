@@ -1,139 +1,122 @@
 import { errorResponse } from '../helpers/index';
+import * as roles from '../constants/index';
 
-export const roleAdmin = (flagRender) => {
-  const adminRoleMidd = (req, res, next) => {
-    try {
-      if (req.user.role === 'ADMIN') {
-        return next();
-      }
-      return errorResponse(req, res, 'You do not have permission to access this route !!!', 401);
-    } catch (err) {
-      if (flagRender) {
-        res.status(401);
-        return res.render('message', {
-          error: err.message,
-          message: '',
-          route: '',
-          text: 'Back',
-        });
-      }
-      return errorResponse(req, res, err.message, 401);
+export const roleAdmin = flagRender => (req, res, next) => {
+  try {
+    if (req.user.role === roles.ADMIN) {
+      return next();
     }
-  };
-  return adminRoleMidd;
+    return errorResponse(req, res, 'You do not have permission to access this route !!!', 401);
+  } catch (err) {
+    if (flagRender) {
+      res.status(401);
+      return res.render('message', {
+        error: err.message,
+        message: '',
+        route: '',
+        text: 'Back',
+      });
+    }
+    return errorResponse(req, res, err.message, 401);
+  }
 };
 
-export const rolePM = (flagRender) => {
-  const PMRoleMidd = (req, res, next) => {
-    try {
-      if (req.user.role === 'PM') {
-        next();
-      }
-      return errorResponse(req, res, 'You do not have permission to access this route !!!', 401);
-    } catch (err) {
-      if (flagRender) {
-        res.status(401);
-        return res.render('message', {
-          error: err.message,
-          message: '',
-          route: '',
-          text: 'Back',
-        });
-      }
-      return errorResponse(req, res, err.message, 401);
+export const rolePM = flagRender => (req, res, next) => {
+  try {
+    if (req.user.role === roles.PM) {
+      next();
     }
-  };
-  return PMRoleMidd;
+    return errorResponse(req, res, 'You do not have permission to access this route !!!', 401);
+  } catch (err) {
+    if (flagRender) {
+      res.status(401);
+      return res.render('message', {
+        error: err.message,
+        message: '',
+        route: '',
+        text: 'Back',
+      });
+    }
+    return errorResponse(req, res, err.message, 401);
+  }
 };
 
-export const roleHR = (flagRender) => {
-  const HRRoleMidd = (req, res, next) => {
-    try {
-      if (req.user.role === 'HR') {
-        return next();
-      }
-      return errorResponse(req, res, 'You do not have permission to access this route !!!', 401);
-    } catch (err) {
-      if (flagRender) {
-        res.status(401);
-        return res.render('message', {
-          error: err.message,
-          message: '',
-          route: '',
-          text: 'Back',
-        });
-      }
-      return errorResponse(req, res, err.message, 401);
+export const roleHR = flagRender => (req, res, next) => {
+  try {
+    if (req.user.role === roles.HR) {
+      return next();
     }
-  };
-  return HRRoleMidd;
+    return errorResponse(req, res, 'You do not have permission to access this route !!!', 401);
+  } catch (err) {
+    if (flagRender) {
+      res.status(401);
+      return res.render('message', {
+        error: err.message,
+        message: '',
+        route: '',
+        text: 'Back',
+      });
+    }
+    return errorResponse(req, res, err.message, 401);
+  }
 };
 
-export const roleDEV = (flagRender) => {
-  const DEVRoleMidd = (req, res, next) => {
-    try {
-      if (req.user.role === 'DEV') {
-        return next();
-      }
-      return errorResponse(req, res, 'You do not have permission to access this route !!!', 401);
-    } catch (err) {
-      if (flagRender) {
-        res.status(401);
-        return res.render('message', {
-          error: err.message,
-          message: '',
-          route: '',
-          text: 'Back',
-        });
-      }
-      return errorResponse(req, res, err.message, 401);
+export const roleDEV = flagRender => (req, res, next) => {
+  try {
+    if (req.user.role === roles.DEV) {
+      return next();
     }
-  };
-  return DEVRoleMidd;
+    return errorResponse(req, res, 'You do not have permission to access this route !!!', 401);
+  } catch (err) {
+    if (flagRender) {
+      res.status(401);
+      return res.render('message', {
+        error: err.message,
+        message: '',
+        route: '',
+        text: 'Back',
+      });
+    }
+    return errorResponse(req, res, err.message, 401);
+  }
 };
 
-export const roleAdminPmHr = (flagRender) => {
-  const adminPmHrRoleMidd = (req, res, next) => {
-    try {
-      if (['ADMIN', 'PM', 'HR'].includes(req.user.role)) {
-        return next();
-      }
-      return errorResponse(req, res, 'You do not have permission to access this route !!!', 401);
-    } catch (err) {
-      if (flagRender) {
-        res.status(401);
-        return res.render('message', {
-          error: err.message,
-          message: '',
-          route: '',
-          text: 'Back',
-        });
-      }
-      return errorResponse(req, res, err.message, 401);
+export const roleAdminPmHr = flagRender => (req, res, next) => {
+  try {
+    if ([roles.ADMIN, roles.PM, roles.HR].includes(req.user.role)) {
+      return next();
     }
-  };
-  return adminPmHrRoleMidd;
+    return errorResponse(req, res, 'You do not have permission to access this route !!!', 401);
+  } catch (err) {
+    if (flagRender) {
+      res.status(401);
+      return res.render('message', {
+        error: err.message,
+        message: '',
+        route: '',
+        text: 'Back',
+      });
+    }
+    return errorResponse(req, res, err.message, 401);
+  }
 };
 
-export const roleAll = (flagRender) => {
-  const allRoleMidd = (req, res, next) => {
-    try {
-      if (['ADMIN', 'PM', 'HR', 'DEV'].includes(req.user.role)) {
-        return next();
-      }
-      return errorResponse(req, res, 'You do not have permission to access this route !!!', 401);
-    } catch (err) {
-      if (flagRender) {
-        res.status(401);
-        return res.render('message', {
-          error: err.message,
-          message: '',
-          route: '',
-          text: 'Back',
-        });
-      }
-      return errorResponse(req, res, err.message, 401);
+export const roleAll = flagRender => (req, res, next) => {
+  try {
+    if ([roles.ADMIN, roles.PM, roles.HR, roles.DEV].includes(req.user.role)) {
+      return next();
     }
-  };
-  return allRoleMidd;
+    return errorResponse(req, res, 'You do not have permission to access this route !!!', 401);
+  } catch (err) {
+    if (flagRender) {
+      res.status(401);
+      return res.render('message', {
+        error: err.message,
+        message: '',
+        route: '',
+        text: 'Back',
+      });
+    }
+    return errorResponse(req, res, err.message, 401);
+  }
 };

@@ -34,7 +34,6 @@ export const addNewClient = async (req, res) => {
   }
 };
 
-// eslint-disable-next-line consistent-return
 export const getAllClient = async (req, res) => {
   // Details required for pagination
   const page = Number(req.query.page) || 1;
