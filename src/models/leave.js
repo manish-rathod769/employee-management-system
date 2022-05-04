@@ -33,7 +33,7 @@ module.exports = (sequelize, DataTypes) => {
   Leave.associate = (models) => {
     Leave.belongsTo(models.Employee, {
       foreignKey: 'employeeId',
-    })
+    });
   };
   return Leave;
 };
