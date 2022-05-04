@@ -98,6 +98,7 @@ const leaveForm = async (req, res) => {
 };
 
 // ------------ business logic of add leave for employee(DEV)
+// eslint-disable-next-line consistent-return
 const addLeave = async (req, res) => {
   const devId = req.user.id;
   const {
@@ -115,6 +116,7 @@ const addLeave = async (req, res) => {
       },
     });
 
+    // eslint-disable-next-line consistent-return
     leaveDates.forEach(async (element) => {
       const dbStartDate = element.startDate;
       const dbEndDate = element.endDate;
@@ -132,23 +134,7 @@ const addLeave = async (req, res) => {
           && dbEndDate.getFullYear() === userEndDate.getFullYear()
           && dbStartDate.getTime() <= userEndDate.getTime())) {
         flagCheck = true;
-        // new Promise((resolve, reject) => {
-        //   try {
-        //     const getleave = Leave.findAll({
-        //       where: { employeeId: devId, isArchived: false },
-        //       limit: 12,
-        //       offset: 0,
-        //     });
-        //     resolve(getleave);
-        //   } catch (error) {
-        //     reject(error.message);
-        //   }
-        // }).then((result) => {
-        //   const leaveView = res.render('view-leave', {
-        //     leavesdata: result, warning: 'YOUR LEAVE DETAILS ARE ALREADY EXIST!!!', success: '',
-        //   });
-        //   return leaveView;
-        // });
+
         const getleave = await Leave.findAll({
           where: { employeeId: devId, isArchived: false },
           limit: 12,
@@ -367,6 +353,7 @@ const viewOneLeave = async (req, res) => {
 
 
 // ------------ update leave data for employee(DEV)
+// eslint-disable-next-line consistent-return
 const updateLeave = async (req, res) => {
   // devid from stored cookies
   const devId = req.user.id;
@@ -387,9 +374,10 @@ const updateLeave = async (req, res) => {
       },
     });
 
-    leaveDates.forEach(async (element) => {
-      const dbStartDate = element.startDate;
-      const dbEndDate = element.endDate;
+    // eslint-disable-next-line consistent-return
+    const existLeave = leaveDates.find(async (ele) => {
+      const dbStartDate = ele.startDate;
+      const dbEndDate = ele.endDate;
       const userStartDate = new Date(startDate);
       const userEndDate = new Date(endDate);
 
@@ -404,23 +392,12 @@ const updateLeave = async (req, res) => {
           && dbEndDate.getFullYear() === userEndDate.getFullYear()
           && dbStartDate.getTime() <= userEndDate.getTime())) {
         flagCheck = true;
-        // new Promise((resolve, reject) => {
-        //   try {
-        //     const getleave = Leave.findAll({
-        //       where: { employeeId: devId, isArchived: false },
-        //       limit: 12,
-        //       offset: 0,
-        //     });
-        //     resolve(getleave);
-        //   } catch (error) {
-        //     reject(error.message);
-        //   }
-        // }).then((result) => {
-        //   const leaveView = res.render('view-leave', {
-        //     leavesdata: result, warning: 'YOUR LEAVE DETAILS ARE ALREADY EXIST!!!', success: '',
-        //   });
-        //   return leaveView;
-        // });
+        return ele;
+      }
+    });
+
+    if (existLeave) {
+      try {
         const getleave = await Leave.findAll({
           where: { employeeId: devId, isArchived: false },
           limit: 12,
@@ -430,8 +407,10 @@ const updateLeave = async (req, res) => {
           leavesdata: getleave, warning: 'YOUR LEAVE DETAILS ARE ALREADY EXIST!!!', success: '',
         });
         return leaveView;
+      } catch (error) {
+        return res.errorResponse(req, res, error.message, 500);
       }
-    });
+    }
   } catch (error) {
     return errorResponse(req, res, error.message, 409);
   }

@@ -502,7 +502,7 @@ export const loginEmployee = async (req, res) => {
 
     // store verify Token to DB
     employee.verifyToken = verifyToken;
-    const dataemp = await employee.save();
+    await employee.save();
     res.cookie('verifyToken', verifyToken);
     const result = {
       avatar: employee.avatar,
