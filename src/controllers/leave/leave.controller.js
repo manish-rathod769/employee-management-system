@@ -1,4 +1,5 @@
 import { v4 as uuidv4 } from 'uuid';
+import { Op } from 'sequelize';
 import { errorResponse, successResponse } from '../../helpers';
 import {
   Leave, ProjectEmployee, Employee, DailyAttendance,
@@ -147,7 +148,12 @@ const addLeave = async (req, res) => {
       }
     });
   } catch (error) {
-    return errorResponse(req, res, error.message, 409);
+    return res.render('message', {
+      error: 'ERROR WHILE FETCHING LEAVE DETAILS!!',
+      message: '',
+      route: '',
+      text: 'Back',
+    });
   }
 
   if (flagCheck === false) {
@@ -206,7 +212,12 @@ const viewLeave = async (req, res) => {
         const arrayLeave = getleave.rows;
         return res.render('view-leave', { leavesdata: arrayLeave, success: '', warning: '' });
       } catch (e) {
-        return errorResponse(req, res, e.message, 400, e);
+        return res.render('message', {
+          error: 'ERROR WHILE FETCHING LEAVE DETAILS!!',
+          message: '',
+          route: '',
+          text: 'Back',
+        });
       }
     }
 
@@ -227,7 +238,12 @@ const viewLeave = async (req, res) => {
         const arrayLeave = getleave.rows;
         return res.render('adminView-leave', { leavesdata: arrayLeave });
       } catch (e) {
-        return errorResponse(req, res, e.message, 400, e);
+        return res.render('message', {
+          error: 'ERROR WHILE FETCHING LEAVE DETAILS!!',
+          message: '',
+          route: '',
+          text: 'Back',
+        });
       }
     }
 
@@ -257,7 +273,12 @@ const viewLeave = async (req, res) => {
         const arrayLeave = getleave.rows;
         return res.render('update-leave', { leavesdata: arrayLeave });
       } catch (e) {
-        return errorResponse(req, res, e.message, 400, e);
+        return res.render('message', {
+          error: 'ERROR WHILE FETCHING LEAVE DETAILS!!',
+          message: '',
+          route: '',
+          text: 'Back',
+        });
       }
     }
 
@@ -279,7 +300,12 @@ const viewLeave = async (req, res) => {
         const arrayLeave = getleave.rows;
         return res.render('hrView-leave', { leavesdata: arrayLeave });
       } catch (e) {
-        return errorResponse(req, res, e.message, 400, e);
+        return res.render('message', {
+          error: 'ERROR WHILE FETCHING LEAVE DETAILS!!',
+          message: '',
+          route: '',
+          text: 'Back',
+        });
       }
     }
 
@@ -305,9 +331,15 @@ const viewOneLeave = async (req, res) => {
         });
         return res.render('view-leavedata', { leavesdata: getleave });
       } catch (e) {
-        return errorResponse(req, res, e.message, 400, e);
+        return res.render('message', {
+          error: 'ERROR WHILE FETCHING LEAVE DETAILS!!',
+          message: '',
+          route: '',
+          text: 'Back',
+        });
       }
     }
+
     // if employee is Admin
     case constantVar.ADMIN: {
       try {
@@ -318,9 +350,15 @@ const viewOneLeave = async (req, res) => {
         );
         return res.render('adminView-leave', { leavesdata: getleave });
       } catch (e) {
-        return errorResponse(req, res, e.message, 400, e);
+        return res.render('message', {
+          error: 'ERROR WHILE FETCHING LEAVE DETAILS!!',
+          message: '',
+          route: '',
+          text: 'Back',
+        });
       }
     }
+
     // if employee is PM
     case constantVar.PM: {
       try {
@@ -330,9 +368,15 @@ const viewOneLeave = async (req, res) => {
         });
         return res.render('update-leave', { leavesdata: getleave });
       } catch (e) {
-        return errorResponse(req, res, e.message, 400, e);
+        return res.render('message', {
+          error: 'ERROR WHILE FETCHING LEAVE DETAILS!!',
+          message: '',
+          route: '',
+          text: 'Back',
+        });
       }
     }
+
     // if employee is HR
     case constantVar.HR: {
       try {
@@ -342,7 +386,12 @@ const viewOneLeave = async (req, res) => {
         });
         return res.render('hrView-leave', { leavesdata: getleave });
       } catch (e) {
-        return errorResponse(req, res, e.message, 400, e);
+        return res.render('message', {
+          error: 'ERROR WHILE FETCHING LEAVE DETAILS!!',
+          message: '',
+          route: '',
+          text: 'Back',
+        });
       }
     }
     default: {
@@ -369,17 +418,18 @@ const updateLeave = async (req, res) => {
   try {
     const leaveDates = await Leave.findAll({
       where: {
+        id: { [Op.notIn]: [req.params.id] },
         employeeId: devId,
         status: 'pending',
       },
     });
 
-    // eslint-disable-next-line consistent-return
-    const existLeave = leaveDates.find(async (ele) => {
-      const dbStartDate = ele.startDate;
-      const dbEndDate = ele.endDate;
+    leaveDates.forEach(async (element) => {
+      const dbStartDate = element.startDate;
+      const dbEndDate = element.endDate;
       const userStartDate = new Date(startDate);
       const userEndDate = new Date(endDate);
+      console.log(dbStartDate, dbEndDate, userStartDate, userEndDate);
 
       // to check in between dates of leave
       if (
@@ -391,12 +441,12 @@ const updateLeave = async (req, res) => {
           && dbEndDate.getMonth() === userEndDate.getMonth()
           && dbEndDate.getFullYear() === userEndDate.getFullYear()
           && dbStartDate.getTime() <= userEndDate.getTime())) {
+        console.log('rrr');
         flagCheck = true;
-        return ele;
       }
     });
 
-    if (existLeave) {
+    if (flagCheck === true) {
       try {
         const getleave = await Leave.findAll({
           where: { employeeId: devId, isArchived: false },
@@ -412,7 +462,12 @@ const updateLeave = async (req, res) => {
       }
     }
   } catch (error) {
-    return errorResponse(req, res, error.message, 409);
+    return res.render('message', {
+      error: 'ERROR WHILE FETCHING LEAVE DETAILS!!',
+      message: '',
+      route: '',
+      text: 'Back',
+    });
   }
 
   if (flagCheck === false) {
@@ -429,7 +484,12 @@ const updateLeave = async (req, res) => {
       // update leave details
       await Leave.update(leavedata, { where: { id: req.params.id } });
     } catch (error) {
-      return res.errorResponse(req, res, error.message, 500);
+      return res.render('message', {
+        error: 'ERROR WHILE EDIT LEAVE DETAILS!!',
+        message: '',
+        route: '',
+        text: 'Back',
+      });
     }
 
     // send mail of leave detail to pm
@@ -445,13 +505,18 @@ const updateLeave = async (req, res) => {
       const leaveView = res.render('view-leave', { leavesdata: getallleave, success: 'YOUR LEAVE DETAILS UPDATED!!!', warning: '' });
       return leaveView;
     } catch (error) {
-      return res.errorResponse(req, res, error.message, 500);
+      return res.render('message', {
+        error: 'ERROR WHILE FETCHING LEAVE DETAILS!!',
+        message: '',
+        route: '',
+        text: 'Back',
+      });
     }
   }
 };
 
-
 // ------------ leave approve or reject by employee(PM)
+// eslint-disable-next-line consistent-return
 const acceptRejectLeave = async (req, res) => {
   const leaveid = req.body;
   let mailOptions = {};
@@ -467,7 +532,7 @@ const acceptRejectLeave = async (req, res) => {
       }],
     });
   } catch (error) {
-    return res.errorResponse(req, res, error.message, 500);
+    return errorResponse(req, res, 'ERROR WHILE FETCHING LEAVE DETAILS!!!');
   }
 
   // if leave accepted by PM
@@ -479,7 +544,6 @@ const acceptRejectLeave = async (req, res) => {
       reason: getdata.reason,
       status: 'approved',
     };
-
 
     // start date and end date to find inbetween dates
     const sDate = getdata.startDate;
@@ -503,14 +567,14 @@ const acceptRejectLeave = async (req, res) => {
     try {
       await DailyAttendance.bulkCreate(finalPayload);
     } catch (error) {
-      return res.errorResponse(req, res, error.message, 500);
+      return errorResponse(req, res, 'ERROR WHILE INSERTING LEAVE DETAILS!!!');
     }
 
     // status update with approved
     try {
       await Leave.update(leavedata, { where: { id: leaveid.lid } });
     } catch (error) {
-      return res.errorResponse(req, res, error.message, 500);
+      return errorResponse(req, res, 'ERROR WHILE EDIT LEAVE DETAILS!!!');
     }
 
     mailOptions = {
@@ -532,7 +596,7 @@ const acceptRejectLeave = async (req, res) => {
     try {
       await Leave.update(leavedata, { where: { id: leaveid.lid } });
     } catch (error) {
-      return res.errorResponse(req, res, error.message, 500);
+      return errorResponse(req, res, 'ERROR WHILE EDIT LEAVE DETAILS!!!');
     }
 
     mailOptions = {
