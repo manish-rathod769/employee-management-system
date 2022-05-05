@@ -82,12 +82,16 @@
                             <option selected disabled>Technology</option>
                           </select>
                           <div class="team-action-icon mx-2">
-                            <!-- <button
-                              id="deleteTech"
-                              class="btn btn-theme ctm-border-radius text-white btn-sm"
+                            <% if (role === 'ADMIN') { %>
+                            <button
+                              id="EditTech"
+                              data-toggle="modal"
+                              data-target="#editTechnology"
+                              class="btn btn-theme ctm-border-radius text-white btn-sm disabled"
                             >
-                              <i class="fa fa-trash" aria-hidden="true"></i>
-                            </button> -->
+                              <i class="fa fa-pencil" aria-hidden="true"></i>
+                            </button>
+                            <% } %>
                           </div>
                         </div>
                       </div>
@@ -190,6 +194,37 @@
     </div>
 
     <!-- modal -->
+    <div class="modal fade" id="editTechnology">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-body">
+            <button type="button" class="close" data-dismiss="modal">
+              &times;
+            </button>
+            <h4 class="modal-title mb-3">Edit Technology</h4>
+            <form id="techEditForm" method="POST" action="/technology">
+            <div class="form-group">
+              <input type="text" class="form-control" id="techEditField" name="field" placeholder="Field" required/>
+            </div>
+            <button
+              type="button"
+              class="btn btn-danger text-white ctm-border-radius float-right ml-3"
+              data-dismiss="modal"
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              class="btn btn-theme text-white ctm-border-radius float-right button-1"
+            >
+              Edit
+            </button>
+          </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <div class="modal fade" id="addPoc">
       <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
@@ -310,7 +345,7 @@
             type: 'POST',
             url: '/technologies',
             data: {
-              techName: `${$('#techName').val()}}`
+              techName: `${$('#techName').val()}`
             },
             success: (data) => {
               $('.toast-header').addClass('bg-success').addClass('text-dark');
@@ -337,6 +372,48 @@
         },
       });
 
+      $('#techList').on('change', (event) => {
+        $('#EditTech').removeClass('disabled');
+      });
+
+      $('#EditTech').on('click', (event) => {
+        $('#techEditField').val($('#techList').val());
+        $('#techEditField').data('tech', $('#techList').val());
+      });
+
+      $('#techEditForm').on('submit', (event) => {
+        event.preventDefault();
+        $.ajax({
+          type: "PUT",
+          url: '/technologies',
+          data: {
+            techName: $('#techEditField').data('tech'),
+            newTech: $('#techEditField').val(),
+          },
+          success: (data) => {
+            $('#editTechnology').modal('toggle');
+            $(".toast-header").removeClass("bg-danger").addClass("bg-success").addClass("text-dark");
+            $(".toast-title").text("Technology");
+            $(".toast-body").text(`${$('#techEditField').val()} Technology Edited successfully!`);
+            $(".toast").toast({
+              delay: 3000,
+            });
+            $(".toast").toast("show");
+            fetchTechnlogy();
+          },
+          error: (error) => {
+            console.log(error);
+            $(".toast-header").removeClass("bg-success").addClass("bg-danger").addClass("text-dark");
+            $(".toast-title").text("Technology");
+            $(".toast-body").text(error.responseJSON.errorMessage);
+            $(".toast").toast({
+              delay: 3000,
+            });
+            $(".toast").toast("show");
+          },
+        });
+      });
+
       const fetchTechnlogy = () => {
         $("#techList").html(`<option selected disabled>Technology</option>`);
         $.ajax({
@@ -349,7 +426,7 @@
             });
           },
           error: function (error) {
-            $('.toast-header').addClass('bg-danger').addClass('text-dark');
+            $('.toast-header').removeClass('bg-success').addClass('bg-danger').addClass('text-dark');
               $('.toast-title').text('Technology');
               $('.toast-body').text(error.responseJSON.errorMessage);
               $('.toast').toast({
@@ -453,7 +530,6 @@
             $(".toast-header").removeClass("bg-success").addClass("bg-danger").addClass("text-dark");
             $(".toast-title").text("POC");
             $(".toast-body").text(error.responseJSON.errorMessage);
-            $(".toast-body").text(error.responseJSON.errorMessage || 'request error');
             $(".toast").toast({
               delay: 4000,
             });

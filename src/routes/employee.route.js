@@ -47,6 +47,7 @@ router.get('/profile', verifyCookie, roleCheck.roleAdminPmHr(true), employeeCont
 // general settings-route
 router.get('/technologies', checkAJAX, verifyCookie, roleCheck.roleAdminPmHr(false), settingController.getTechnology);
 router.post('/technologies', verifyCookie, roleCheck.roleAdmin(false), settingController.addTechnology);
+router.put('/technologies', verifyCookie, roleCheck.roleAdmin(false), settingController.updateTechnology);
 router.get('/setting', verifyCookie, roleCheck.roleAdminPmHr(true), settingController.settingView);
 router.get('/logout', verifyCookie, employeeController.logOut);
 
