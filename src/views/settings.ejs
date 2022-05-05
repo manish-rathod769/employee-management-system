@@ -348,7 +348,7 @@
               techName: `${$('#techName').val()}`
             },
             success: (data) => {
-              $('.toast-header').addClass('bg-success').addClass('text-dark');
+              $('.toast-header').removeClass('bg-danger').addClass('bg-success').addClass('text-dark');
               $('.toast-title').text('Technology');
               $('.toast-body').text('new Technology added');
               $('.toast').toast({
@@ -358,7 +358,7 @@
               fetchTechnlogy();
             },
             error: (error) => {
-              $('.toast-header').addClass('bg-danger').addClass('text-dark');
+              $('.toast-header').removeClass('bg-success').addClass('bg-danger').addClass('text-dark');
               $('.toast-title').text('Technology');
               $('.toast-body').text(error.responseJSON.errorMessage);
               $('.toast').toast({
