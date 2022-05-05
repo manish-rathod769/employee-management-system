@@ -370,7 +370,8 @@ const enlargeEmployee = (event, id, index) => {
       const totalExp = getTimeBetweenDates(data.careerStartDate, new Date());
       const tech = data.Technologies.map(elem => elem.techName);
       lastcard.after(
-        `<div class="row ctm-border-radius shadow-sm grow border-dark bg-dark" id="employee-details"> 
+        `<div class="col-md-12 col-lg-12 col-xl-12">
+        <div class="row ctm-border-radius shadow-sm grow border-dark bg-dark" id="employee-details"> 
               <div class="col-12"> 
               <div class="team-action-icon float-right">
                 <button type="button"
@@ -501,7 +502,7 @@ const enlargeEmployee = (event, id, index) => {
                   </div>
                 </div>
               </div>
-
+            </div>
             </div>`,
       );
       $('html, body').delay(300).animate({

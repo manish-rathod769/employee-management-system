@@ -93,8 +93,8 @@ const viewProject = async (req, res) => {
       });
       projectsData.push({ totalCount: totalCount.length });
       projectsData.push({ role: req.user.role });
+      return successResponse(req, res, projectsData, 200);
     }
-    return successResponse(req, res, 'operation successful', 200);
   } catch (error) {
     return errorResponse(req, res, 'something went wrong', 500, error.message);
   }
