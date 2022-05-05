@@ -145,6 +145,32 @@ export const addTechnology = async (req, res) => {
   }
 };
 
+export const updateTechnology = async (req, res) => {
+  try {
+    const tech = await Technology.findOne(
+      {
+        where: {
+          techName: {
+            [Op.iLike]: `${req.body.techName}`,
+          },
+        },
+      },
+    );
+    if (!tech) {
+      return helpers.errorResponse(req, res, 'technology not found!', 404);
+    }
+
+    tech.techName = req.body.newTech;
+    await tech.save();
+
+    res.status(201);
+    return helpers.successResponse(req, res, 'tech updated successfully!', 200);
+  } catch (error) {
+    // console.log(error);
+    return helpers.errorResponse(req, res, 'something went wrong', 500, error.message);
+  }
+};
+
 export const renderPocView = (req, res) => {
   res.status(200);
   res.render('employee/poc');
