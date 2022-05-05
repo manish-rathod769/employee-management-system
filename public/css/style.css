@@ -1871,3 +1871,8 @@ textarea.form-control {
   .paginate {
 	  background-color: #3E007C;
   }
+  .switch
+  {
+	  position: relative;
+  }
+  

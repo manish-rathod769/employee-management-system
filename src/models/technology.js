@@ -6,11 +6,18 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: false,
       },
-      isArchive: {
+      isArchived: {
         type: DataTypes.BOOLEAN,
         defaultValue: false,
       },
     },
   );
+  Technology.associate = (models) => {
+    Technology.belongsToMany(models.Employee, {
+      through: 'EmployeeTech',
+      foreignKey: 'techId',
+      uniqueKey: 'empTech',
+    });
+  };
   return Technology;
 };

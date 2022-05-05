@@ -1,5 +1,8 @@
 import joi from 'joi';
 import { deleteFile, errorResponse, isValidTech } from '../../helpers';
+import {
+  ADMIN, DEV, HR, PM,
+} from '../../constants';
 
 const validation = joi.object({
   firstName: joi.string().trim(true).required(),
@@ -9,14 +12,14 @@ const validation = joi.object({
   gender: joi.string().trim(true).valid('male', 'female').required(),
   DOB: joi.date().less('now').required(),
   joiningDate: joi.date().required(),
-  role: joi.string().trim(true).valid('ADMIN', 'DEV', 'PM', 'HR').required(),
+  role: joi.string().trim(true).valid(ADMIN, DEV, PM, HR).required(),
   careerStartDate: joi.date().required(),
 
   contactNo: joi.string().trim(true).required(),
-  secondaryEmail: joi.string().email().trim(),
+  secondaryEmail: joi.string().email().trim(true).allow(''),
   houseNo: joi.string().trim(true).required(),
   addressLine1: joi.string().trim(true).required(),
-  addressLine2: joi.string().trim(true),
+  addressLine2: joi.string().trim(true).allow(''),
   landmark: joi.string().trim(true).required(),
   city: joi.string().trim(true).required(),
   state: joi.string().trim(true).required(),
@@ -72,31 +75,31 @@ export const employeeValidate = async (req, res, next) => {
   const { error } = validation.validate(payload);
 
   if (!req.file && !req.body.edited) {
-    errorResponse(req, res, 'please upload profile pic', 406);
-  } else if (error) {
+    return errorResponse(req, res, 'please upload profile pic', 406);
+  }
+  if (error) {
     if (req.file) {
       deleteFile(req.file.path);
     }
     res.status(406);
-    errorResponse(req, res, 'employee data validation error', 406, error.message);
-  } else if (!isValidTech(req.body.knownTech)) {
+    return errorResponse(req, res, `employee data validation error. ${error.message}`, 406, error.message);
+  }
+  if (!isValidTech(req.body.knownTech)) {
     if (req.file) {
       deleteFile(req.file.path);
     }
-    errorResponse(req, res, 'selected technology does not exists in system', 406);
-  } else {
-    next();
+    return errorResponse(req, res, 'selected technology does not exists in system', 406);
   }
+  return next();
 };
 
 const loginValidation = joi.object({
   email: joi.string().email().trim(true).required(),
-  role: joi.string().trim(true).valid('ADMIN', 'DEV', 'PM', 'HR').required(),
+  role: joi.string().trim(true).valid(ADMIN, DEV, PM, HR).required(),
   password: joi.string().trim(true).required().min(8)
     .max(12),
 });
 
-// eslint-disable-next-line consistent-return
 export const loginValidate = async (req, res, next) => {
   const payload = {
     email: req.body.email,
@@ -105,10 +108,9 @@ export const loginValidate = async (req, res, next) => {
   };
   const { error } = loginValidation.validate(payload);
   if (error) {
-    req.flash('error', error.message);
-    return res.redirect(301, '/login');
+    return errorResponse(req, res, `Validation Error: ${error.message}`, 406);
   }
-  next();
+  return next();
 };
 
 const passwordValidation = joi.object({
@@ -127,7 +129,7 @@ export const passwordValidate = async (req, res, next) => {
   };
   const { error } = passwordValidation.validate(payload);
   if (error) {
-    errorResponse(req, res, 'password validation error', 406, error.message);
+    return errorResponse(req, res, 'password validation error', 406, error.message);
   }
-  next();
+  return next();
 };

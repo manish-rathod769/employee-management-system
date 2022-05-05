@@ -38,7 +38,7 @@
     <link rel="stylesheet" href="/assets/plugins/select2/select2.min.css" />
 
     <link rel="stylesheet" href="/assets/css/style.css" />
-    <title>Employees Page</title>
+    <title>Projects</title>
 
     <!--[if lt IE 9]>
       <script src="assets/js/html5shiv.min.js"></script>
@@ -172,9 +172,8 @@
 
     <script src="/assets/plugins/bootstrap-tagsinput/bootstrap-tagsinput.min.js"></script>
 
-    <script src="/public/js/script.js"></script>
-    <script src="/public/js/navigation.js"></script>
-
+    <script src="/assets/js/script.js"></script>
+    <script src="/assets/js/navigation.js"></script>
     <script>
       $(".aside-module-name").text("Project");
       $("#asideProjects")
@@ -240,6 +239,7 @@
           method: "GET",
           success: (resData) => {
             // console.log(resData);
+            const { role } = resData.data.pop();
             const { totalCount } = resData.data.pop();
 
             $("#previous").attr("data-index", Number(index) - 1);

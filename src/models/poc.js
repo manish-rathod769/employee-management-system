@@ -10,7 +10,8 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.UUID,
         allowNull: false,
       },
-    });
+    },
+  );
   Poc.associate = (models) => {
     Poc.belongsTo(models.Employee, {
       foreignKey: 'employeeId',

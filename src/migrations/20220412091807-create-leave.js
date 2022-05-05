@@ -1,5 +1,3 @@
-/* eslint-disable no-unused-vars */
-
 module.exports = {
   up: (queryInterface, Sequelize) => queryInterface.createTable('Leaves', {
     id: {
@@ -8,7 +6,7 @@ module.exports = {
       primaryKey: true,
     },
     employeeId: {
-      type: Sequelize.STRING,
+      type: Sequelize.UUID,
     },
     startDate: {
       type: Sequelize.DATE,
@@ -34,5 +32,5 @@ module.exports = {
       type: Sequelize.DATE,
     },
   }),
-  down: (queryInterface, Sequelize) => queryInterface.dropTable('Leaves'),
+  down: queryInterface => queryInterface.dropTable('Leaves'),
 };

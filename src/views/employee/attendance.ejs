@@ -6,6 +6,15 @@
 
     <link rel="icon" type="image/x-icon" href="/assets/img/favicon.png" />
 
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/img/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/img/favicon-16x16.png">
+    <link rel="manifest" href="/assets/img/site.webmanifest">
+    <link rel="mask-icon" href="/assets/img/safari-pinned-tab.svg" color="#5bbad5">
+    <link rel="shortcut icon" href="/assets/img/favicon.ico">
+    <meta name="msapplication-TileColor" content="#da532c">
+    <meta name="msapplication-config" content="/assets/img/browserconfig.xml">
+    <meta name="theme-color" content="#ffffff">
+
     <link rel="stylesheet" href="/assets/css/bootstrap.min.css" />
 
     <link rel="stylesheet" href="/assets/css/lnr-icon.css" />
@@ -20,7 +29,7 @@
     />
 
     <link rel="stylesheet" href="/assets/css/style.css" />
-    <title>Profile Page</title>
+    <title>Attendance </title>
   </head>
   <body>
     <div class="inner-wrapper">
@@ -276,24 +285,25 @@
             if (result.data !== "NA") {
               result.data.forEach((key) => {
                 const date = key.date;
-                const { startTime, endTime, totalHour } = key.finalLog;
+                if (!key.isOnLeave) {
+                  const { startTime, endTime, totalHour } = key.finalLog;
 
-                $(`#start-${date}`).text(
-                  `${new Date(startTime).toLocaleTimeString()}`
-                );
-                $(`#end-${date}`).text(
-                  `${new Date(endTime).toLocaleTimeString()}`
-                );
-                $(`#totalHour-${date}`).text(`${totalHour}`);
+                  $(`#start-${date}`).text(
+                    `${new Date(startTime).toLocaleTimeString()}`
+                  );
+                  $(`#end-${date}`).text(
+                    `${new Date(endTime).toLocaleTimeString()}`
+                  );
+                  $(`#totalHour-${date}`).text(`${totalHour}`);
 
-                // json stringify value in function work as parsed 
-                $(`#log-${date} button`).attr('onclick', `getDailyLog(${JSON.stringify(key.log) || false})`);
+                  // json stringify value in function work as parsed 
+                  $(`#log-${date} button`).attr('onclick', `getDailyLog(${JSON.stringify(key.log) || false})`);
 
-                if (key.date === today.getDate()) {
-                    getDailyLog(key.log);
+                  if (key.date === today.getDate()) {
+                      getDailyLog(key.log);
+                  }
                 }
               });
-              
             }
           },
           error: (error) => {

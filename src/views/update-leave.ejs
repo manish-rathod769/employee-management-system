@@ -40,6 +40,7 @@
             <%- include('partials/aside'); %>
 
               <div class="col-xl-10 col-lg-9 col-md-12">
+                <div class="d-none" id="message-body"> </div>
 
                 <div class="card shadow-sm grow ctm-border-radius">
                   <div class="card-body d-flex justify-content-between">
@@ -91,9 +92,17 @@
                                 <div class="card-body">
                                   <div class="pro-widget-content">
                                     <div class="profile-info-widget">
-                                      <p><label class="form-label text-orange lead">Employee :</label>
+                                      <p><label class="form-label text-orange lead">Name
+                                          :</label>
                                         <span class="text-primary">
-                                          <%= leavedata.employeeId %>
+                                          <%= leavedata.Employee.firstName %>
+                                            <%= leavedata.Employee.lastName %>
+                                        </span>
+                                      </p>
+                                      <p><label class="form-label text-orange lead">Email
+                                          :</label>
+                                        <span class="text-primary">
+                                          <%= leavedata.Employee.email %>
                                         </span>
                                       </p>
                                       <p><label class="form-label text-orange lead">Start Date :</label>
@@ -193,7 +202,10 @@
   <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
 
   <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/additional-methods.min.js"></script>
-
+  <script>
+    $('.aside-module-name').text('Leaves');
+    $('#leaveLink').removeClass('text-dark').addClass('active').addClass('text-white');
+  </script>
   <script>
     let acceptfun = (lid) => {
       var action = 'accept';
@@ -202,9 +214,13 @@
         method: 'PUT',
         data: { lid, action },
         success: function (result) {
+          displaySuccessMessage('LEAVE ACCEPTED SUCCESSFULLY!!!');
           $(`#accept_${lid}`).hide(lid);
           $(`#reject_${lid}`).hide(lid);
-        }
+        },
+        error: function (result) {
+          displayError(result.responseJSON.errorMessage);
+        },
       })
       //window.location.href = `/leave/accept-reject`;
 
@@ -218,9 +234,13 @@
         method: 'PUT',
         data: { lid, action },
         success: function (result) {
+          displaySuccessMessage('LEAVE REJECTED SUCCESSFULLY!!!');
           $(`#accept_${lid}`).hide(lid);
           $(`#reject_${lid}`).hide(lid);
-        }
+        },
+        error: function (result) {
+          displayError(result.responseJSON.errorMessage);
+        },
       })
       //window.location.href = `/leave/accept-reject`;
 
@@ -238,6 +258,36 @@
       let query = `page=${page}&size=${size}`;
       window.location.href = `/leave/view?${query}`;
     }
+
+    const displayError = (err) => {
+      $('#message-body').removeClass('d-none');
+      $('#message-body').html(`
+    <div class="card shadow-sm ctm-border-radius" id="error-body">
+      <div class="card-body d-flex justify-content-between">
+        <p class='text-danger font-weight-bold'>${err}</p>
+      </div>
+    </div>
+  `);
+      setTimeout(() => {
+        $('#message-body').html('');
+        $('#message-body').addClass('d-none');
+      }, 5000);
+    };
+
+    const displaySuccessMessage = (message) => {
+      $('#message-body').removeClass('d-none');
+      $('#message-body').html(`
+    <div class="card shadow-sm ctm-border-radius" id="error-body">
+      <div class="card-body d-flex justify-content-between">
+        <p class='text-success font-weight-bold'><b>${message}</b></p>
+      </div>
+    </div>
+  `);
+      setTimeout(() => {
+        $('#message-body').html('');
+        $('#message-body').addClass('d-none');
+      }, 5000);
+    };
   </script>
 
 

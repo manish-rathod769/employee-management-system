@@ -6,7 +6,7 @@ module.exports = (sequelize, DataTypes) => {
       primaryKey: true,
     },
     employeeId: {
-      type: DataTypes.STRING,
+      type: DataTypes.UUID,
       allowNull: false,
     },
     startDate: {
@@ -30,8 +30,10 @@ module.exports = (sequelize, DataTypes) => {
       defaultValue: false,
     },
   });
-  // Leave.associate = function (models) {
-
-  // };
+  Leave.associate = (models) => {
+    Leave.belongsTo(models.Employee, {
+      foreignKey: 'employeeId',
+    });
+  };
   return Leave;
 };

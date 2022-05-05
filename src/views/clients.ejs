@@ -24,7 +24,7 @@
     <link rel="stylesheet" href="/assets/plugins/select2/select2.min.css" />
 
     <link rel="stylesheet" href="/assets/css/style.css" />
-    <title>Employees Page</title>
+    <title>Clients</title>
 
     <!--[if lt IE 9]>
       <script src="assets/js/html5shiv.min.js"></script>
@@ -48,8 +48,12 @@
                 <h4 class="card-title float-left mb-0 mt-2"><span id="clients-count"></span> Clients</h4>
                 <ul class="nav nav-tabs float-right border-0 tab-list-emp">
                   <li class="nav-item pl-3">
+                  <%
+                  var disableField = 'disabled'; 
+                  if(role === 'ADMIN'){ %>
                     <a class="btn btn-theme button-1 text-white ctm-border-radius p-2 add-person ctm-btn-padding" id="add-client">
                       <i class="fa fa-plus"></i> Add Client</a>
+                  <% } %>
                     <a class="btn btn-theme button-1 text-white ctm-border-radius p-2 add-person ctm-btn-padding" id="all-client">
                       <i class="fa fa-users"></i> All Client</a>
                   </li>
@@ -116,35 +120,35 @@
                 <div class="people-grid-row">
                   <form id="client-register-form">
                     <div class="mb-3">
-                      <label class="form-label text-orange lead">Name :</label>
+                      <label class="form-label text-orange lead">Name :<span class="text-danger">*</span></label>
                       <input type="text" class="form-control" name="name">
                     </div>
                     <div class="mb-3">
-                      <label class="form-label text-orange lead">Email :</label>
+                      <label class="form-label text-orange lead">Email :<span class="text-danger">*</span></label>
                       <input type="email" class="form-control" name="email">
                     </div>
                     <div class="mb-3">
-                      <label class="form-label text-orange lead">SlackId :</label>
+                      <label class="form-label text-orange lead">SlackId :<span class="text-danger">*</span></label>
                       <input type="text" class="form-control" name="slackId">
                     </div>
                     <div class="mb-3">
-                      <label class="form-label text-orange lead">Country :</label>
+                      <label class="form-label text-orange lead">Country :<span class="text-danger">*</span></label>
                       <select class="form-control" name="country" id="country">
                         <option value="India" selected>India</option>
                       </select>
                     </div>
                     <div class="mb-3">
-                      <label class="form-label text-orange lead">State :</label>
+                      <label class="form-label text-orange lead">State :<span class="text-danger">*</span></label>
                       <select class="form-control" name="state" id="state" onchange="populateCityNames(`${this.value}`, 0)">
                       </select>
                     </div>
                     <div class="mb-3">
-                      <label class="form-label text-orange lead">City :</label>
+                      <label class="form-label text-orange lead">City :<span class="text-danger">*</span></label>
                       <select class="form-control" name="city" id="city">
                       </select>
                     </div>
                     <div class="mb-3">
-                      <label class="form-label text-orange lead">Organization :</label>
+                      <label class="form-label text-orange lead">Organization :<span class="text-danger">*</span></label>
                       <input type="text" class="form-control" name="organization">
                     </div>
                     <div class="d-flex justify-content-between">
@@ -161,50 +165,43 @@
                 <div class="people-grid-row">
                   <form id="client-edit-form">
                     <div class="mb-3">
-                      <label class="form-label text-orange lead">Name :</label>
-                      <input type="text" class="form-control" name="name" id="client-edit-name" >
+                      <label class="form-label text-orange lead">Name :<span class="text-danger">*</span></label>
+                      <input type="text" class="form-control" name="name" id="client-edit-name" <% if(role != 'ADMIN'){ %> <%= disableField %> <% } %> >
                     </div>
                     <div class="mb-3">
-                      <label class="form-label text-orange lead">Country :</label>
-                      <select class="form-control" name="country" id="client-edit-country">
+                      <label class="form-label text-orange lead">Country :<span class="text-danger">*</span></label>
+                      <select class="form-control" name="country" id="client-edit-country" <% if(role != 'ADMIN'){ %> <%= disableField %> <% } %> >
                         <option value="India" selected>India</option>
                       </select>
                     </div>
                     <div class="mb-3">
-                      <label class="form-label text-orange lead">State :</label>
-                      <select class="form-control" name="state" id="client-edit-state" onchange="populateCityNames(`${this.value}`, 1)">
+                      <label class="form-label text-orange lead">State :<span class="text-danger">*</span></label>
+                      <select class="form-control" name="state" id="client-edit-state" onchange="populateCityNames(`${this.value}`, 1)" <% if(role != 'ADMIN'){ %> <%= disableField %> <% } %> >
                       </select>
                     </div>
                     <div class="mb-3">
-                      <label class="form-label text-orange lead">City :</label>
-                      <select class="form-control" name="city" id="client-edit-city">
+                      <label class="form-label text-orange lead">City :<span class="text-danger">*</span></label>
+                      <select class="form-control" name="city" id="client-edit-city" <% if(role != 'ADMIN'){ %> <%= disableField %> <% } %> >
                       </select>
                     </div>
-                    <!-- <div class="mb-3">
-                      <label class="form-label text-orange lead">City :</label>
-                      <input type="text" class="form-control" name="city" id="client-edit-city">
-                    </div>
                     <div class="mb-3">
-                      <label class="form-label text-orange lead">State :</label>
-                      <input type="text" class="form-control" name="state" id="client-edit-state">
+                      <label class="form-label text-orange lead">Organization :<span class="text-danger">*</span></label>
+                      <input type="text" class="form-control" name="organization" id="client-edit-organization" <% if(role != 'ADMIN'){ %> <%= disableField %> <% } %> >
                     </div>
+                    <!-- Remove -->
+                  <% if(role === 'ADMIN') {%>
                     <div class="mb-3">
-                      <label class="form-label text-orange lead">Country :</label>
-                      <input type="text" class="form-control" name="country" id="client-edit-country">
-                    </div> -->
-                    <div class="mb-3">
-                      <label class="form-label text-orange lead">Organization :</label>
-                      <input type="text" class="form-control" name="organization" id="client-edit-organization">
+                      <label class="form-label text-orange lead">IsArchived :<span class="text-danger">*</span>&nbsp;</label>
+                      <label class="switch">
+                        <input type="checkbox" id="isArchived" name="isArchived">
+                        <span class="slider"></span>
+                      </label>
                     </div>
-                    <div class="mb-3">
-                      <label class="form-label text-orange lead">Is Archived :</label>
-                      <div class="custom-control custom-switch float-right">
-                        <input type="checkbox" class="custom-control-input" id="isArchived">
-                        <label class="custom-control-label" for="isArchived"></label>
-                      </div>
-                    </div>
+                  <% } %>
                     <div class="d-flex justify-content-between">
-                      <button type="submit" class="btn btn-theme button-1 text-white ctm-border-radius p-2 add-person ctm-btn-padding px-3" id="client-edit-submit"><h4>Update</h4></button>
+                      <% if(role === 'ADMIN'){ %>
+                          <button type="submit" class="btn btn-theme button-1 text-white ctm-border-radius p-2 add-person ctm-btn-padding px-3" id="client-edit-submit"><h4>Update</h4></button>
+                      <% } %>
                       <p class="btn btn-theme button-1 text-white ctm-border-radius p-2 add-person ctm-btn-padding px-3" onclick='viewClientWithPagination()'>Cancel</p>
                     </div>
                   </form>

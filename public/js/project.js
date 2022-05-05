@@ -120,6 +120,7 @@ let fetchprojectData = (index) => {
     success: (resData) => {
       $('#projects-data').html('');
       if(resData.success){  
+        const { role } = resData.data.pop();
         const { totalCount } = resData.data.pop();
         $('#action').text('projects');
         $('#all-project').css('display','none');
@@ -140,6 +141,7 @@ let fetchprojectData = (index) => {
         $('#current').text(index);
 
         if(resData.data.length){
+          // console.log(resData.data);
           resData.data.forEach( project => {
             $('#projects-data').append(`
               <div class='col-md-6 col-lg-6 col-xl-4'>
@@ -155,11 +157,17 @@ let fetchprojectData = (index) => {
                         </div>
                       </div>
                     </div>
-                    <p onclick='projectDetails("${project.projectId}")' class='float-right text-danger cursor-pointer'>view</p>
+                    <div class="d-flex justify-content-between mt-2">
+                      <p onclick='projectDetails("${project.projectId}")' class='btn btn-theme ctm-border-radius text-white cursor-pointer' id='update-project-pencil'><i class="fa fa-pencil"></i></p>
+                      <a href="/viewProject/${project.projectId}" class='btn btn-theme ctm-border-radius text-white cursor-pointer' id='view-project-eye'><span class="lnr lnr-eye"></span></a>
+                    </div>
                   </div>
                 </div>
               </div>
             `);
+            if(role != 'ADMIN'){
+              $('#update-project-pencil').remove();
+            }
           });
         }else{
           $('#projects-data').append(`

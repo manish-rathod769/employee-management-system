@@ -1,5 +1,5 @@
 // eslint-disable-next-line import/prefer-default-export
-export const getTotalHour = (hour, startTime, endTime) => {
+export const getTotalMinutes = (hour, startTime, endTime) => {
   let newHour = new Date(endTime).getHours() - new Date(startTime).getHours();
   if (newHour < 0) {
     throw new Error('end time before start time');
@@ -20,7 +20,6 @@ export const getTime = (date) => {
   const month = date.getMonth();
   const year = date.getFullYear();
   const newDate = new Date(year, month, day);
-  console.log(newDate);
   return newDate.getTime();
 };
 
@@ -29,7 +28,8 @@ export const getFinalLog = (attendance) => {
   const endTime = attendance.log[attendance.log.length - 1].end;
   const totalHour = (Math.floor(attendance.totalMinutes / 60)
                                     + ((attendance.totalMinutes % 60) / 100).toFixed(2));
-  const IdealMinutes = getTotalHour(0, startTime, endTime);
+
+  const IdealMinutes = getTotalMinutes(0, startTime, endTime);
   const IdealHours = (Math.floor(IdealMinutes / 60) + ((IdealMinutes % 60) / 100).toFixed(2));
   const monthLog = {
     startTime,

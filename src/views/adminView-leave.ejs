@@ -96,10 +96,17 @@
                                                                     <div class="pro-widget-content">
                                                                         <div class="profile-info-widget">
                                                                             <p><label
-                                                                                    class="form-label text-orange lead">Employee
+                                                                                class="form-label text-orange lead">Name
+                                                                                :</label>
+                                                                                <span class="text-primary">
+                                                                                    <%= leavedata.Employee.firstName %> <%= leavedata.Employee.lastName %>
+                                                                                </span>
+                                                                            </p>
+                                                                            <p><label
+                                                                                    class="form-label text-orange lead">Email
                                                                                     :</label>
                                                                                 <span class="text-primary">
-                                                                                    <%= leavedata.employeeId %>
+                                                                                    <%= leavedata.Employee.email %>
                                                                                 </span>
                                                                             </p>
                                                                             <p><label
@@ -181,7 +188,10 @@
     <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
 
     <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/additional-methods.min.js"></script>
-
+    <script>
+        $('.aside-module-name').text('Leaves');
+        $('#leaveLink').removeClass('text-dark').addClass('active').addClass('text-white');
+    </script>
     <script>
         function myFunction() {
             let size = document.getElementById("size").value;

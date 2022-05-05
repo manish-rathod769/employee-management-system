@@ -1,25 +1,22 @@
-$('#cancelAddEmployee').click((event) => {
-  event.preventDefault();
-  $(':input', '#form-edit-employee').not(':button, :submit, :reset, :hidden')
+$('#cancelAddEmployee').click(() => {
+  $(':input', '#form-add-employee').not(':button, :submit, :reset, :hidden')
     .val('');
   $('#addEmployeeFormContainer').addClass('d-none');
   $('#employeeDisplayContainer').removeClass('d-none');
+  $('.avatar-preview').find('div').css('background-image', 'url(../img/logo2.png)');
 });
 
+// eslint-disable-next-line no-unused-vars
 const imagePreview = () => {
   const addForm = $('#form-add-employee');
   const file = addForm.find('#imageUpload')[0].files[0];
-  // const blobURL = window.URL.createObjectURL(file);
-  // console.log(blobURL);
+
   if (file) {
     const reader = new FileReader();
+    reader.readAsDataURL(file);
     reader.onload = (evenet) => {
-      // const file2 = compressImage(blobURL, 50, 800);
-      // console.log(file2);
-      // $('.avatar-preview').after(file2);
       $('.avatar-preview').find('div').css('background-image', `url(${evenet.target.result})`);
     };
-    reader.readAsDataURL(file);
   }
 };
 
@@ -90,10 +87,10 @@ $(document).ready(() => {
       landmark: {
         required: true,
       },
-      city: {
+      state: {
         required: true,
       },
-      state: {
+      city: {
         required: true,
       },
       country: {
@@ -123,83 +120,83 @@ $(document).ready(() => {
     },
     messages: {
       firstName: {
-        required: 'First Name is requrired',
+        required: 'First Name is requrired*',
         minlength: 'at least 2 character required',
       },
       lastName: {
-        required: 'Last Name is requrired',
+        required: 'Last Name is requrired*',
         minlength: 'at least 2 character required',
       },
       middleName: {
-        required: 'Middle Name is requrired',
+        required: 'Middle Name is requrired*',
         minlength: 'at least 2 character required',
       },
       email: {
-        required: 'email is required',
+        required: 'email is required*',
         email: 'please enter valid email',
       },
       dob: {
-        required: 'please select dob',
+        required: 'please select dob*',
       },
       role: {
-        required: 'please select valid role',
+        required: 'please select valid role*',
       },
       joiningDate: {
-        required: 'please enter date',
+        required: 'please enter date*',
       },
       careerStartDate: {
-        required: 'plese enter total experiance',
+        required: 'plese enter total experiance*',
       },
 
       highestQualification: {
-        required: 'highest qualification is requrired',
+        required: 'highest qualification is requrired*',
       },
       collage: {
-        required: 'collage is requrired',
+        required: 'collage is requrired*',
       },
       university: {
-        required: 'university is requrired',
+        required: 'university is requrired*',
       },
       knownTech: {
-        required: 'knownTech is requrired',
+        required: 'knownTech is requrired*',
       },
 
       // contact details
       houseNo: {
-        required: 'house number/name is required',
+        required: 'house number/name is required*',
       },
       contactNo: {
-        required: 'contact no is required',
+        required: 'contact no is required*',
         digits: 'only digit is allowed',
         maxlength: 'lenth should be 10',
         minlength: 'lenth should be 10',
       },
       secondaryEmail: {
-        email: 'eneter valid email address',
+        email: 'eneter valid email address*',
       },
       addressLine1: {
-        required: 'address line required',
+        required: 'address line required*',
       },
       landmark: {
-        required: 'landmark required',
+        required: 'landmark required*',
       },
       city: {
-        requrired: 'city is required',
+        requrired: 'city is required*',
       },
       state: {
-        required: 'state is required',
+        required: 'state is required*',
       },
       country: {
-        required: 'country is required',
+        required: 'country is required*',
       },
       pincode: {
-        required: 'pincode is required',
+        required: 'pincode is required*',
         digits: 'only digit allowed',
         maxlength: 'pin should be of 6 digit',
         minlength: 'pin should be of 6 digit',
       },
       workingTimeInYear: {
-        min: 'please enter appropriate value',
+        min: 'please enter appropriate value*',
         digits: 'only digits allowed',
       },
       workingTimeInMonth: {
@@ -209,15 +206,20 @@ $(document).ready(() => {
       },
 
       avatar: {
-        required: 'please upload profile pic',
+        required: 'please upload profile pic*',
         extensions: 'only .jpeg, .png, .jpg formate allowed',
         filesize: 'file size morethen 2 MB not allowed',
       },
     },
+
     errorElement: 'span',
     errorClass: 'text-danger',
+
     errorPlacement(error, element) {
-      if (element.attr('name') === 'dob' || element.attr('name') === 'joiningDate' || element.attr('name') === 'role') {
+      if (element.attr('name') === 'dob'
+      || element.attr('name') === 'joiningDate'
+      || element.attr('name') === 'role'
+      || element.attr('name') === 'careerStartDate') {
         error.insertAfter(element.parent());
       } else if (element.attr('name') === 'avatar') {
         error.insertAfter(element.parent().parent());
@@ -225,10 +227,15 @@ $(document).ready(() => {
         error.insertAfter(element);
       }
     },
+
     submitHandler() {
       const addForm = $('#form-add-employee');
       const formData = new FormData($('#form-add-employee')[0]);
-      formData.append('knownTechs', addForm.find('#knownTech').val());
+      formData.append('previousEmployer', addForm.find('#preEmployer').val());
+      formData.append('employerAddress', addForm.find('#preEmployerAddress').val());
+      formData.append('workingTime',
+        `${addForm.find('#workingTimeInYear').val()} years, ${addForm.find('#workingTimeInMonth').val()} months`);
+
       // const file = addForm.find('#imageUpload')[0].files[0];
       // formData.append('avatar', file, file.name);
       // console.log(formData);
@@ -237,54 +244,35 @@ $(document).ready(() => {
       //   console.log(`${pair[0]}`);
       //   console.dir(pair[1]);
       // }
-      const payload = {
-        lastName: addForm.find('#lastName').val(),
-        firstName: addForm.find('#firstName').val(),
-        middleName: addForm.find('#middleName').val(),
-        email: addForm.find('#email').val(),
-        gender: addForm.find("input[type='radio'][name='gender']:checked").val(),
-        DOB: addForm.find('#dob').val(),
-        role: addForm.find('#role').val(),
-        joiningDate: addForm.find('#joiningDate').val(),
-        careerStartDate: addForm.find('#careerStartDate').val(),
 
-        collage: addForm.find('#collage').val(),
-        highestQualification: addForm.find('#highestQualification').val(),
-        university: addForm.find('#university').val(),
-        knownTech: addForm.find('#knownTech').val(),
-        secondaryEmail: addForm.find('#secondaryEmail').val(),
-        contactNo: addForm.find('#contactNo').val(),
-        houseNo: addForm.find('#houseNo').val(),
-        addressLine1: addForm.find('#addressLine1').val(),
-        addressLine2: addForm.find('#addressLine2').val(),
-        landmark: addForm.find('#landmark').val(),
-        state: addForm.find('#state').val(),
-        pincode: addForm.find('#pincode').val(),
-        city: addForm.find('#city').val(),
-        country: addForm.find('#country').val(),
-        previousEmployer: addForm.find('#preEmployer').val(),
-        employerAddress: addForm.find('#preEmployerAddress').val(),
-        workingTime: `${addForm.find('#workingTimeInYear')} years, ${addForm.find('#workingTimeInMonth')} months`,
-      };
-      // console.log(payload);
       $.ajax({
         type: 'POST',
         url: '/employees',
         data: formData,
         contentType: false,
         processData: false,
-        success: (data) => {
+        success: () => {
           // console.log(data);
           $('.toast-header').removeClass('bg-danger').addClass('bg-success').addClass('text-dark');
           $('.toast-title').text('Employee Register');
-          $('.toast-body').text("employee registered successfully");
+          $('.toast-body').text('employee registered successfully');
           $('.toast').toast({
             delay: 5000,
           });
           $('.toast').toast('show');
+
+          // $(':input', '#form-add-employee').not(':button, :submit, :reset, :hidden')
+          //   .val('');
+          $('#form-add-employee')[0].reset();
+          $('.avatar-preview').find('div').css('background-image', 'url(../img/logo2.png)');
+
+          // change view
           $('#addEmployeeFormContainer').addClass('d-none');
           $('#employeeDisplayContainer').removeClass('d-none');
-          setTimeout(() => window.location.reload(), 3000);
+
+          // reset form fields
+
+          setTimeout(() => displayEmployee(), 100);
         },
         error: (error) => {
           $('.toast-header').removeClass('bg-success').addClass('bg-danger').addClass('text-dark');
