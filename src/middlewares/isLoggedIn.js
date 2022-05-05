@@ -9,12 +9,16 @@ const isLoggedIn = async (req, res, next) => {
       return next();
     }
 
-    // Return Data of user. Here it will return emailID.
-    const payload = verify(verifyToken, process.env.verifyToken);
-    if (payload.role === roles.DEV) {
-      return res.redirect(`employee/${payload.id}`);
+    // Return Data of user if payload exist.
+    try {
+      const payload = verify(verifyToken, process.env.verifyToken);
+      if (payload.role === roles.DEV) {
+        return res.redirect(`employee/${payload.id}`);
+      }
+      return res.redirect('/');
+    } catch (error) {
+      return res.redirect('/login');
     }
-    return res.redirect('/');
   } catch (error) {
     res.status(401);
     return res.render('message', {
