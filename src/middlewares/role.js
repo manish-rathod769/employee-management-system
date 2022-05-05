@@ -6,7 +6,7 @@ export const roleAdmin = flagRender => (req, res, next) => {
     if (req.user.role === roles.ADMIN) {
       return next();
     }
-    return errorResponse(req, res, 'You do not have permission to access this route !!!', 401);
+    throw new Error('You do not have permission to access this route !!!');
   } catch (err) {
     if (flagRender) {
       res.status(401);
@@ -26,7 +26,7 @@ export const rolePM = flagRender => (req, res, next) => {
     if (req.user.role === roles.PM) {
       return next();
     }
-    return errorResponse(req, res, 'You do not have permission to access this route !!!', 401);
+    throw new Error('You do not have permission to access this route !!!');
   } catch (err) {
     if (flagRender) {
       res.status(401);
@@ -46,7 +46,7 @@ export const roleHR = flagRender => (req, res, next) => {
     if (req.user.role === roles.HR) {
       return next();
     }
-    return errorResponse(req, res, 'You do not have permission to access this route !!!', 401);
+    throw new Error('You do not have permission to access this route !!!');
   } catch (err) {
     if (flagRender) {
       res.status(401);
@@ -66,7 +66,7 @@ export const roleDEV = flagRender => (req, res, next) => {
     if (req.user.role === roles.DEV) {
       return next();
     }
-    return errorResponse(req, res, 'You do not have permission to access this route !!!', 401);
+    throw new Error('You do not have permission to access this route !!!');
   } catch (err) {
     if (flagRender) {
       res.status(401);
@@ -86,7 +86,7 @@ export const roleAdminPmHr = flagRender => (req, res, next) => {
     if ([roles.ADMIN, roles.PM, roles.HR].includes(req.user.role)) {
       return next();
     }
-    return errorResponse(req, res, 'You do not have permission to access this route !!!', 401);
+    throw new Error('You do not have permission to access this route !!!');
   } catch (err) {
     if (flagRender) {
       res.status(401);
@@ -106,7 +106,7 @@ export const roleAll = flagRender => (req, res, next) => {
     if ([roles.ADMIN, roles.PM, roles.HR, roles.DEV].includes(req.user.role)) {
       return next();
     }
-    return errorResponse(req, res, 'You do not have permission to access this route !!!', 401);
+    throw new Error('You do not have permission to access this route !!!');
   } catch (err) {
     if (flagRender) {
       res.status(401);

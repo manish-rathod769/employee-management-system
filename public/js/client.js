@@ -10,7 +10,9 @@ const displayError = (err) => {
   setTimeout(() => {
     $('#message-body').html('');
     $('#message-body').addClass('d-none');
-  }, 5000);
+  }, 3000);
+  // eslint-disable-next-line no-use-before-define
+  viewClientWithPagination();
 };
 
 const displaySuccessMessage = (message) => {
@@ -25,7 +27,9 @@ const displaySuccessMessage = (message) => {
   setTimeout(() => {
     $('#message-body').html('');
     $('#message-body').addClass('d-none');
-  }, 5000);
+  }, 3000);
+  // eslint-disable-next-line no-use-before-define
+  viewClientWithPagination();
 };
 
 const hideShowField = (fieldsToBeHide, fieldsToBeShown) => {
