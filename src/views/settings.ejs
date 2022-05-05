@@ -87,7 +87,8 @@
                               id="EditTech"
                               data-toggle="modal"
                               data-target="#editTechnology"
-                              class="btn btn-theme ctm-border-radius text-white btn-sm disabled"
+                              disabled
+                              class="btn btn-theme ctm-border-radius text-white btn-sm"
                             >
                               <i class="fa fa-pencil" aria-hidden="true"></i>
                             </button>
@@ -373,7 +374,7 @@
       });
 
       $('#techList').on('change', (event) => {
-        $('#EditTech').removeClass('disabled');
+        $('#EditTech').removeAttr('disabled');
       });
 
       $('#EditTech').on('click', (event) => {
