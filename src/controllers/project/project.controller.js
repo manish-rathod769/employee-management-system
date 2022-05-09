@@ -39,6 +39,7 @@ const singleProject = async (req, res) => {
 };
 
 
+// eslint-disable-next-line consistent-return
 const viewProject = async (req, res) => {
   try {
     const page = Number(req.query.page) || 1;
