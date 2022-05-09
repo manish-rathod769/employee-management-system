@@ -9,7 +9,7 @@ module.exports = {
 
   down: (queryInterface, Sequelize) => Promise.all([
     queryInterface.changeColumn('Employees', 'verifyToken', {
-      type: Sequelize.STRING,
+      type: Sequelize.STRING(1234),
       allowNull: true,
     }),
   ]),
