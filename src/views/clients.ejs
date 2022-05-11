@@ -214,6 +214,24 @@
     </div>
   </div>
 
+  <div class='col-md-6 col-lg-6 col-xl-4'>
+    <div class='card'>
+      <div class='card-body'>
+        <div class='pro-widget-content'>
+          <div class='profile-info-widget'>
+            <div class='profile-det-info'>
+              <p>Name: <span class='text-primary'>${client.name}</span></p>
+              <p>EmailId: <span class='text-primary'>${client.email}</span></p>
+              <p>SlackId: <span class='text-primary'>${client.slackId}</span></p>
+              <p>Organization: <span class='text-primary'>${client.organization}</span></p>
+            </div>
+          </div>
+        </div>
+        <p onclick='clientDetails("${client.id}")' class='float-right btn btn-theme ctm-border-radius text-white cursor-pointer mt-2'><span id='eyeOrPencil'></span></p>
+      </div>
+    </div>
+  </div>
+
   <div class="sidebar-overlay" id="sidebar_overlay"></div>
   <script src="/assets/js/jquery-3.2.1.min.js"></script>
 

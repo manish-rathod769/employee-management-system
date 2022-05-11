@@ -536,7 +536,7 @@ const acceptRejectLeave = async (req, res) => {
     const datesDiff = getDatesBetween(sDate, eDate);
     let payload = {};
     const finalPayload = [];
-    datesDiff.forEach(async (date) => {
+    datesDiff.forEach((date) => {
       payload = {
         id: uuidv4(),
         employeeId: getdata.employeeId,

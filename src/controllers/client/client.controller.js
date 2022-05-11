@@ -72,6 +72,7 @@ export const getAllClient = async (req, res) => {
 
       const clientsData = allClients.rows;
       clientsData.push({ totalCount: allClients.count });
+      clientsData.push({ role: req.user.role });
 
       return successResponse(req, res, clientsData, 200);
     } catch (error) {
@@ -121,6 +122,7 @@ export const getAllClient = async (req, res) => {
 
     const clientsData = findAndCountClient.rows;
     clientsData.push({ totalCount: findAndCountClient.count });
+    clientsData.push({ role: req.user.role });
 
     return successResponse(req, res, clientsData, 200);
   } catch (error) {

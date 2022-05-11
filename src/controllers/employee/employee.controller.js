@@ -477,6 +477,7 @@ export const loginEmployee = async (req, res) => {
       {
         where: {
           email: req.body.email,
+          isArchived: false,
         },
       },
     );

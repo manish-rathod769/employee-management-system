@@ -1,11 +1,10 @@
-/* eslint-disable no-shadow */
 import { Op } from 'sequelize';
 import { v4 as uuidv4 } from 'uuid';
+import * as roles from '../../constants/index';
 import {
   Employee, Project, ProjectClient, ProjectEmployee, Client,
 } from '../../models';
 import { successResponse, errorResponse } from '../../helpers/index';
-
 
 const addProject = async (req, res) => {
   try {
@@ -50,7 +49,7 @@ const viewProject = async (req, res) => {
 
     // ADMIN and HR role
     // role file
-    if (['ADMIN', 'HR'].includes(req.user.role)) {
+    if ([roles.ADMIN, roles.HR].includes(req.user.role)) {
       const allProjects = await Project.findAll({
         where: { name: { [Op.iLike]: `%${searchWord}%` } },
         offset: (page - 1) * count,
@@ -63,7 +62,7 @@ const viewProject = async (req, res) => {
       allProjects.push({ totalCount: totalCount.length });
       allProjects.push({ role: req.user.role });
       return successResponse(req, res, allProjects, 200);
-    } if (req.user.role === 'DEV' || req.user.role === 'PM') {
+    } if (req.user.role === roles.DEV || req.user.role === roles.PM) {
       let projectsId = await ProjectEmployee.findAll({
         where: { employeeId: req.user.id },
         attributes: ['projectId'],
@@ -85,7 +84,7 @@ const viewProject = async (req, res) => {
         where: {
           [Op.and]: [{
             projectId:
-            { [Op.in]: projectsId },
+              { [Op.in]: projectsId },
           },
           { isArchived: false },
           { name: { [Op.iLike]: `%${searchWord}%` } }],
@@ -104,16 +103,25 @@ const viewProject = async (req, res) => {
 const updateProject = async (req, res) => {
   try {
     const ProjectId = req.params.id;
-    const { client, pm, dev } = req.body;
+    const client = req.body.client || [];
+    const pm = req.body.pm || [];
+    const dev = req.body.dev || [];
 
     if (client) {
       await ProjectClient.destroy({
         where: { projectId: ProjectId },
-        force: true,
       });
-      client.forEach(async (client) => {
-        await ProjectClient.create({ projectId: ProjectId, clientId: client });
+
+      const arrProjectClient = [];
+      client.forEach((ele) => {
+        arrProjectClient.push({ clientId: ele, projectId: ProjectId });
       });
+
+      try {
+        await ProjectClient.bulkCreate(arrProjectClient);
+      } catch (error) {
+        return errorResponse(req, res, error.message);
+      }
     }
 
     if (pm || dev) {
@@ -122,15 +130,19 @@ const updateProject = async (req, res) => {
         force: true,
       });
 
-      if (pm) {
-        pm.forEach(async (pm) => {
-          await ProjectEmployee.create({ projectId: ProjectId, employeeId: pm });
-        });
-      }
-      if (dev) {
-        dev.forEach(async (dev) => {
-          await ProjectEmployee.create({ projectId: ProjectId, employeeId: dev });
-        });
+      const arrProjectEmployee = [];
+      pm.forEach((ele) => {
+        arrProjectEmployee.push({ employeeId: ele, projectId: ProjectId });
+      });
+
+      dev.forEach((ele) => {
+        arrProjectEmployee.push({ employeeId: ele, projectId: ProjectId });
+      });
+
+      try {
+        await ProjectEmployee.bulkCreate(arrProjectEmployee);
+      } catch (error) {
+        return errorResponse(req, res, error.message);
       }
     }
     const {
