@@ -1,7 +1,7 @@
 const displayError = (err) => {
   $('#message-body').removeClass('d-none');
   $('#message-body').html(`
-    <div class="card shadow-sm ctm-border-radius" id="error-body">
+    <div class="card shadow-sm ctm-border-radius grow" id="error-body">
       <div class="card-body d-flex justify-content-between">
         <p class='text-danger font-weight-bold'>${err}</p>
       </div>
@@ -18,7 +18,7 @@ const displayError = (err) => {
 const displaySuccessMessage = (message) => {
   $('#message-body').removeClass('d-none');
   $('#message-body').html(`
-    <div class="card shadow-sm ctm-border-radius" id="error-body">
+    <div class="card shadow-sm ctm-border-radius grow" id="error-body">
       <div class="card-body d-flex justify-content-between">
         <p class='text-success font-weight-bold'><b>${message}</b></p>
       </div>
@@ -122,6 +122,7 @@ const fetchClientData = (index) => {
     success: (resData) => {
       $('#clients-data').html('');
       if (resData.success) {
+        const { role } = resData.data.pop();
         const { totalCount } = resData.data.pop();
         $('#action').text('Clients');
         $('#all-client').css('display', 'none');
@@ -144,7 +145,7 @@ const fetchClientData = (index) => {
         $('#current').text(index);
         if (resData.data.length) {
           resData.data.forEach((client) => {
-            $('#clients-data').append(`
+            const part1 = `
             <div class='col-md-6 col-lg-6 col-xl-4'>
               <div class='card'>
                 <div class='card-body'>
@@ -158,11 +159,20 @@ const fetchClientData = (index) => {
                       </div>
                     </div>
                   </div>
-                  <p onclick='clientDetails("${client.id}")' class='float-right btn btn-theme ctm-border-radius text-white cursor-pointer mt-2'><span class='lnr lnr-eye'></span></p>
+            `;
+            let part2 = '';
+            if (role === 'ADMIN') {
+              part2 = `<p onclick='clientDetails("${client.id}")' class='float-right btn btn-theme ctm-border-radius text-white cursor-pointer mt-2'><span class='lnr lnr-pencil'></span></p>`;
+            } else {
+              part2 = `<p onclick='clientDetails("${client.id}")' class='float-right btn btn-theme ctm-border-radius text-white cursor-pointer mt-2'><span class='lnr lnr-eye'></span></p>`;
+            }
+            const part3 = `
                 </div>
               </div>
             </div>
-          `);
+            `;
+            const finalHTML = part1 + part2 + part3;
+            $('#clients-data').append(finalHTML);
           });
         } else {
           $('#clients-data').append(`

@@ -262,7 +262,7 @@
     const displayError = (err) => {
       $('#message-body').removeClass('d-none');
       $('#message-body').html(`
-    <div class="card shadow-sm ctm-border-radius" id="error-body">
+    <div class="card shadow-sm ctm-border-radius grow" id="error-body">
       <div class="card-body d-flex justify-content-between">
         <p class='text-danger font-weight-bold'>${err}</p>
       </div>
@@ -271,13 +271,13 @@
       setTimeout(() => {
         $('#message-body').html('');
         $('#message-body').addClass('d-none');
-      }, 5000);
+      }, 3000);
     };
 
     const displaySuccessMessage = (message) => {
       $('#message-body').removeClass('d-none');
       $('#message-body').html(`
-    <div class="card shadow-sm ctm-border-radius" id="error-body">
+    <div class="card shadow-sm ctm-border-radius grow" id="error-body">
       <div class="card-body d-flex justify-content-between">
         <p class='text-success font-weight-bold'><b>${message}</b></p>
       </div>
@@ -286,7 +286,7 @@
       setTimeout(() => {
         $('#message-body').html('');
         $('#message-body').addClass('d-none');
-      }, 5000);
+      }, 3000);
     };
   </script>
 

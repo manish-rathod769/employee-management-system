@@ -1,10 +1,11 @@
-$('#cancelEdit').click(() => {
+  $('#cancelEdit').click(() => {
   $(':input', '#form-edit-employee').not(':button, :submit, :reset, :hidden')
     .val('');
   $('#editEmployeeFormContainer').addClass('d-none');
   $('#employeeDisplayContainer').removeClass('d-none');
 });
 
+// eslint-disable-next-line no-unused-vars
 const imagePreviewUpdate = () => {
   const editForm = $('#form-edit-employee');
   const file = editForm.find('#imageUploadUpdate')[0].files[0];

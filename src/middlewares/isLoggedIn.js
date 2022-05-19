@@ -17,7 +17,7 @@ const isLoggedIn = async (req, res, next) => {
       }
       return res.redirect('/');
     } catch (error) {
-      return res.redirect('/login');
+      return next();
     }
   } catch (error) {
     res.status(401);

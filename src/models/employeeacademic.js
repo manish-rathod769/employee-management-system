@@ -25,7 +25,6 @@ module.exports = (sequelize, DataTypes) => {
   EmployeeAcademic.associate = (models) => {
     EmployeeAcademic.belongsTo(models.Employee, {
       foreignKey: 'employeeId',
-      onDelete: 'CASCADE',
     });
   };
   return EmployeeAcademic;

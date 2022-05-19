@@ -106,18 +106,28 @@ module.exports = (sequelize, DataTypes) => {
   Employee.associate = (models) => {
     Employee.hasOne(models.EmployeeContact, {
       foreignKey: 'employeeId',
+      onDelete: 'CASCADE',
+      hooks: true,
     });
     Employee.hasOne(models.EmployeeAcademic, {
       foreignKey: 'employeeId',
+      onDelete: 'CASCADE',
+      hooks: true,
     });
     Employee.hasOne(models.EmployeePreWork, {
       foreignKey: 'employeeId',
+      onDelete: 'CASCADE',
+      hooks: true,
     });
     Employee.hasMany(models.ProjectEmployee, {
       foreignKey: 'employeeId',
+      onDelete: 'CASCADE',
+      hooks: true,
     });
     Employee.hasMany(models.Poc, {
       foreignKey: 'employeeId',
+      onDelete: 'CASCADE',
+      hooks: true,
     });
     Employee.belongsToMany(models.Technology, {
       through: 'EmployeeTech',
@@ -126,6 +136,8 @@ module.exports = (sequelize, DataTypes) => {
     });
     Employee.hasMany(models.Leave, {
       foreignKey: 'employeeId',
+      onDelete: 'CASCADE',
+      hooks: true,
     });
   };
   return Employee;
